@@ -1,0 +1,1994 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ㅤ</title>
+    <link href="https://fonts.googleapis.com/css2?family=Jersey+15&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="https://www.khanacademy.org/computer-programming/assets-wip/6435356132360192/4945022646861824.png">
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        ::-webkit-scrollbar { height:6px; width:6px; }
+        ::-webkit-scrollbar-track { background:#0a0a0a; }
+        ::-webkit-scrollbar-thumb { background:#2a2a2a; border-radius:3px; }
+        ::-webkit-scrollbar-thumb:hover { background:#3a3a3a; }
+        ::-webkit-scrollbar-corner { background:#0a0a0a; }
+        body {
+            background:#0d0d0d;
+            color:#fff;
+            font-family:'Jersey 15', 'Segoe UI', sans-serif;
+            height:100vh;
+            display:flex;
+            flex-direction:column;
+            overflow:hidden;
+        }
+        body * {
+            color:#fff;
+            text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+        }
+        .tabs {
+            background:#0f0f0f;
+            border-bottom:1px solid #1e1e1e;
+            padding:0 40px;
+            display:flex;
+            gap:4px;
+            flex-shrink:0;
+        }
+        .tab {
+            padding:12px 18px;
+            font-size:15px;
+            color:#fff;
+            cursor:pointer;
+            border-bottom:2px solid transparent;
+            white-space:nowrap;
+            transition:all 0.15s;
+            display:flex;
+            align-items:center;
+            gap:7px;
+            user-select:none;
+        }
+        .tab:hover { color:#fff; filter:brightness(1.3); }
+        .tab.active { color:#fff; border-bottom-color:#7c3aed; }
+        .tab-icon {
+            width:15px; height:15px;
+            display:flex; align-items:center; justify-content:center;
+            font-size:13px; line-height:1; flex-shrink:0;
+        }
+        .tab-icon img { width:15px; height:15px; object-fit:contain; }
+        #page-all { display:flex; flex-direction:column; flex:1; overflow-y:auto; overflow-x:hidden; }
+        .player-list { padding:16px 40px; display:flex; flex-direction:column; gap:30px; }
+        .player-row {
+            position:relative;
+            height:68px;
+            cursor:pointer;
+            border-radius:6px;
+            overflow:visible;
+            flex-shrink:0;
+            transition:filter 0.15s;
+        }
+        .player-row:hover { filter:brightness(1.05); }
+.row-bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    border-radius: 6px;
+    overflow: hidden;
+}
+        .row-bg svg { width:100%; height:100%; position:absolute; inset:0; }
+        .row-content {
+            position:absolute; inset:0;
+            display:flex; align-items:center;
+            padding:0 22px; gap:12px; z-index:2;
+            overflow:hidden;
+        }
+        .row-pos {
+            font-size:18px; font-weight:900;
+            color:#fff !important;
+            text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000 !important;
+            width:28px; flex-shrink:0; text-align:center;
+        }
+        .row-name {
+            font-size:15px; font-weight:700;
+            flex-shrink:0; width:160px;
+            white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+        }
+        .row-tiers { display:flex; gap:6px; margin-left:auto; align-items:center; flex-shrink:0; }
+        .tier-circle-wrap { display:flex; flex-direction:column; align-items:center; gap:0; flex-shrink:0; }
+        .style-page { display:none; flex:1; flex-direction:column; overflow:hidden; }
+        .style-page.open { display:flex; }
+        .col-page-inner {
+            display:flex; gap:10px; padding:16px 40px 16px;
+            flex:1; overflow-x:auto; overflow-y:auto; align-items:flex-start;
+        }
+        .tier-col { flex-shrink:0; width:155px; display:flex; flex-direction:column; min-height:0; }
+        .tier-col-title {
+            font-size:12px; font-weight:700; text-align:center;
+            padding:7px 6px; border-radius:5px 5px 0 0;
+            letter-spacing:1px; text-transform:uppercase;
+        }
+        .tier-col-players {
+            display:flex; flex-direction:column; gap:4px; padding:5px;
+            border-radius:0 0 5px 5px; overflow-y:visible; min-height:40px;
+        }
+        .col-player-card {
+            position:relative;
+            height:44px;
+            border-radius:4px;
+            overflow:visible;
+            cursor:pointer;
+            flex-shrink:0;
+            transition:filter 0.15s;
+        }
+        .col-player-card:hover { filter:brightness(1.05); }
+        .col-card-bg { position:absolute; inset:0; border-radius:4px; overflow:hidden; }
+        .col-card-bg svg { width:100%; height:100%; position:absolute; inset:0; }
+        .col-card-content {
+            position:absolute; inset:0;
+            display:flex; align-items:center;
+            gap:6px; padding:0 8px; z-index:2;
+            overflow:hidden;
+        }
+        .col-rank {
+            font-size:11px;
+            color:#fff !important;
+            width:18px; flex-shrink:0; text-align:right;
+        }
+        .col-name {
+            font-size:13px; font-weight:600;
+            white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+        }
+        #scene-player {
+            display:none; position:fixed; inset:0;
+            background:rgba(0,0,0,0.92); z-index:100;
+            align-items:center; justify-content:center;
+        }
+        #scene-player.open { display:flex; }
+        .detail-box {
+            background:#141414; border:1px solid #222; border-radius:12px;
+            width:700px; min-height:360px; position:relative; overflow:hidden; display:flex;
+        }
+        .detail-left {
+            width:170px; flex-shrink:0; position:relative;
+            display:flex; align-items:center; justify-content:center;
+            overflow:visible; min-height:360px;
+        }
+        .detail-left svg { position:absolute; inset:0; width:100%; height:100%; }
+        .detail-avatar-placeholder { font-size:56px; opacity:0.2; position:relative; z-index:2; }
+        .detail-right {
+            flex:1; padding:28px 28px 24px;
+            display:flex; flex-direction:column; gap:12px; overflow-y:auto;
+        }
+        .detail-name { font-size:24px; font-weight:900; }
+        .detail-pos  { font-size:12px; margin-top:10px; opacity:0.5; }
+        .detail-tiers { display:flex; flex-wrap:wrap; gap:10px; margin-top:4px; }
+        .detail-tier-item { display:flex; flex-direction:column; align-items:center; gap:4px; }
+        .detail-style-lbl { font-size:10px; opacity:0.5; }
+        .close-btn {
+            position:absolute; top:12px; right:14px;
+            background:none; border:none; color:#fff; font-size:18px;
+            cursor:pointer; z-index:10; transition:color 0.1s;
+            text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+        }
+        .close-btn:hover { color:#fff; filter:brightness(1.5); }
+        #loading-screen {
+            position:fixed; inset:0; background:#0d0d0d;
+            display:flex; flex-direction:column;
+            align-items:center; justify-content:center;
+            z-index:999; gap:16px;
+        }
+        #loading-screen.hidden { display:none; }
+        #loading-bar-wrap { width:260px; height:4px; background:#1e1e1e; border-radius:2px; overflow:hidden; }
+        #loading-bar { height:100%; width:0%; background:#7c3aed; transition:width 0.2s; }
+        #loading-label { font-size:13px; }
+.news-list {
+    padding:16px 40px;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+}
+.news-box {
+    background:#141414;
+    border:1px solid #1e1e1e;
+    border-radius:8px;
+    padding:18px 22px;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+}
+.news-date {
+    font-size:10px;
+    color:#444;
+    letter-spacing:1px;
+}
+.news-title {
+    font-size:16px;
+    font-weight:700;
+    color:#fff;
+}
+.news-body {
+    font-size:13px;
+    color:#aaa;
+    line-height:1.6;
+}
+.tiertest-main {
+    display:flex;
+    gap:16px;
+    align-items:stretch;
+}
+.tiertest-players {
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    flex-shrink:0;
+    justify-content:space-between;
+}
+.tiertest-player {
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:2px;
+    position:relative;
+}
+.tiertest-player-name {
+    font-size:11px;
+    color:#fff;
+    white-space:nowrap;
+}
+.tiertest-player-img {
+    position:relative;
+    width:96px;
+    height:96px;
+    overflow:visible;
+}
+.tiertest-player-img img {
+    position:absolute;
+    left:-103px;
+    top:-97px;
+    width:300px;
+    height:300px;
+    pointer-events:none;
+}
+.tiertest-result {
+    font-size:18px;
+    font-weight:900;
+    font-family:'Jersey 15', sans-serif;
+    position:absolute;
+    right:-8px;
+    top:0;
+}
+.tiertest-result.W { color:#4caf50; text-shadow:-1px -1px 0 #000,1px -1px 0 #000,-1px 1px 0 #000,1px 1px 0 #000; }
+.tiertest-result.L { color:#f44336; text-shadow:-1px -1px 0 #000,1px -1px 0 #000,-1px 1px 0 #000,1px 1px 0 #000; }
+.tiertest-result.D { color:#aaa; text-shadow:-1px -1px 0 #000,1px -1px 0 #000,-1px 1px 0 #000,1px 1px 0 #000; }
+.tiertest-styles {
+    display:flex;
+    flex-direction:row;
+    gap:16px;
+    align-items:stretch;
+}
+.tiertest-style-row {
+    display:flex;
+    align-items:center;
+    gap:8px;
+}
+.tiertest-writeup {
+    font-size:13px;
+    color:#aaa;
+    line-height:1.6;
+    border-top:1px solid #1e1e1e;
+    padding-top:12px;
+    margin-top:4px;
+}
+    </style>
+</head>
+<body>
+
+<div id="loading-screen">
+    <div style="font-size:14px;">Loading player skins...</div>
+    <div id="loading-bar-wrap"><div id="loading-bar"></div></div>
+    <div id="loading-label"></div>
+</div>
+
+<div class="tabs" id="tabs"></div>
+<div id="page-all"><div class="player-list" id="list-all"></div></div>
+<div id="page-news" style="display:none; flex:1; flex-direction:column; overflow-y:auto; overflow-x:hidden;">
+    <div class="news-list" id="list-news"></div>
+</div>
+<div id="pages-styles"></div>
+
+<div id="scene-player">
+    <div class="detail-box">
+        <button class="close-btn" onclick="closeDetail()">✕</button>
+        <div class="detail-left" id="detail-left">
+            <svg viewBox="0 0 170 360" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+                <rect width="170" height="360" fill="#0f0f0f"/>
+                <polygon id="detail-quad" points="0,0 170,0 170,360 0,360" fill="#1e1e1e" opacity="0.7"/>
+            </svg>
+        </div>
+        <div class="detail-right">
+            <div>
+                <div class="detail-name" id="detail-name"></div>
+                <div class="detail-pos"  id="detail-pos"></div>
+            </div>
+            <div class="detail-tiers" id="detail-tiers"></div>
+        </div>
+    </div>
+</div>
+
+<canvas id="skin-canvas" width="1600" height="1600" style="display:none;"></canvas>
+
+<script>
+
+var news = [
+    {
+        type: "tiertest",
+        date: "2026-05-25",
+        title: "Tier Test",
+        styles: ["mace","sword","sword","sword","crystal"],
+        playerA: { name:"ASBackup",  results:["W","L","L","L","D"] },
+        playerB: { name:"SpittFire", results:["L","W","W","W","D"] },
+        writeup: "This was a masterclass in ragebaiting by SpittFire. ASBackup won the mace match after killing an AFK SpittFire who left MID-MATCH, SpittFire, naturally, won the sword matches, then SpittFire, for 25 MINUTES, ran in a crystal match forcing a draw on time."
+    },
+    {
+        type: "tiertest",
+        date: "2026-05-19",
+        title: "Tier Test",
+        styles: ["smp","sword","sword","sword","mace","mace","mace","mace"],
+        playerA: { name:"ASBackup",  results:["L","L","L","L","W","W","L","L"] },
+        playerB: { name:"SpittFire", results:["W","W","W","W","L","L","W","W"] },
+        writeup: "A choke from ASBackup in smp, two suprise wins for SpittFire in mace. SpittFire mace promoted to HT2."
+    },
+    {
+        type: "tiertest",
+        date: "2026-05-13",
+        title: "Tier Test",
+        styles: ["cart","crystal","crystal","sword","sword","sword","smp","smp","pot","mace","mace"],
+        playerA: { name:"ASBackup",  results:["W","W","W","L","L","L","L","L","W","W","L"] },
+        playerB: { name:"SpittFire", results:["L","L","L","W","W","W","W","W","L","L","W"] },
+        writeup: "Outside of two shock comebacks by SpittFire in SMP, basically to be expected results. [NTS Update this]"
+    },
+    {
+        type: "tiertest",
+        date: "2026-05-07",
+        title: "Tier Test",
+        styles: ["sword","crystal"],
+        playerA: { name:"ASBackup",  results:["W","W"] },
+        playerB: { name:"EmersonJenner", results:["L","L"] },
+        writeup: "Yeah, it wasn't even close."
+    },
+    {
+        type: "tiertest",
+        date: "2026-05-07",
+        title: "Tier Test",
+        styles: ["pot","crystal","axe","axe","axe","mace","smp","cart","crystal","mace"],
+        playerA: { name:"ASBackup",  results:["L","L","L","L","L","W","L","W","W","W"] },
+        playerB: { name:"4Futurz", results:["W","W","W","W","W","L","W","L","L","L"] },
+        writeup: "All matches but the last three took place on one server, where every match was extremely close, but 4Futurz came out on top. There were two hack clients found on his account, and the recordings happen to have some... interesting moments from his perspective, but all's fair. On the second server, ASBackup came back winning all three games. Recordings for these three are suspiciously missing, but 4Futurz is witness to the three games. 4Futurz was promoted everywhere exept cart and mace."
+    },
+    {
+        type: "tiertest",
+        date: "2026-05-05",
+        title: "Tier Test",
+        styles: ["crystal","axe","mace","smp","pot"],
+        playerA: { name:"ASBackup",  results:["W","W","W","W","D"] },
+        playerB: { name:"SpittFire", results:["L","L","L","L","D"] },
+        writeup: "After some extremely long a tight matches, ASBackup's sword, pot, and SMP have been promoted and SpittFire's mace and pot have been promoted and crystal demoted."
+    },
+    {
+        type: "text",
+        date: "2026-05-05",
+        title: "New Style!",
+        body: "MineCart PVP has been added to MCTiers! Testing includes default and exbo cart pvp."
+    }
+];
+
+// ============================================================
+// ASSET URLS
+// ============================================================
+var ICON_URLS = {
+    crystal: "https://www.khanacademy.org/computer-programming/assets-wip/6435356132360192/6265364849999872.png",
+    sword:   "https://www.khanacademy.org/computer-programming/assets-wip/6435356132360192/5496788505444352.png",
+    axe:     "https://www.khanacademy.org/computer-programming/assets-wip/6435356132360192/4589745837817856.png",
+    pot:     "https://www.khanacademy.org/computer-programming/assets-wip/6435356132360192/6733981685235712.png",
+    smp:     "https://www.khanacademy.org/computer-programming/assets-wip/6435356132360192/5941607732199424.png",
+    mace:    "https://www.khanacademy.org/computer-programming/assets-wip/6435356132360192/5155319747821568.png",
+    cart:    "https://www.khanacademy.org/computer-programming/assets-wip/6435356132360192/4823883614371840.png",
+};
+var RING_URLS = {
+    gold:   "https://www.khanacademy.org/computer-programming/assets-wip/6435356132360192/4922574698299392.png",
+    silver: "https://www.khanacademy.org/computer-programming/assets-wip/6435356132360192/5654721532903424.png",
+    bronze: "https://www.khanacademy.org/computer-programming/assets-wip/6435356132360192/4534535442513920.png",
+    grey:   "https://www.khanacademy.org/computer-programming/assets-wip/6435356132360192/5304779543003136.png"
+};
+
+// ============================================================
+// STYLES
+// ============================================================
+var styles = [
+    { key:"crystal", label:"Crystal", iconUrl: ICON_URLS.crystal },
+    { key:"sword",   label:"Sword",   iconUrl: ICON_URLS.sword   },
+    { key:"axe",     label:"Axe",     iconUrl: ICON_URLS.axe     },
+    { key:"pot",     label:"Pot",     iconUrl: ICON_URLS.pot     },
+    { key:"smp",     label:"SMP",     iconUrl: ICON_URLS.smp     },
+    { key:"mace",    label:"Mace",    iconUrl: ICON_URLS.mace    },
+    { key:"cart",    label:"Cart",    iconUrl: ICON_URLS.cart    }
+];
+
+var tierOrder  = ["HT1","HT2","HT3","LT1","LT2","LT3","LT4","LT5"];
+var tierColors = {
+    "HT1": { bg:"#130f00", stroke:"#FFD700", text:"#FFD700", ring:"gold"   },
+    "HT2": { bg:"#111",    stroke:"#C0C0C0", text:"#C0C0C0", ring:"silver" },
+    "HT3": { bg:"#100800", stroke:"#CD7F32", text:"#CD7F32", ring:"bronze" },
+    "LT1": { bg:"#0d0d0d", stroke:"#383838", text:"#666",    ring:"grey"   },
+    "LT2": { bg:"#0d0d0d", stroke:"#343434", text:"#606060", ring:"grey"   },
+    "LT3": { bg:"#0d0d0d", stroke:"#303030", text:"#5a5a5a", ring:"grey"   },
+    "LT4": { bg:"#0d0d0d", stroke:"#2c2c2c", text:"#545454", ring:"grey"   },
+    "LT5": { bg:"#0d0d0d", stroke:"#282828", text:"#4e4e4e", ring:"grey"   }
+};
+var rowColors = [
+    { bg:"#202020", quad:"#FFD700" },
+    { bg:"#202020", quad:"#C0C0C0" },
+    { bg:"#202020", quad:"#CD7F32" },
+    { bg:"#202020", quad:"#606060" }
+];
+
+// ============================================================
+// PLAYERS
+// ============================================================
+var players = [
+    {
+        name: "ASBackup",
+        tiers: { crystal:"HT1", sword:"HT3", axe:"HT3", pot:"HT2", smp:"HT2", mace:"HT1", cart:"HT3" },
+        bannerUrl: "file:///C:/Users/silas.boram28/Downloads/ASBackup.png",
+        skinPalette: {
+            ' ': [255, 255, 255, 0],
+            'a': [140,140,140,255], 'b': [153,153,153,255], 'c': [230,230,230,255],
+            'd': [128,128,128,255], 'e': [179,179,179,255], 'f': [89, 89, 89, 255],
+            'g': [64, 64, 64, 255], 'h': [115,115,115,255], 'i': [255,255,255,255],
+            'j': [110,110,110,255], 'k': [102,102,102,255], 'l': [77, 77, 77, 255],
+            'm': [166,166,166,255]
+        },
+        skinBitmap: [
+'        aaaaaaabcccccccc                mmmmmmm',
+'        aabbbbaacccccccc                mmmmmmmm',
+'        abbbbbbacccccccc                 m mmmmm',
+'        abbbbbbacccccccc                     mmm',
+'        aabbbbaacccccccc                 m   mmm',
+'        aabbbbbacccccccc                mmm mmmm',
+'        aaaaabbbcccccccc                mmmmmmm',
+'        aaaaaaabcccccccc                 mmmmmm',
+'baaaaaaaaaaaaaabbbaaaabbbaaaaabbmmm  mm   mmmm   mmmmm   mmmmmmm',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaammmmmmmmmmmmmmmmmmmmmmmmmmmmmm m',
+'ddddddddddddaaadddddddddddddddddmmmmmmmmmmm   mm mmmmmmmmmmmm mm',
+'dddddddddddddddddddddddddddddddd   mm               mm     mm',
+'cccddddddddddddddddddccccccccccc',
+'ccccccccccccceeccccccccccccccccc',
+'cccccccccccccecccccccccccccccccc',
+'cccccccccccccccccccccccccccccccc',
+'    ffffgggg        hhhhhhhhhhhhhhhh        hhhhiiii',
+'    ffffgggg        hhhhhhhhhhhhhhhh        hhhhiiii',
+'    ffffgggg        hhhhhhhhhhhhhhhh        hhhhiiii',
+'    ffffgggg        hhhhhhhhhhhhhhhh        hhhhiiii',
+'fhhfffffffffffffhhhhhhhgghhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh',
+'ffffffffffffffffhhhhhhhjghhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh',
+'ffffffffffffffffhhhhhhhgghhhhhhhhhhhhhhhiiiiiiiiiiiiiiii',
+'ffffffffffffffffhhhhhhhgghhhhhhhhhhhhhhhiiiiiiiiiiiiiiii',
+'ffffffffffffffffhhhhhhhgghhhhhhhhhhhhhhhiiiiiiiiiiiiiiii',
+'ffffffffffffffffhhhhhhhgghhhhhhhhhhhhhhhiiiiiiiiiiiiiiii',
+'ffffffffffffffffhhhhhhhgghhhhhhhhhhhhhhhiiiiiiiiiiiiiiii',
+'ffffffffffffffffhhhhhhhgghhhhhhhhhhhhhhhiiiiiiiiiiiiiiii',
+'ffffffffffffffffhhhhhhhgghhhhhhhhhhhhhhhiiiiiiiiiiiiiiii',
+'ffffffffffffffffhhhhhhhgghhhhhhhhhhhhhhhiiiiiiiiiiiiiiii',
+'ffffffffffffffffhhhhhhhjghhhhhhhhhhhhhhhiiiiiiiiiiiiiiii',
+'gggggggggggggggglhhhhllkklhhhhhllllllllliiiiiiiiiiiiiiii',
+'                    mm    mm                mmmm',
+'                    m      m                mmmm',
+'                    m      m                mmmm',
+'                    mm    mm                mmmm',
+'                mmmmmm    mmmmmmmmmmmmmmmmmmmmmmmmmmmmmm',
+'                mmmmmm    mmmmmmmmmmmmmmmmmmmmmmmmmmmmmm',
+' ll          ll mmmmmm    mmmmmmmmmmmmmmmmmmmmmmmmmmmmmm',
+' ll          ll mmmmmmm  mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm',
+' ll          ll mmmmmmm  mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm',
+' ll          ll mmmmmaammmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm',
+'                mmmmmmmmbmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm',
+'                mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm',
+'                mmmmmmmmbmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm',
+'                mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm',
+'                mmmmmmmmbmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm',
+'                mmmmmmmmmmmmmmmmmmmmmmmm',
+'                    ffffgggg        hhhhiiii        mmmm',
+'                    ffffgggg        hhhhiiii        mmmm',
+'                    ffffgggg        hhhhiiii        mmmm',
+'                    ffffgggg        hhhhiiii        mmmm',
+'                fffffffhhhffffffhhhhhhhhhhhhhhhhmmmmmmmmmmmmmmmm',
+'                ffffffffffffffffhhhhhhhhhhhhhhhhmmmmmmmmmmmmmmmm',
+'         ll  ll ffffffffffffffffiiiiiiiiiiiiiiiimmmmmmmmmmmmmmmm',
+'         ll  ll ffffffffffffffffiiiiiiiiiiiiiiiimmmmmmmmmmmmmmmm',
+'         ll  ll ffffffffffffffffiiiiiiiiiiiiiiiimmmmmmmmmmmmmmmm',
+'         ll  ll ffffffffffffffffiiiiiiiiiiiiiiiimmmmmmmmmmmmmmmm',
+'                ffffffffffffffffiiiiiiiiiiiiiiiimmmmmmmmmmmmmmmm',
+'                ffffffffffffffffiiiiiiiiiiiiiiiimmmmmmmmmmmmmmmm',
+'                ffffffffffffffffiiiiiiiiiiiiiiiimmmmmmmmmmmmmmmm',
+'                ffffffffffffffffiiiiiiiiiiiiiiiimmmmmmmmmmmmmmmm',
+'                ffffffffffffffffiiiiiiiiiiiiiiiimmmmmmmmmmmmmmmm',
+'                ggggggggggggggggiiiiiiiiiiiiiiii',
+        ]
+    },
+    {
+        name: "SpittFire",
+        tiers: { crystal:"LT3", sword:"HT1", axe:"HT2", pot:"HT2", smp:"HT3", mace:"HT2", cart:"LT1" },
+        skinPalette: {
+	    ' ' : [255, 255, 255, 0],
+	    'a' : [45, 81, 111, 255], 'b' : [37, 69, 96, 255], 'c' : [13, 43, 69, 255],
+	    'd' : [188, 163, 131, 255], 'e' : [211, 190, 163, 255], 'f' : [254, 236, 214, 255],
+ 	    'g' : [174, 149, 117, 255], 'h' : [78, 68, 54, 255], 'i' : [22, 38, 51, 255],
+   	    'j' : [20, 31, 40, 255], 'k' : [32, 55, 74, 255], 'l' : [39, 36, 32, 255], 'm' : [66, 51, 32, 255], 'n' : [231, 175, 87, 255], 'o' : [255, 209, 137, 255]
+        },
+        skinBitmap: [
+'        abccccbadeeeeeed                   bb',
+'        bbccccbbeeeeeeee                   bb',
+'        cccccccceeddddee                cccbbccc',
+'        ccccccccfeddddef                bbbccbbb',
+'        ccccccccfeddddef                bbbccbbb',
+'        cccccccceeddddee                cccbbccc',
+'        bbccccbbeeeeeeee                  cbbc',
+'        abccccbadeeeeeed                  cbbc',
+'abccccbaabccccbaabccccbaabccccba  cbbc    cbbc    cbbc     bb',
+'bbccccbbbbeeeebbbbccccbbbbccccbb  cbbc            cbbc     cc',
+'cccccccccccbbcccccccccccccccccccc cbbc            cbbc ccccccccc',
+'deeeeeeddeeeeeeddeeeeeeddeeeeded',
+'fffefffffhhffhhfffffefffffeffeff',
+'ffffgefffffggfffffegffffffffefff',
+'efeffffffhhhhhhffffffffeeffffefe',
+'deeffeeddeeeeeeddeeffeeddeeeeeed',
+'    iiijiiij        kbbbbbbkkkkkkkkk        bbkedf',
+'    iiijiiij        kbbmmbbkkkkkkkkk        bbkfff',
+'    iiijiiij        kbmffmbkkkkkkkkk        bbkedf',
+'    iiijiiij        kbmffmbkkkkkkkkk        bbkfff',
+'iiiiiiijjjjjjiiikkkkkbmffmbkkkkkkbbbbbbkbbbbbbkkkkkkbb',
+'iiiiiijjjjjjjjiikkkkkbmbbmbkkkkkkbbbbbbkbaabbbkkkkkkbb',
+'iiiiiiijjjjjjiiikkkkkbmbmbbkkkkkkbaaaabkbaabbbkkkkkkbb',
+'iiiiiiijjjjjjiiikkkkkbbmbbbkkkkkkbbbbbbkbbbbbkkkkkkkkb',
+'iiiiiiijjjjjjiiikkkkkbbnbbbkkkkkkbbaabbkbbbbbbkkkkkkbb',
+'iiiiiijjjjjjjjiikkkkkbbbbbbkkkkkkbbbbbbkbbbbbbkkkkkkbb',
+'iiiiiiijjjjjjiiikkkkkbaaaabkkkkkkbbbbbbkegegeeggggggee',
+'iiiiiiijjjjjjiiikkkkkbbkkbbkkkkkkbbkkbbkfegeffeeeeeeff',
+'bbbbbffkkkkkkbbbkkkkkbbbbbbkkkkkkbbbbbbkegfeffffffffff',
+'ffffflleeeeeefffkkkkkbkkkkbkkkkkkbkkkkbkffffffffffffff',
+'ffffflleeeeeefffkkkkkbbbbbbkkkkkkbbbbbbkefefegffffffge',
+'fffffffeeeeeefffkkkkkkkkkkkkkkkkkkkkkkkkefeffgffffffgf',
+'        fffe',
+'        fffe',
+'        fffe',
+'        fffe',
+'',
+'',
+'iiiiiii      iii',
+'iiiiiii      iii',
+'iiiiiii      iii       o                baabaa      ab',
+'                                        bbbbbb      bb',
+'iiiiiii      iii',
+'iiiiiii      iii',
+'     ff',
+'fffff  eeeeeefff',
+'     ff',
+'fffffffeeeeeefff',
+'        efff        jiiijiii        kbbfde',
+'        efff        jiiijiii        kbbfff',
+'        efff        jiiijiii        kbbfde',
+'        efff        jiiijiii        kbbfff',
+'                jjjjjiiiiiiiiiijkkkkkbbbbbbbbk',
+'                jjjjjjiiiiiiiijjkkkkkbbbaabbbk',
+'     iiiiiiiiii jjjjjiiiiiiiiiijkkkkkbbbaabbbk',
+'     iiiiiiiiii jjjjjiiiiiiiiiijkkkkkkbbbbbbkk',
+'     iiiiiiiiii jjjjjiiiiiiiiiijkkkkkbbbbbbbbk       aabaabba',
+'                jjjjjjiiiiiiiijjkkkkkbbbbbbbbk       bbbbbbbb',
+'     iiiiiiiiii jjjjjiiiiiiiiiijgggggeegegeeeg',
+'     iiiiiiiiii jjjjjiiiiiiiiiijeeeeeffegefffe',
+'     ff         kkkkkffbbbbbbbbkfffffffefgefff',
+'eeeee  ffffffffeeeeeellffffffffeffffffffffffff',
+'     ff         eeeeellffffffffefffffgefefeegf',
+'eeeeeffffffffffeeeeeeffffffffffefffffgffefefgf',
+        ]
+    },
+    {
+        name: "Snoopy",
+        tiers: { crystal:"LT5", sword:"LT4", axe:"LT4", pot:"LT4", smp:"LT5", mace:"LT5", cart:"LT5" },
+        skinPalette: {
+        ' ' : [255, 0, 0, 0],
+        'a' : [251, 237, 145, 255], 'b' : [223, 150, 88, 255], 'c' : [246, 211, 141, 255],
+        'd' : [223, 150, 88, 255], 'e' : [108, 21, 46, 255], 'f' : [255, 255, 255, 255],
+        'g' : [67, 103, 83, 255], 'h' : [119, 67, 32, 255], 'i' : [12, 7, 23, 255],
+        'j' : [72, 35, 35, 255], 'k' : [103, 45, 67, 255], 'l' : [235, 191, 206, 255],
+        'm' : [142, 55, 55, 255], 'n' : [40, 19, 43, 255], 'o' : [145, 96, 144, 255]
+        },
+        skinBitmap: [
+        '        aaaaaaaabbbbbbbb',
+        '        aaaaaaaabbbbbbbb',
+        '        aaaaaaaabbbbbbbb',
+        '        aaaaaaaabbbbbbbb',
+        '        aaaaaaaabbbbbbbb',
+        '        aaaaaaaabbbbbbbb',
+        '        aaaaaaaabbbbbbbb',
+        '        aaaaaaaabbbbbbbb',
+        'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+        'aaaaaaaaaaaaaccaaaaaaaaaaaaaaaaa',
+        'cccccaaaaaaadddaaaaccccccaaeeaac',
+        'cccddaaaaddddddaaaaddccccceaaecc',
+        'cccddaaaafgddgfaaaaddcccccaaaacc',
+        'ccdddaaaaddddddaaaadddccccaaaacc',
+        'ddddddaaaddhhddaaadddddddccaaccd',
+        'dddddddaaaddddaaaddddddddddddddd',
+        '    iiiijjjj        ooooooooiiiiiiii        nnnndddd',
+        '    iiiijjjj        oddddddoiiiiiiii        nnnndddd',
+        '    iiiijjjj        oddddddoiiiiiiii        nnnndddd',
+        '    iikkjjjj        noddddoniiiiiiii        nnnndddd',
+        'iiiiiikkiiiiiiiinnnnnonddnonnnnnnnnnnnnnnnnnnnnnnnnnnnnn',
+        'iiiiiikkiiiiiiiinnnnnoniinonnnnnnnnnnnnnnnnnnnnnnnnnnnnn',
+        'iiiiiikiiiiiiiiinnnnnoniinonnnnnnnoooonnnnnnnnnnnnnnnnnn',
+        'iiiiiiiiiiiiiiiinnnnnoniinonnnnnnnonnonnnnnnnnnnnnnnnnnn',
+        'iiiiiiiiiiiiiiiinnnnnoniinonnnnnnnonnonnnnnnnnnnnnnnnnnn',
+        'iiiiiiiiiiiiiiiinnnnnoniinonnnnnnnoooonnoooooooooooooooo',
+        'iiiiiiiiiiiiiiiinnnnnoniinonnnnnnnnnnnnnoooooooooooooooo',
+        'ddddddddddddddddnnnnnoniinonnnnnnnnnnnnnnnnnnnnnnnnnnnnn',
+        'ddddddddddddddddnnnnnonkknonnnnnnnnnnnnndddddddddddddddd',
+        'llmmmmmmmmlllllloooooonkinoooooooooooooodddddddddddddddd',
+        'lmllllmlllmllllloooooonkinoooooooooooooodddddddddddddddd',
+        'jjjjjjjjjjjjjjjjnnnnnnnkinnnnnnnnnnnnnnndddddddddddddddd',
+        '',
+        '',
+        '',
+        '',
+        '',
+        '',
+        '',
+        '',
+        '',
+        '',
+        '',
+        '',
+        '',
+        '',
+        '',
+        '',
+        
+        '               iiiiiiiijjjjiiii    nnnndddd',
+        '               iiiiiiiijjjjiiii    nnnndddd',
+        '               iiiiiiiijjjjiiii    nnnndddd',
+        '               iiiiiiiijjjjiiii    nnnndddd',
+        '               iiiiiiiiiiiiiiiinnnnnnnnnnnnnnnn',
+        '               iiiiiiiiiiiiiiiinnnnnnnnnnnnnnnn',
+        '               iiiiiiiiiiiiiiiinnnnnnnnnnnnnnnn',
+        '               iiiiiiiiiiiiiiiinnnnnnnnnnnnnnnn',
+        '               iiiiiiiiiiiiiiiinnnnnnnnnnnnnnnn',
+        '               iiiiiiiiiiiiiiiioooooooooooooooo',
+        '               iiiiiiiiiiiiiiiioooooooooooooooo',
+        '               ddddddddddddddddnnnnnnnnnnnnnnnn',
+        '               dddddddddddddddddddddddddddddddd',
+        '               llmmmmmmmmlllllldddddddddddddddd',
+        '               lmlllmllllmllllldddddddddddddddd',
+        '               jjjjjjjjjjjjjjjjdddddddddddddddd'
+        ]
+    },
+    {
+        name: "TemptingAnt2136",
+        tiers: { crystal:"LT5", sword:"LT3", axe:"LT3", pot:"LT3", smp:"LT4", mace:"LT4", cart:"LT5" },
+        skinPalette: {
+            ' ' : [255, 255, 255, 0],
+            'a' : [74, 50, 25, 255], 'b' : [183, 131, 107, 255], 'c' : [70, 58, 165, 255],
+            'd' : [7, 188, 198, 255], 'e' : [63, 63, 63, 255], 'f' : [255, 255, 255, 255],
+            'g' : [121, 77, 60, 255], 'h' : [132, 79, 64, 255]
+        },
+        skinBitmap: [
+'        aaaaaaaabbaaaabb',
+'        aaaaaaaabbbbbbbb',
+'        aaaaaaaabbbbbbbb',
+'        aaaaaaaabbbbbbbb',
+'        aaaaaaaabbbbbbbb',
+'        aaaaaaaabbbbbbbb',
+'        aaaaaaaaaaaaaaaa',
+'        aaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaabbbbbbaaaaaaaaaaaaaaaaa',
+'aaaaaaaabaabbaabaaaaaaaaaaaaaaaa',
+'aaaaabbabfcbbcfbabbaaaaaaaaaaaaa',
+'aaaaaaabbbbggbbbbaaaaaaaaaaaaaaa',
+'aaabbaaaabahhabaaaabbaaaaaaaaaaa',
+'bbbbbbaaaaaaaaaaaabbbbbbbbaaaabb',
+'    cccceeee        ddddddddcccdcccc        ddddbbbb',
+'    cccceeee        ddddddddcccccccc        ddddbbbb',
+'    cccceeee        ddbbbbddcccccccc        ddddbbbb',
+'    cccceeee        ddbbbbddccccccdd        ddddbbbb',
+'ccccccccccccccccddddddbbbbdddddddddddddddddddddddddddddd',
+'ccccccccccccccccdddddddbbddddddddddddddddddddddddddddddd',
+'ccccccccccccccccdddddddddddddddddddddddddddddddddddddddd',
+'ccccccccccccccccdddddddddddddddddddddddddddddddddddddddd',
+'ccccccccccccccccddddddddddddddddddddddddbbbbbbbbbbbbbbbb',
+'ccccccccccccccccddddddddddddddddddddddddbbbbbbbbbbbbbbbb',
+'ccccccccccccccccddddddddddddddddddddddddbbbbbbbbbbbbbbbb',
+'ccccccccccccccccddddddddddddddddddddddddbbbbbbbbbbbbbbbb',
+'ccccceecccccccccddddddddddddddddddddddddbbbbbbbbbbbbbbbb',
+'eeeeeeeeeeeeeeeeddddddddddddddddddddddddbbbbbbbbbbbbbbbb',
+'eeeeeeeeeeeeeeeecccccccccdddddcccdddddccbbbbbbbbbbbbbbbb',
+'eeeeeeeeeeeeeeeeccccccccccdddcccccccdcccbbbbbbbbbbbbbbbb',
+'',
+'',
+'',
+'',
+'',
+'',
+'',
+'',
+'',
+'',
+'',
+'',
+'',
+'',
+'',
+'',
+'                    cccceeee        ddddbbbb',
+'                    cccceeee        ddddbbbb',
+'                    cccceeee        ddddbbbb',
+'                    cccceeee        ddddbbbb',
+'                ccccccccccccccccdddddddddddddddd',
+'                ccccccccccccccccdddddddddddddddd',
+'                ccccccccccccccccdddddddddddddddd',
+'                ccccccccccccccccdddddddddddddddd',
+'                ccccccccccccccccbbbbbbbbbbbbbbbb',
+'                ccccccccccccccccbbbbbbbbbbbbbbbb',
+'                ccccccccccccccccbbbbbbbbbbbbbbbb',
+'                ccccccccccccccccbbbbbbbbbbbbbbbb',
+'                ccccceecccccccccbbbbbbbbbbbbbbbb',
+'                eeeeeeeeeeeeeeeebbbbbbbbbbbbbbbb',
+'                eeeeeeeeeeeeeeeebbbbbbbbbbbbbbbb',
+'                eeeeeeeeeeeeeeeebbbbbbbbbbbbbbbb'
+        ]
+    },
+    {
+        name: "MRChevyGuys",
+        tiers: { crystal:"LT5", sword:"LT3", axe:"LT3", pot:"LT3", smp:"LT4", mace:"LT4", cart:"LT5" },
+        skinPalette: {
+            ' ' : [255, 255, 255, 0],
+            'a' : [74, 50, 25, 255], 'b' : [183, 131, 107, 255], 'c' : [70, 58, 165, 255],
+            'd' : [7, 188, 198, 255], 'e' : [63, 63, 63, 255], 'f' : [255, 255, 255, 255],
+            'g' : [121, 77, 60, 255], 'h' : [132, 79, 64, 255]
+        },
+        skinBitmap: [
+'        aaaaaaaabbaaaabb',
+'        aaaaaaaabbbbbbbb',
+'        aaaaaaaabbbbbbbb',
+'        aaaaaaaabbbbbbbb',
+'        aaaaaaaabbbbbbbb',
+'        aaaaaaaabbbbbbbb',
+'        aaaaaaaaaaaaaaaa',
+'        aaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaabbbbbbaaaaaaaaaaaaaaaaa',
+'aaaaaaaabaabbaabaaaaaaaaaaaaaaaa',
+'aaaaabbabfcbbcfbabbaaaaaaaaaaaaa',
+'aaaaaaabbbbggbbbbaaaaaaaaaaaaaaa',
+'aaabbaaaabahhabaaaabbaaaaaaaaaaa',
+'bbbbbbaaaaaaaaaaaabbbbbbbbaaaabb',
+'    cccceeee        ddddddddcccdcccc        ddddbbbb',
+'    cccceeee        ddddddddcccccccc        ddddbbbb',
+'    cccceeee        ddbbbbddcccccccc        ddddbbbb',
+'    cccceeee        ddbbbbddccccccdd        ddddbbbb',
+'ccccccccccccccccddddddbbbbdddddddddddddddddddddddddddddd',
+'ccccccccccccccccdddddddbbddddddddddddddddddddddddddddddd',
+'ccccccccccccccccdddddddddddddddddddddddddddddddddddddddd',
+'ccccccccccccccccdddddddddddddddddddddddddddddddddddddddd',
+'ccccccccccccccccddddddddddddddddddddddddbbbbbbbbbbbbbbbb',
+'ccccccccccccccccddddddddddddddddddddddddbbbbbbbbbbbbbbbb',
+'ccccccccccccccccddddddddddddddddddddddddbbbbbbbbbbbbbbbb',
+'ccccccccccccccccddddddddddddddddddddddddbbbbbbbbbbbbbbbb',
+'ccccceecccccccccddddddddddddddddddddddddbbbbbbbbbbbbbbbb',
+'eeeeeeeeeeeeeeeeddddddddddddddddddddddddbbbbbbbbbbbbbbbb',
+'eeeeeeeeeeeeeeeecccccccccdddddcccdddddccbbbbbbbbbbbbbbbb',
+'eeeeeeeeeeeeeeeeccccccccccdddcccccccdcccbbbbbbbbbbbbbbbb',
+'',
+'',
+'',
+'',
+'',
+'',
+'',
+'',
+'',
+'',
+'',
+'',
+'',
+'',
+'',
+'',
+'                    cccceeee        ddddbbbb',
+'                    cccceeee        ddddbbbb',
+'                    cccceeee        ddddbbbb',
+'                    cccceeee        ddddbbbb',
+'                ccccccccccccccccdddddddddddddddd',
+'                ccccccccccccccccdddddddddddddddd',
+'                ccccccccccccccccdddddddddddddddd',
+'                ccccccccccccccccdddddddddddddddd',
+'                ccccccccccccccccbbbbbbbbbbbbbbbb',
+'                ccccccccccccccccbbbbbbbbbbbbbbbb',
+'                ccccccccccccccccbbbbbbbbbbbbbbbb',
+'                ccccccccccccccccbbbbbbbbbbbbbbbb',
+'                ccccceecccccccccbbbbbbbbbbbbbbbb',
+'                eeeeeeeeeeeeeeeebbbbbbbbbbbbbbbb',
+'                eeeeeeeeeeeeeeeebbbbbbbbbbbbbbbb',
+'                eeeeeeeeeeeeeeeebbbbbbbbbbbbbbbb'
+        ]
+    },
+    {
+        name: "Dudadude111",
+        tiers: { crystal:"LT4", sword:"LT2", axe:"LT2", pot:"LT2", smp:"LT3", mace:"HT2", cart:"LT3" },
+        skinPalette: {
+            ' ' : [255, 255, 255, 0],
+            'a' : [74, 50, 25, 255], 'b' : [183, 131, 107, 255], 'c' : [70, 58, 165, 255],
+            'd' : [7, 188, 198, 255], 'e' : [63, 63, 63, 255], 'f' : [255, 255, 255, 255],
+            'g' : [121, 77, 60, 255], 'h' : [132, 79, 64, 255]
+        },
+        skinBitmap: [
+'        aaaaaaaabbaaaabb',
+'        aaaaaaaabbbbbbbb',
+'        aaaaaaaabbbbbbbb',
+'        aaaaaaaabbbbbbbb',
+'        aaaaaaaabbbbbbbb',
+'        aaaaaaaabbbbbbbb',
+'        aaaaaaaaaaaaaaaa',
+'        aaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaabbbbbbaaaaaaaaaaaaaaaaa',
+'aaaaaaaabaabbaabaaaaaaaaaaaaaaaa',
+'aaaaabbabfcbbcfbabbaaaaaaaaaaaaa',
+'aaaaaaabbbbggbbbbaaaaaaaaaaaaaaa',
+'aaabbaaaabahhabaaaabbaaaaaaaaaaa',
+'bbbbbbaaaaaaaaaaaabbbbbbbbaaaabb',
+'    cccceeee        ddddddddcccdcccc        ddddbbbb',
+'    cccceeee        ddddddddcccccccc        ddddbbbb',
+'    cccceeee        ddbbbbddcccccccc        ddddbbbb',
+'    cccceeee        ddbbbbddccccccdd        ddddbbbb',
+'ccccccccccccccccddddddbbbbdddddddddddddddddddddddddddddd',
+'ccccccccccccccccdddddddbbddddddddddddddddddddddddddddddd',
+'ccccccccccccccccdddddddddddddddddddddddddddddddddddddddd',
+'ccccccccccccccccdddddddddddddddddddddddddddddddddddddddd',
+'ccccccccccccccccddddddddddddddddddddddddbbbbbbbbbbbbbbbb',
+'ccccccccccccccccddddddddddddddddddddddddbbbbbbbbbbbbbbbb',
+'ccccccccccccccccddddddddddddddddddddddddbbbbbbbbbbbbbbbb',
+'ccccccccccccccccddddddddddddddddddddddddbbbbbbbbbbbbbbbb',
+'ccccceecccccccccddddddddddddddddddddddddbbbbbbbbbbbbbbbb',
+'eeeeeeeeeeeeeeeeddddddddddddddddddddddddbbbbbbbbbbbbbbbb',
+'eeeeeeeeeeeeeeeecccccccccdddddcccdddddccbbbbbbbbbbbbbbbb',
+'eeeeeeeeeeeeeeeeccccccccccdddcccccccdcccbbbbbbbbbbbbbbbb',
+'',
+'',
+'',
+'',
+'',
+'',
+'',
+'',
+'',
+'',
+'',
+'',
+'',
+'',
+'',
+'',
+'                    cccceeee        ddddbbbb',
+'                    cccceeee        ddddbbbb',
+'                    cccceeee        ddddbbbb',
+'                    cccceeee        ddddbbbb',
+'                ccccccccccccccccdddddddddddddddd',
+'                ccccccccccccccccdddddddddddddddd',
+'                ccccccccccccccccdddddddddddddddd',
+'                ccccccccccccccccdddddddddddddddd',
+'                ccccccccccccccccbbbbbbbbbbbbbbbb',
+'                ccccccccccccccccbbbbbbbbbbbbbbbb',
+'                ccccccccccccccccbbbbbbbbbbbbbbbb',
+'                ccccccccccccccccbbbbbbbbbbbbbbbb',
+'                ccccceecccccccccbbbbbbbbbbbbbbbb',
+'                eeeeeeeeeeeeeeeebbbbbbbbbbbbbbbb',
+'                eeeeeeeeeeeeeeeebbbbbbbbbbbbbbbb',
+'                eeeeeeeeeeeeeeeebbbbbbbbbbbbbbbb'
+        ]
+    },
+    {
+        name: "4Futurz",
+        tiers: { crystal:"HT1", sword:"LT1", axe:"HT2", pot:"HT3", smp:"HT2", mace:"LT3", cart:"LT3" },
+        skinPalette: {
+            ' ' : [255, 255, 255, 0],
+            'a' : [30, 30, 30, 255], 'b' : [255, 255, 255, 255]
+        },
+        skinBitmap: [
+'        aaaaaaaaaaaaaaaa',
+'        aaaaaaaaaaaaaaaa',
+'        aaaaaaaaaaaaaaaa',
+'        aaaaaaaaaaaaaaaa',
+'        aaaaaaaaaaaaaaaa',
+'        aaaaaaaaaaaaaaaa',
+'        aaaaaaaaaaaaaaaa',
+'        aaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaabbaabbaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'    aaaaaaaa        aaaaaaaaaaaaaaaa        aaaaaaaa',
+'    aaaaaaaa        aaaaaaaaaaaaaaaa        aaaaaaaa',
+'    aaaaaaaa        aaaaaaaaaaaaaaaa        aaaaaaaa',
+'    aaaaaaaa        aaaaaaaaaaaaaaaa        aaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'',
+'',
+'',
+'',
+'',
+'',
+'',
+'',
+'',
+'',
+'',
+'',
+'',
+'',
+'',
+'',
+'                    aaaaaaaa        aaaaaaaa',
+'                    aaaaaaaa        aaaaaaaa',
+'                    aaaaaaaa        aaaaaaaa',
+'                    aaaaaaaa        aaaaaaaa',
+'                aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'                aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'                aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'                aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'                aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'                aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'                aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'                aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'                aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'                aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'                aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'                aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+        ]
+    },
+    {
+        name: "Tubbo",
+        tiers: { crystal:"LT5", sword:"LT5", axe:"LT5", pot:"LT5", smp:"LT5", mace:"LT4", cart:"LT5" },
+        skinPalette: {
+            ' ' : [255, 255, 255, 0],
+            'a' : [190, 135, 110, 255],
+            'b' : [145, 95, 65, 255], 'c' : [60, 40, 35, 255], 'd' : [0, 145, 0, 255],
+            'e' : [255, 255, 255, 255], 'f' : [120, 65, 50, 255], 'g' : [76, 76, 76, 255],
+            'h' : [94, 66, 54, 255], 'i' : [115, 85, 75, 255], 'j' : [107, 107, 107, 255],
+        },
+        skinBitmap: [
+'        aaaaaaaaaaaaaaaa',
+'        aaaaaaaaabbbbbba',
+'        aaaaaaaaabbbbbba',
+'        aaaaaaaaabbbbbba',
+'        aaaaaaaaabbbbbba',
+'        aaaaaaaaabbbbbba',
+'        aaaaaaaaabbbbbba',
+'        aaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaccccccaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaedaadeaaaaaaaaaaaaaaaaa',
+'aaaaaaaabaaaaaabaaaaaaaaaaaaaaaa           bb',
+'aaaaaaaabaffffabaaaaaaaaaaaaaaaa           bb',
+'aaaaaaaabaaaaaabaaaaaaaaaaaaaaaa           bb',
+'    ccccgggg        haaaaaahcccccccc',
+'    ccccgggg        haaaaaahcccccccc',
+'    ccccgggg        haaaaaahcccccccc',
+'    ccccgggg        haaaaaahcccccccc',
+'cccchhhhcccchhhhcccchhaaaahhcccchhhhhhhhiiiiiiiiiiiiii',
+'cccchhhhcccchhhhcccchhhaahhhcccchhhhhhhhiiiiiiiiiiiiii',
+'cccchhhhcccchhhhcccchhhhhhhhcccchhhhhhhhiiiiiiiiiiiiii',
+'cccchhhhcccchhhhcccchhhhhhhhcccchhhhhhhhiiiiiiiiiiiiii',
+'cccchhhhcccchhhhcccchhhhhhhhcccchhhhhhhhiiiiiiiiiiiiii',
+'cccchhhhcccchhhhcccchhhhhhhhcccchhhhhhhhiiiiiiiiiiiiii',
+'cccchhhhcccchhhhcccchhhhhhhhcccchhhhhhhhiiiiiiiiiiiiii',
+'cccchhhhcccchhhhcccchhhhhhhhcccchhhhhhhhiiiiiiiiiiiiii',
+'cccchhhhcccchhhhcccchhhhhhhhcccchhhhhhhhiiiiiiiiiiiiii',
+'ggcchhhhccggjjjjcccchhhhhhhhcccchhhhhhhhaaaaaaaaaaaaaa',
+'ggggjjjjggggjjjjcccchhhhhhhhcccchhhhhhhhaaaaaaaaaaaaaa',
+'ggggjjjjggggjjjjcccchhhhhhhhcccchhhhhhhhaaaaaaaaaaaaaa',
+'    iiii            i      i',
+'    iiii            i      i',
+'    iiii            i      i',
+'    iiii            i      i',
+'iiiiiiii    iiiiiiiiii    iiiiiiiiiiiiii',
+'iiiiiiii    iiiiiiiiiii  iiiiiiiiiiiiiii',
+'iiiiiiii    iiiiiiiiiiiiiiiiiiiiiiiiiiii',
+'iiiiiiii    iiiiiiiiiiiiiiiiiiiiiiiiiiii',
+'iiiiiiii    iiiiiiiiiiiiiiiiiiiiiiiiiiii',
+'iiiiiii     iiiiiiiiiiiiiiiiiiiiiiiiiiii',
+'iiiiii      i  iiiiiiiiiiiiiiiiiiiiiiiii',
+'                iiiiiiiiiiiiiiiiiiiiiiii',
+'                iiiiiiiiiiiiiiiiiiiiiiii',
+'                iiiiiiiiiiiiiiiiiiiiiiii',
+'                iiiiiiiiiiiiiiiiiiiiiiii',
+'                iiiiiiiiiiiiiiiiiiiiiiii',
+'    iiii            ccccgggg        iiiiaa',
+'    iiii            ccccgggg        iiiiaa',
+'    iiii            ccccgggg        iiiiaa',
+'    iiii            ccccgggg        iiiiaa',
+'    iiiiiiiiiiiicccchhhhcccchhhhiiiiiiiiiiiiii',
+'    iiiiiiiiiiiicccchhhhcccchhhhiiiiiiiiiiiiii',
+'    iiiiiiiiiiiicccchhhhcccchhhhiiiiiiiiiiiiii',
+'    iiiiiiiiiiiicccchhhhcccchhhhiiiiiiiiiiiiii',
+'    iiiiiiiiiiiicccchhhhcccchhhhiiiiiiiiiiiiii',
+'     iiiiiiiiiiicccchhhhcccchhhhiiiiiiiiiiiiii',
+'      iiiiiii  icccchhhhcccchhhhiiiiiiiiiiiiii',
+'                cccchhhhcccchhhhiiiiiiiiiiiiii',
+'                cccchhhhcccchhhhiiiiiiiiiiiiii',
+'                ggcchhhhccggjjjjaaaaaaaaaaaaaa',
+'                ggggjjjjggggjjjjaaaaaaaaaaaaaa',
+'                ggggjjjjggggjjjjaaaaaaaaaaaaaa',
+        ]
+    },
+    {
+        name: "EmersonJenner",
+        tiers: { crystal:"LT5", sword:"LT4", axe:"LT5", pot:"LT4", smp:"LT5", mace:"LT5", cart:"LT5" },
+        skinPalette: {
+            ' ' : [255, 0, 0, 0], 
+            'a' : [34, 22, 17, 255], 'b' : [126, 83, 55, 255], 'c' : [255, 255, 255, 255], 
+            'd' : [63, 30, 2, 255], 'e' : [117, 60, 40, 255], 'f' : [207, 173, 133, 255], 
+            'g' : [52, 52, 52, 255], 'h' : [202, 38, 66, 255], 'i' : [228, 207, 211, 255], 
+            'j' : [108, 63, 39, 255], 'k' : [129, 156, 181]
+        },
+        skinBitmap: [
+        '        aaaaaaaabbbbbbbb',
+        '        aaaaaaaabbbbbbbb',
+        '        aaaaaaaabbbbbbbb',
+        '        aaaaaaaabbbbbbbb',
+        '        aaaaaaaabbbbbbbb',
+        '        aaaaaaaabbbbbbbb',
+        '        aaaaaaaabbbbbbbb',
+        '        aaaaaaaabbbbbbbb',
+        'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+        'aaaaaaaaabbbbbbaaaaaaaaaaaaaaaaa',
+        'aaaaaabbbbbbbbbbbbaaaaaaaaaaaaaa',
+        'aaabbbbbbbbbbbbbbbbbbaaaaaaaaaaa',
+        'aabbbbbbbcdbbdcbbbbbbbaaaaaaaaaa',
+        'bbbbbbbbbbbbbbbbbbbbbbbbbaaaaaab',
+        'bbbbbbbbbbbeebbbbbbbbbbbbbbbbbbb',
+        'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb',
+        '    ffffgggg        hibbbbihffffffff        hhhhbbbb',
+        '    ffffgggg        hibbbbihffffffff        hhhhbbbb',
+        '    ffffgggg        hibbbbihffffffff        hhhhbbbb',
+        '    ffffgggg        hibbbbihffffffff        hhhhbbbb',
+        'ffffffffffffffffhhhhhibbbbihhhhhhiiiiiihhhhhhhhhhhhhhhhh',
+        'ffffffffffffffffhhhhhhiiiihhhhhhhhhhhhhhhhhhhhhhhhhhhhhh',
+        'ffffffffffffffffhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh',
+        'ffffffffffffffffhhhhhhhhhhhhhhhhhhhhhhhhiiiiiiiiiiiiiiii',
+        'ffffffffffffffffhhhhhhhhhhhhhhhhhhhhhhhhbbbbbbbbbbbbbbbb',
+        'ffffffffffffffffhhhhhhhhhhhhhhhhhhhhhhhhbbbbbbbbbbbbbbbb',
+        'ffffffffffffffffhhhhhhhhhhhhhhhhhhhhhhhhbbbbbbbbbbbbbbbb',
+        'ffffffffffffffffffffffffffffffffffffffffbbbbbbbbbbbbbbbb',
+        'ffffffffffffffffjjjjjjjkkjjjjjjjjjjjjjjjbbbbbbbbbbbbbbbb',
+        'ffffffffffffffffffffffffffffffffffffffffbbbbbbbbbbbbbbbb',
+        'ggggggggggggggggffffffffffffffffffffffffbbbbbbbbbbbbbbbb',
+        'ggggggggggggggggffffffffffffffffffffffffbbbbbbbbbbbbbbbb',
+        '',
+        '',
+        '',
+        '',
+        '',
+        '',
+        '',
+        '',
+        '',
+        '',
+        '',
+        '',
+        '',
+        '',
+        '',
+        '',
+        '                    ffffgggg        hhhhbbbb',
+        '                    ffffgggg        hhhhbbbb',
+        '                    ffffgggg        hhhhbbbb',
+        '                    ffffgggg        hhhhbbbb',
+        '                ffffffffffffffffhhhhhhhhhhhhhhhh',
+        '                ffffffffffffffffhhhhhhhhhhhhhhhh',
+        '                ffffffffffffffffhhhhhhhhhhhhhhhh',
+        '                ffffffffffffffffiiiiiiiiiiiiiiii',
+        '                ffffffffffffffffbbbbbbbbbbbbbbbb',
+        '                ffffffffffffffffbbbbbbbbbbbbbbbb',
+        '                ffffffffffffffffbbbbbbbbbbbbbbbb',
+        '                ffffffffffffffffbbbbbbbbbbbbbbbb',
+        '                ffffffffffffffffbbbbbbbbbbbbbbbb',
+        '                ffffffffffffffffbbbbbbbbbbbbbbbb',
+        '                ggggggggggggggggbbbbbbbbbbbbbbbb',
+        '                ggggggggggggggggbbbbbbbbbbbbbbbb'
+        ]
+    },
+    {
+        name: "Donkeh",
+        tiers: { crystal:"LT5", sword:"LT4", axe:"LT4", pot:"LT4", smp:"LT5", mace:"LT5", cart:"LT5" },
+        skinPalette: {
+            ' ' : [255, 255, 255, 0],
+            'a' : [74, 50, 25, 255], 'b' : [183, 131, 107, 255], 'c' : [70, 58, 165, 255],
+            'd' : [7, 188, 198, 255], 'e' : [63, 63, 63, 255], 'f' : [255, 255, 255, 255],
+            'g' : [121, 77, 60, 255], 'h' : [132, 79, 64, 255]
+        },
+        skinBitmap: [
+'        aaaaaaaabbaaaabb',
+'        aaaaaaaabbbbbbbb',
+'        aaaaaaaabbbbbbbb',
+'        aaaaaaaabbbbbbbb',
+'        aaaaaaaabbbbbbbb',
+'        aaaaaaaabbbbbbbb',
+'        aaaaaaaaaaaaaaaa',
+'        aaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaabbbbbbaaaaaaaaaaaaaaaaa',
+'aaaaaaaabaabbaabaaaaaaaaaaaaaaaa',
+'aaaaabbabfcbbcfbabbaaaaaaaaaaaaa',
+'aaaaaaabbbbggbbbbaaaaaaaaaaaaaaa',
+'aaabbaaaabahhabaaaabbaaaaaaaaaaa',
+'bbbbbbaaaaaaaaaaaabbbbbbbbaaaabb',
+'    cccceeee        ddddddddcccdcccc        ddddbbbb',
+'    cccceeee        ddddddddcccccccc        ddddbbbb',
+'    cccceeee        ddbbbbddcccccccc        ddddbbbb',
+'    cccceeee        ddbbbbddccccccdd        ddddbbbb',
+'ccccccccccccccccddddddbbbbdddddddddddddddddddddddddddddd',
+'ccccccccccccccccdddddddbbddddddddddddddddddddddddddddddd',
+'ccccccccccccccccdddddddddddddddddddddddddddddddddddddddd',
+'ccccccccccccccccdddddddddddddddddddddddddddddddddddddddd',
+'ccccccccccccccccddddddddddddddddddddddddbbbbbbbbbbbbbbbb',
+'ccccccccccccccccddddddddddddddddddddddddbbbbbbbbbbbbbbbb',
+'ccccccccccccccccddddddddddddddddddddddddbbbbbbbbbbbbbbbb',
+'ccccccccccccccccddddddddddddddddddddddddbbbbbbbbbbbbbbbb',
+'ccccceecccccccccddddddddddddddddddddddddbbbbbbbbbbbbbbbb',
+'eeeeeeeeeeeeeeeeddddddddddddddddddddddddbbbbbbbbbbbbbbbb',
+'eeeeeeeeeeeeeeeecccccccccdddddcccdddddccbbbbbbbbbbbbbbbb',
+'eeeeeeeeeeeeeeeeccccccccccdddcccccccdcccbbbbbbbbbbbbbbbb',
+'',
+'',
+'',
+'',
+'',
+'',
+'',
+'',
+'',
+'',
+'',
+'',
+'',
+'',
+'',
+'',
+'                    cccceeee        ddddbbbb',
+'                    cccceeee        ddddbbbb',
+'                    cccceeee        ddddbbbb',
+'                    cccceeee        ddddbbbb',
+'                ccccccccccccccccdddddddddddddddd',
+'                ccccccccccccccccdddddddddddddddd',
+'                ccccccccccccccccdddddddddddddddd',
+'                ccccccccccccccccdddddddddddddddd',
+'                ccccccccccccccccbbbbbbbbbbbbbbbb',
+'                ccccccccccccccccbbbbbbbbbbbbbbbb',
+'                ccccccccccccccccbbbbbbbbbbbbbbbb',
+'                ccccccccccccccccbbbbbbbbbbbbbbbb',
+'                ccccceecccccccccbbbbbbbbbbbbbbbb',
+'                eeeeeeeeeeeeeeeebbbbbbbbbbbbbbbb',
+'                eeeeeeeeeeeeeeeebbbbbbbbbbbbbbbb',
+'                eeeeeeeeeeeeeeeebbbbbbbbbbbbbbbb'
+        ]
+    },
+    {
+        name: "eliasjenner",
+        tiers: { crystal:"LT5", sword:"LT5", axe:"LT5", pot:"LT5", smp:"LT5", mace:"LT5", cart:"LT5" },
+        skinPalette: {
+            ' ' : [255, 255, 255, 0],
+            'a' : [74, 50, 25, 255], 'b' : [183, 131, 107, 255], 'c' : [70, 58, 165, 255],
+            'd' : [7, 188, 198, 255], 'e' : [63, 63, 63, 255], 'f' : [255, 255, 255, 255],
+            'g' : [121, 77, 60, 255], 'h' : [132, 79, 64, 255]
+        },
+        skinBitmap: [
+'        aaaaaaaabbaaaabb',
+'        aaaaaaaabbbbbbbb',
+'        aaaaaaaabbbbbbbb',
+'        aaaaaaaabbbbbbbb',
+'        aaaaaaaabbbbbbbb',
+'        aaaaaaaabbbbbbbb',
+'        aaaaaaaaaaaaaaaa',
+'        aaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaabbbbbbaaaaaaaaaaaaaaaaa',
+'aaaaaaaabaabbaabaaaaaaaaaaaaaaaa',
+'aaaaabbabfcbbcfbabbaaaaaaaaaaaaa',
+'aaaaaaabbbbggbbbbaaaaaaaaaaaaaaa',
+'aaabbaaaabahhabaaaabbaaaaaaaaaaa',
+'bbbbbbaaaaaaaaaaaabbbbbbbbaaaabb',
+'    cccceeee        ddddddddcccdcccc        ddddbbbb',
+'    cccceeee        ddddddddcccccccc        ddddbbbb',
+'    cccceeee        ddbbbbddcccccccc        ddddbbbb',
+'    cccceeee        ddbbbbddccccccdd        ddddbbbb',
+'ccccccccccccccccddddddbbbbdddddddddddddddddddddddddddddd',
+'ccccccccccccccccdddddddbbddddddddddddddddddddddddddddddd',
+'ccccccccccccccccdddddddddddddddddddddddddddddddddddddddd',
+'ccccccccccccccccdddddddddddddddddddddddddddddddddddddddd',
+'ccccccccccccccccddddddddddddddddddddddddbbbbbbbbbbbbbbbb',
+'ccccccccccccccccddddddddddddddddddddddddbbbbbbbbbbbbbbbb',
+'ccccccccccccccccddddddddddddddddddddddddbbbbbbbbbbbbbbbb',
+'ccccccccccccccccddddddddddddddddddddddddbbbbbbbbbbbbbbbb',
+'ccccceecccccccccddddddddddddddddddddddddbbbbbbbbbbbbbbbb',
+'eeeeeeeeeeeeeeeeddddddddddddddddddddddddbbbbbbbbbbbbbbbb',
+'eeeeeeeeeeeeeeeecccccccccdddddcccdddddccbbbbbbbbbbbbbbbb',
+'eeeeeeeeeeeeeeeeccccccccccdddcccccccdcccbbbbbbbbbbbbbbbb',
+'',
+'',
+'',
+'',
+'',
+'',
+'',
+'',
+'',
+'',
+'',
+'',
+'',
+'',
+'',
+'',
+'                    cccceeee        ddddbbbb',
+'                    cccceeee        ddddbbbb',
+'                    cccceeee        ddddbbbb',
+'                    cccceeee        ddddbbbb',
+'                ccccccccccccccccdddddddddddddddd',
+'                ccccccccccccccccdddddddddddddddd',
+'                ccccccccccccccccdddddddddddddddd',
+'                ccccccccccccccccdddddddddddddddd',
+'                ccccccccccccccccbbbbbbbbbbbbbbbb',
+'                ccccccccccccccccbbbbbbbbbbbbbbbb',
+'                ccccccccccccccccbbbbbbbbbbbbbbbb',
+'                ccccccccccccccccbbbbbbbbbbbbbbbb',
+'                ccccceecccccccccbbbbbbbbbbbbbbbb',
+'                eeeeeeeeeeeeeeeebbbbbbbbbbbbbbbb',
+'                eeeeeeeeeeeeeeeebbbbbbbbbbbbbbbb',
+'                eeeeeeeeeeeeeeeebbbbbbbbbbbbbbbb'
+        ]
+    },
+];
+
+// ============================================================
+// SKIN RENDERER — new texture-mapped quad version
+// ============================================================
+function vec3(x,y,z){ return {x:x,y:y,z:z}; }
+function subV(a,b){ return vec3(a.x-b.x,a.y-b.y,a.z-b.z); }
+function crossV(a,b){ return vec3(a.y*b.z-a.z*b.y,a.z*b.x-a.x*b.z,a.x*b.y-a.y*b.x); }
+function dotV(a,b){ return a.x*b.x+a.y*b.y+a.z*b.z; }
+function normV(a){ var l=Math.sqrt(dotV(a,a))||1; return vec3(a.x/l,a.y/l,a.z/l); }
+function scaleV(a,s){ return vec3(a.x*s,a.y*s,a.z*s); }
+function rotX(v,a){ var c=Math.cos(a),s=Math.sin(a); return vec3(v.x,v.y*c-v.z*s,v.y*s+v.z*c); }
+function rotY(v,a){ var c=Math.cos(a),s=Math.sin(a); return vec3(v.x*c+v.z*s,v.y,-v.x*s+v.z*c); }
+
+var CAM_Z=350, CANVAS_SIZE=1600, CANVAS_HALF=CANVAS_SIZE/2;
+
+function project(v){
+    var fov=CAM_Z/(CAM_Z-v.z);
+    return {x:CANVAS_HALF+v.x*fov, y:CANVAS_HALF+v.y*fov, z:v.z};
+}
+
+function getShade(corners){
+    var ab=subV(corners[1],corners[0]), ac=subV(corners[2],corners[0]);
+    var n=normV(crossV(ab,ac));
+    var sh=[
+        {axis:vec3(0,-1,0),shade:1.0},{axis:vec3(0,1,0),shade:0.5},
+        {axis:vec3(0,0,1),shade:0.9},{axis:vec3(0,0,-1),shade:0.6},
+        {axis:vec3(-1,0,0),shade:0.75},{axis:vec3(1,0,0),shade:0.75}
+    ];
+    var best=0.7,bestDot=-99;
+    for(var i=0;i<sh.length;i++){
+        var d=dotV(n,sh[i].axis);
+        if(d>bestDot){bestDot=d;best=sh[i].shade;}
+    }
+    return best;
+}
+
+function getFaceCorners(axis,hw,hh,hd){
+    if(axis==='front') { return [vec3(-hw,-hh,hd), vec3(hw,-hh,hd), vec3(hw,hh,hd), vec3(-hw,hh,hd)]; }
+    if(axis==='back')  { return [vec3(hw,-hh,-hd), vec3(-hw,-hh,-hd), vec3(-hw,hh,-hd), vec3(hw,hh,-hd)]; }
+    if(axis==='right') { return [vec3(hw,-hh,-hd), vec3(hw,-hh,hd), vec3(hw,hh,hd), vec3(hw,hh,-hd)]; }
+    if(axis==='left')  { return [vec3(-hw,-hh,hd), vec3(-hw,-hh,-hd), vec3(-hw,hh,-hd), vec3(-hw,hh,hd)]; }
+    if(axis==='top')   { return [vec3(-hw,-hh,-hd), vec3(hw,-hh,-hd), vec3(hw,-hh,hd), vec3(-hw,-hh,hd)]; }
+    if(axis==='bottom'){ return [vec3(-hw,hh,hd), vec3(hw,hh,hd), vec3(hw,hh,-hd), vec3(-hw,hh,-hd)]; }
+}
+
+function cropFaceToCanvas(bitmap,palette,bx,by,bw,bh){
+    var c=document.createElement("canvas");
+    c.width=bw; c.height=bh;
+    var cx=c.getContext("2d");
+    var id=cx.createImageData(bw,bh);
+    for(var row=0;row<bh;row++){
+        for(var col=0;col<bw;col++){
+            var ch=(bitmap[by+row]&&(bx+col)<bitmap[by+row].length)?bitmap[by+row][bx+col]:' ';
+            var p=palette[ch];
+            var i=(row*bw+col)*4;
+            id.data[i]=p[0]; id.data[i+1]=p[1]; id.data[i+2]=p[2]; id.data[i+3]=p[3];
+        }
+    }
+    cx.putImageData(id,0,0);
+    return c;
+}
+
+function bilerp(pts,u,v){
+    var x=pts[0].x*(1-u)*(1-v)+pts[1].x*u*(1-v)+pts[2].x*u*v+pts[3].x*(1-u)*v;
+    var y=pts[0].y*(1-u)*(1-v)+pts[1].y*u*(1-v)+pts[2].y*u*v+pts[3].y*(1-u)*v;
+    return {x:x,y:y};
+}
+
+function drawTri(ctx,img,p0,p1,p2,u0,v0,u1,v1,u2,v2){
+    ctx.imageSmoothingEnabled=false;
+ctx.globalCompositeOperation='source-over';
+    var iw=img.width,ih=img.height;
+    var sx0=u0*iw,sy0=v0*ih,sx1=u1*iw,sy1=v1*ih,sx2=u2*iw,sy2=v2*ih;
+    var denom=sx0*(sy1-sy2)+sx1*(sy2-sy0)+sx2*(sy0-sy1);
+    if(Math.abs(denom)<0.0001){return;}
+    var a=(p0.x*(sy1-sy2)+p1.x*(sy2-sy0)+p2.x*(sy0-sy1))/denom;
+    var b=(p0.x*(sx2-sx1)+p1.x*(sx0-sx2)+p2.x*(sx1-sx0))/denom;
+    var c=(p0.x*(sx1*sy2-sx2*sy1)+p1.x*(sx2*sy0-sx0*sy2)+p2.x*(sx0*sy1-sx1*sy0))/denom;
+    var d=(p0.y*(sy1-sy2)+p1.y*(sy2-sy0)+p2.y*(sy0-sy1))/denom;
+    var e=(p0.y*(sx2-sx1)+p1.y*(sx0-sx2)+p2.y*(sx1-sx0))/denom;
+    var f=(p0.y*(sx1*sy2-sx2*sy1)+p1.y*(sx2*sy0-sx0*sy2)+p2.y*(sx0*sy1-sx1*sy0))/denom;
+    ctx.save();
+    ctx.beginPath();
+    ctx.moveTo(p0.x,p0.y); ctx.lineTo(p1.x,p1.y); ctx.lineTo(p2.x,p2.y);
+    ctx.closePath(); ctx.clip();
+    ctx.transform(a,d,b,e,c,f);
+    ctx.drawImage(img,0,0);
+    ctx.restore();
+}
+
+function drawImageQuad(ctx,img,pts,shade){
+    var divs=8;
+    ctx.save();
+    ctx.beginPath();
+    ctx.moveTo(pts[0].x,pts[0].y);
+    ctx.lineTo(pts[1].x,pts[1].y);
+    ctx.lineTo(pts[2].x,pts[2].y);
+    ctx.lineTo(pts[3].x,pts[3].y);
+    ctx.closePath();
+    ctx.clip();
+    for(var row=0;row<divs;row++){
+        for(var col=0;col<divs;col++){
+            var u0=col/divs,     v0=row/divs;
+            var u1=(col+1)/divs, v1=(row+1)/divs;
+            var p00=bilerp(pts,u0,v0);
+            var p10=bilerp(pts,u1,v0);
+            var p11=bilerp(pts,u1,v1);
+            var p01=bilerp(pts,u0,v1);
+            var cx=(p00.x+p10.x+p11.x+p01.x)/4;
+            var cy=(p00.y+p10.y+p11.y+p01.y)/4;
+            var ex=0.75;
+            p00={x:cx+(p00.x-cx)*(1+ex/8),y:cy+(p00.y-cy)*(1+ex/8)};
+            p10={x:cx+(p10.x-cx)*(1+ex/8),y:cy+(p10.y-cy)*(1+ex/8)};
+            p11={x:cx+(p11.x-cx)*(1+ex/8),y:cy+(p11.y-cy)*(1+ex/8)};
+            p01={x:cx+(p01.x-cx)*(1+ex/8),y:cy+(p01.y-cy)*(1+ex/8)};
+            drawTri(ctx,img,p00,p10,p11,u0,v0,u1,v0,u1,v1);
+            drawTri(ctx,img,p00,p11,p01,u0,v0,u1,v1,u0,v1);
+            drawTri(ctx,img,p00,p10,p01,u0,v0,u1,v0,u0,v1);
+            drawTri(ctx,img,p10,p11,p01,u1,v0,u1,v1,u0,v1);
+        }
+    }
+if(shade<1.0){
+    ctx.save();
+    ctx.globalCompositeOperation='source-atop';
+    ctx.beginPath();
+    ctx.moveTo(pts[0].x,pts[0].y);
+    ctx.lineTo(pts[1].x,pts[1].y);
+    ctx.lineTo(pts[2].x,pts[2].y);
+    ctx.lineTo(pts[3].x,pts[3].y);
+    ctx.closePath();
+    ctx.fillStyle='rgba(0,0,0,'+(1-shade)+')';
+    ctx.fill();
+    ctx.restore();
+}
+    ctx.restore();
+}
+
+var faceMap=[
+    [8,0,8,8,'head','top'],[16,0,8,8,'head','bottom'],
+    [0,8,8,8,'head','left'],[8,8,8,8,'head','back'],
+    [16,8,8,8,'head','right'],[24,8,8,8,'head','front'],
+    [20,16,8,4,'body','top'],[28,16,8,4,'body','bottom'],
+    [16,20,4,12,'body','left'],[20,20,8,12,'body','back'],
+    [28,20,4,12,'body','right'],[32,20,8,12,'body','front'],
+    [44,16,4,4,'leftArm','top'],[48,16,4,4,'leftArm','bottom'],
+    [40,20,4,12,'leftArm','left'],[44,20,4,12,'leftArm','back'],
+    [48,20,4,12,'leftArm','right'],[52,20,4,12,'leftArm','front'],
+    [36,48,4,4,'rightArm','top'],[40,48,4,4,'rightArm','bottom'],
+    [32,52,4,12,'rightArm','left'],[36,52,4,12,'rightArm','back'],
+    [40,52,4,12,'rightArm','right'],[44,52,4,12,'rightArm','front'],
+    [4,16,4,4,'leftLeg','top'],[8,16,4,4,'leftLeg','bottom'],
+    [0,20,4,12,'leftLeg','left'],[4,20,4,12,'leftLeg','back'],
+    [8,20,4,12,'leftLeg','right'],[12,20,4,12,'leftLeg','front'],
+    [20,48,4,4,'rightLeg','top'],[24,48,4,4,'rightLeg','bottom'],
+    [16,52,4,12,'rightLeg','left'],[20,52,4,12,'rightLeg','back'],
+    [24,52,4,12,'rightLeg','right'],[28,52,4,12,'rightLeg','front'],
+    [40,0,8,8,'head2','top'],[48,0,8,8,'head2','bottom'],
+    [32,8,8,8,'head2','right'],[40,8,8,8,'head2','back'],
+    [48,8,8,8,'head2','left'],[56,8,8,8,'head2','front'],
+    [20,32,8,4,'body2','top'],[28,32,8,4,'body2','bottom'],
+    [16,36,4,12,'body2','left'],[20,36,8,12,'body2','back'],
+    [28,36,4,12,'body2','right'],[32,36,8,12,'body2','front'],
+    [44,32,4,4,'rightArm2','top'],[48,32,4,4,'rightArm2','bottom'],
+    [40,36,4,12,'rightArm2','left'],[44,36,4,12,'rightArm2','back'],
+    [48,36,4,12,'rightArm2','right'],[52,36,4,12,'rightArm2','front'],
+    [52,48,4,4,'leftArm2','top'],[56,48,4,4,'leftArm2','bottom'],
+    [48,52,4,12,'leftArm2','left'],[52,52,4,12,'leftArm2','back'],
+    [56,52,4,12,'leftArm2','right'],[60,52,4,12,'leftArm2','front'],
+    [8,32,4,4,'leftLeg2','top'],[4,32,4,4,'leftLeg2','bottom'],
+    [0,36,4,12,'leftLeg2','left'],[4,36,4,12,'rightLeg2','back'],
+    [8,36,4,12,'leftLeg2','right'],[12,36,4,12,'leftLeg2','front'],
+    [4,48,4,4,'rightLeg2','top'],[8,48,4,4,'rightLeg2','bottom'],
+    [0,52,4,12,'rightLeg2','left'],[4,52,4,12,'leftLeg2','back'],
+    [8,52,4,12,'rightLeg2','right'],[12,52,4,12,'rightLeg2','front']
+];
+
+var partDefs=[
+    {key:'rightLeg',  hw:12,hh:36,hd:12, tx:12,  ty:70, tz:0, pivot:{y:-36}, swingAngle:-0.42},
+    {key:'leftLeg', hw:12,hh:36,hd:12, tx:-12, ty:70, tz:0, pivot:{y:-36}, swingAngle:0.42 },
+    {key:'rightArm',  hw:12,hh:36,hd:12, tx:-36, ty:0,  tz:0, pivot:{y:-36}, swingAngle:0.42 },
+    {key:'leftArm', hw:12,hh:36,hd:12, tx:36,  ty:0,  tz:0, pivot:{y:-36}, swingAngle:-0.42},
+    {key:'body',     hw:24,hh:36,hd:12, tx:0,   ty:0,  tz:0, pivot:null,    swingAngle:0    },
+    {key:'head',     hw:24,hh:24,hd:24, tx:0,   ty:-60,tz:0, pivot:null,    swingAngle:0    }
+];
+
+function renderSkin(canvas,player){
+    var activeDefs = partDefs;
+    var ctx=canvas.getContext('2d');
+ctx.clearRect(0,0,CANVAS_SIZE,CANVAS_SIZE);
+ctx.globalCompositeOperation='source-over';
+
+    var RX=0.05, RY=-2.41, SCALE=1.59;
+
+    // build face canvases for this player
+    var faceCanvases={};
+    for(var i=0;i<faceMap.length;i++){
+        var fm=faceMap[i];
+        faceCanvases[fm[4]+'-'+fm[5]]=cropFaceToCanvas(player.skinBitmap,player.skinPalette,fm[0],fm[1],fm[2],fm[3]);
+    }
+
+    var allFaces=[];
+    var axes=['front','back','left','right','top','bottom'];
+
+    for(var di=0;di<activeDefs.length;di++){
+        var def=activeDefs[di];
+        for(var ai=0;ai<axes.length;ai++){
+            var axis=axes[ai];
+            var fc1=faceCanvases[def.key+'-'+axis];
+            if(fc1){ allFaces.push({fc:fc1,def:def,axis:axis,expand:0}); }
+            var fc2=faceCanvases[def.key+'2-'+axis];
+            if(fc2){ allFaces.push({fc:fc2,def:def,axis:axis,expand:2}); }
+        }
+    }
+
+    for(var i=0;i<allFaces.length;i++){
+        var f=allFaces[i];
+        var def=f.def;
+        var hw=def.hw+f.expand, hh=def.hh+f.expand, hd=def.hd+f.expand;
+        var corners=getFaceCorners(f.axis,hw,hh,hd);
+        var transformed=[];
+        for(var j=0;j<corners.length;j++){
+            var v=corners[j];
+            if(def.swingAngle!==0&&def.pivot){
+                var py=def.pivot.y;
+                v=vec3(v.x,v.y-py,v.z);
+                v=rotX(v,def.swingAngle);
+                v=vec3(v.x,v.y+py,v.z);
+            }
+            v=vec3(v.x+def.tx, v.y+def.ty-36, v.z+def.tz);
+            v=rotX(v,RX); v=rotY(v,RY);
+            v=scaleV(v,SCALE);
+            transformed.push(v);
+        }
+        var pts2d=[];
+        for(var j=0;j<transformed.length;j++){ pts2d.push(project(transformed[j])); }
+        f.pts2d=pts2d;
+f.depth=(transformed[0].z+transformed[1].z+transformed[2].z+transformed[3].z)/4;
+// bias so legs draw behind body and arms
+if(def.key==='leftLeg'||def.key==='rightLeg'||
+   def.key==='leftLeg2'||def.key==='rightLeg2'){
+    f.depth -= 50;
+}
+        f.shade=getShade(transformed);
+    }
+
+    allFaces.sort(function(a,b){ return (a.depth||0)-(b.depth||0); });
+
+    for(var i=0;i<allFaces.length;i++){
+        var f=allFaces[i];
+        if(!f.pts2d){continue;}
+        drawImageQuad(ctx,f.fc,f.pts2d,f.shade);
+    }
+}
+
+// ============================================================
+// PRELOAD
+// ============================================================
+var skinCanvas=document.getElementById('skin-canvas');
+
+function preloadSkins(onDone){
+    var i=0;
+    var bar=document.getElementById('loading-bar');
+    var lbl=document.getElementById('loading-label');
+    function next(){
+        if(i>=players.length){onDone();return;}
+        var p=players[i];
+        lbl.textContent=p.name+' ('+(i+1)+' / '+players.length+')';
+        bar.style.width=Math.round((i/players.length)*100)+'%';
+        setTimeout(function(){
+            if(p.skinBitmap&&p.skinPalette){
+                renderSkin(skinCanvas,p);
+                p.avatarUrl=skinCanvas.toDataURL();
+            }
+            i++; next();
+        },10);
+    }
+    next();
+}
+
+// ============================================================
+// HELPERS
+// ============================================================
+var scorePlayer=function(p){
+    var total=0;
+    for(var i=0;i<styles.length;i++){
+        var t=p.tiers[styles[i].key]||"LT5";
+        var idx=tierOrder.indexOf(t);
+        total+=idx===-1?tierOrder.length:idx;
+    }
+    return total/styles.length;
+};
+
+var sortedPlayers=players.slice().sort(function(a,b){return scorePlayer(a)-scorePlayer(b);});
+
+var makeRowSVG=function(rank){
+    var rc=rowColors[Math.min(rank,3)];
+    return (
+        '<svg width="100%" height="100%" viewBox="0 0 1000 68"'+
+        ' preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">'+
+        '<rect width="1000" height="68" rx="6" ry="6" fill="'+rc.bg+'" opacity="1"/>'+
+        '<polygon points="0,0 155,0 200,68 0,68" fill="'+rc.quad+'" opacity="0.9"/>'+
+        '</svg>'
+    );
+};
+
+var makeIconHTML=function(style,size){
+    if(style.iconUrl){
+        return '<img src="'+style.iconUrl+'" width="'+size+'" height="'+size+
+               '" style="object-fit:contain;image-rendering:auto;" alt="'+style.label+'">';
+    }
+    return '<span style="font-size:'+size+'px;line-height:1;">'+style.emoji+'</span>';
+};
+
+var makeTierCircle=function(tier,style,circleSize){
+    circleSize=circleSize||44;
+    var tc=tierColors[tier]||{bg:"#0d0d0d",stroke:"#282828",text:"#4e4e4e",ring:"grey"};
+    var ringUrl=RING_URLS[tc.ring];
+    var cx=circleSize/2, cy=circleSize/2;
+    var rectW=circleSize*0.80, rectH=circleSize*0.30;
+    var rectX=(circleSize-rectW)/2;
+    var rectY=cy+(circleSize/2-2)*0.50;
+    var totalH=rectY+rectH+3;
+    var lblSz=circleSize*0.20;
+    var iconSz=circleSize*0.5;
+    var ringEl='<image href="'+ringUrl+'" x="0" y="0" width="'+circleSize+'" height="'+circleSize+'"/>';
+    var iconContent;
+    if(style.iconUrl){
+        iconContent='<image href="'+style.iconUrl+'" x="'+(cx-iconSz/2)+'" y="'+(cy-iconSz/2)+
+                    '" width="'+iconSz+'" height="'+iconSz+'"/>';
+    } else {
+        iconContent='<foreignObject x="'+(cx-iconSz/2)+'" y="'+(cy-iconSz/2)+
+                    '" width="'+iconSz+'" height="'+iconSz+'">' +
+                    '<div xmlns="http://www.w3.org/1999/xhtml" style="width:100%;height:100%;'+
+                    'display:flex;align-items:center;justify-content:center;'+
+                    'font-size:'+(iconSz*0.78)+'px;line-height:1;">'+
+                    style.emoji+'</div></foreignObject>';
+    }
+    return (
+        '<svg width="'+circleSize+'" height="'+totalH+'"'+
+        ' viewBox="0 0 '+circleSize+' '+totalH+'"'+
+        ' xmlns="http://www.w3.org/2000/svg" xmlns:xhtml="http://www.w3.org/1999/xhtml">'+
+        ringEl+iconContent+
+        '<text x="'+cx+'" y="'+(rectY+rectH*0.74)+'" text-anchor="middle" fill="white"'+
+        ' stroke="black" stroke-width="0.5" paint-order="stroke"'+
+        ' font-size="'+lblSz+'" font-weight="700" font-family="Jersey 15,Segoe UI,sans-serif">'+tier+'</text>'+
+        '</svg>'
+    );
+};
+
+// ============================================================
+// BUILD TABS
+// ============================================================
+var tabsEl=document.getElementById("tabs");
+var addTab=function(label,style,key){
+    var tab=document.createElement("div");
+    tab.className="tab"+(key==="all"?" active":"");
+    tab.title = "PVP Rankings";
+    var iconPart=style?'<span class="tab-icon">'+makeIconHTML(style,14)+'</span>':'';
+    tab.innerHTML=iconPart+label;
+    tab.addEventListener("click",function(){switchTab(key);});
+    tabsEl.appendChild(tab);
+};
+
+// ============================================================
+// BUILD ALL PAGE
+// ============================================================
+function buildAllPage() {
+
+    var listAll = document.getElementById("list-all");
+
+    for (var i = 0; i < sortedPlayers.length; i++) {
+
+        (function(p, rank) {
+
+            var row = document.createElement("div");
+            row.className = "player-row";
+
+            // --- Background: SVG quad polygon ---
+            var bgDiv = document.createElement("div");
+            bgDiv.className = "row-bg";
+            bgDiv.innerHTML = makeRowSVG(rank);
+            row.appendChild(bgDiv);
+
+            // --- Optional banner image (blends over SVG bg) ---
+            if (p.bannerUrl) {
+                var banner = document.createElement("img");
+                banner.src = p.bannerUrl;
+                banner.style.cssText =
+                    'position:absolute;' +
+                    'inset:0;' +
+                    'width:100%;' +
+                    'height:100%;' +
+                    'object-fit:cover;' +
+                    'object-position:center;' +
+                    'border-radius:6px;' +
+                    'opacity:0.4;' +
+                    'pointer-events:none;' +
+                    'mix-blend-mode:screen;' +
+                    'z-index:1;';
+                row.appendChild(banner);
+            }
+
+            // --- Row content (name, position, tiers) ---
+            var content = document.createElement("div");
+            content.className = "row-content";
+
+            var posEl = document.createElement("div");
+            posEl.className = "row-pos";
+            posEl.textContent = rank + 1;
+            content.appendChild(posEl);
+
+            var nameEl = document.createElement("div");
+            nameEl.className = "row-name";
+            nameEl.textContent = p.name;
+            nameEl.style.position = 'absolute';
+            nameEl.style.left = '120px';
+            content.appendChild(nameEl);
+
+            var tiersEl = document.createElement("div");
+            tiersEl.className = "row-tiers";
+            for (var j = 0; j < styles.length; j++) {
+                var t = p.tiers[styles[j].key] || "LT5";
+                var wrap = document.createElement("div");
+                wrap.className = "tier-circle-wrap";
+                wrap.innerHTML = makeTierCircle(t, styles[j], 42);
+                tiersEl.appendChild(wrap);
+            }
+            content.appendChild(tiersEl);
+
+            row.appendChild(content);
+
+            // --- Optional avatar image ---
+            if (p.avatarUrl) {
+                var img = document.createElement("img");
+                img.src = p.avatarUrl;
+                img.style.cssText =
+                    'position:absolute;' +
+                    'left:-120px;' +
+                    'top:-155px;' +
+                    'width:400px;' +
+                    'height:400px;' +
+                    'z-index:4;' +
+                    'pointer-events:none;';
+                row.appendChild(img);
+            }
+
+            row.addEventListener("click", function() { openDetail(p, rank); });
+            listAll.appendChild(row);
+
+        })(sortedPlayers[i], i);
+    }
+}
+
+function buildNewsPage(){
+    var listNews = document.getElementById("list-news");
+    var sorted = news.slice().sort(function(a,b){
+        return new Date(b.date) - new Date(a.date);
+    });
+
+    for(var i=0; i<sorted.length; i++){
+        var item = sorted[i];
+        var box = document.createElement("div");
+        box.className = "news-box";
+
+        if(item.type === "text"){
+            box.innerHTML =
+                '<div class="news-date">'+item.date+'</div>'+
+                '<div class="news-title">'+item.title+'</div>'+
+                '<div class="news-body">'+item.body+'</div>';
+
+        } else if(item.type === "tiertest"){
+            // find players
+            var pA = null, pB = null;
+            for(var j=0; j<players.length; j++){
+                if(players[j].name === item.playerA.name) pA = players[j];
+                if(players[j].name === item.playerB.name) pB = players[j];
+            }
+
+            // build styles column
+            var stylesHTML = '';
+            for(var s=0; s<item.styles.length; s++){
+                var styleKey = item.styles[s];
+                var styleObj = null;
+                for(var k=0; k<styles.length; k++){
+                    if(styles[k].key === styleKey){ styleObj = styles[k]; break; }
+                }
+                if(!styleObj) continue;
+                var tierA = pA ? (pA.tiers[styleKey]||'LT5') : 'LT5';
+                var tierB = pB ? (pB.tiers[styleKey]||'LT5') : 'LT5';
+stylesHTML +=
+    '<div class="tiertest-style-row" style="display:flex;flex-direction:column;align-items:center;justify-content:space-between;height:100%;gap:0;">'+
+        '<div class="tiertest-result '+item.playerA.results[s]+'" style="position:static;flex:1;display:flex;align-items:center;justify-content:center;">'+item.playerA.results[s]+'</div>'+
+        '<img src="'+styleObj.iconUrl+'" width="28" height="28" style="object-fit:contain;">'+
+        '<div class="tiertest-result '+item.playerB.results[s]+'" style="position:static;flex:1;display:flex;align-items:center;justify-content:center;">'+item.playerB.results[s]+'</div>'+
+    '</div>';
+            }
+
+            // build player img HTML
+            var imgA = pA && pA.avatarUrl ?
+                '<img src="'+pA.avatarUrl+'">' : '';
+            var imgB = pB && pB.avatarUrl ?
+                '<img src="'+pB.avatarUrl+'">' : '';
+
+box.innerHTML =
+    '<div class="news-date">'+item.date+'</div>'+
+    '<div class="news-title" style="margin-bottom:12px;">'+item.title+'</div>'+
+    '<div class="tiertest-main">'+
+        '<div class="tiertest-players">'+
+            '<div class="tiertest-player">'+
+                '<div class="tiertest-player-name">'+item.playerA.name+'</div>'+
+                '<div class="tiertest-player-img">'+imgA+'</div>'+
+            '</div>'+
+            '<div class="tiertest-player">'+
+                '<div class="tiertest-player-name">'+item.playerB.name+'</div>'+
+                '<div class="tiertest-player-img">'+imgB+'</div>'+
+            '</div>'+
+        '</div>'+
+        '<div class="tiertest-styles" style="flex-direction:row;display:flex;gap:16px;align-items:center;">'+
+            stylesHTML+
+        '</div>'+
+    '</div>'+
+    '<div class="tiertest-writeup">'+item.writeup+'</div>';
+        }
+
+        listNews.appendChild(box);
+    }
+}
+
+// ============================================================
+// BUILD STYLE PAGES
+// ============================================================
+function buildStylePages(){
+    var pagesStylesEl=document.getElementById("pages-styles");
+    for(var si=0;si<styles.length;si++){
+        (function(style){
+            var page=document.createElement("div");
+            page.className="style-page";
+            page.id="page-"+style.key;
+
+            var inner=document.createElement("div");
+            inner.className="col-page-inner";
+
+            var byTier={};
+            for(var ti=0;ti<tierOrder.length;ti++){byTier[tierOrder[ti]]=[];}
+            for(var pi=0;pi<sortedPlayers.length;pi++){
+                var t=sortedPlayers[pi].tiers[style.key]||"LT5";
+                if(!byTier[t]){byTier[t]=[];}
+                byTier[t].push({player:sortedPlayers[pi],rank:pi});
+            }
+
+            for(var ti=0;ti<tierOrder.length;ti++){
+                (function(tier,entries){
+                    var tc=tierColors[tier]||{bg:"#0d0d0d",stroke:"#282828",text:"#4e4e4e"};
+                    var col=document.createElement("div");
+                    col.className="tier-col";
+
+                    var titleEl=document.createElement("div");
+                    titleEl.className="tier-col-title";
+                    titleEl.style.cssText="background:"+tc.bg+";color:#fff;"+
+                        "border:1px solid "+tc.stroke+";border-bottom:none;";
+                    titleEl.textContent=tier;
+                    col.appendChild(titleEl);
+
+                    var colPlayers=document.createElement("div");
+                    colPlayers.className="tier-col-players";
+                    colPlayers.style.cssText="background:"+tc.bg+";border:1px solid "+tc.stroke+
+                        ";border-top:none;border-radius:0 0 5px 5px;";
+
+                    for(var ei=0;ei<entries.length;ei++){
+                        (function(entry){
+                            var card=document.createElement("div");
+                            card.className="col-player-card";
+                            card.style.overflow="visible";
+
+                            var cbg=document.createElement("div");
+                            cbg.className="col-card-bg";
+                            cbg.innerHTML=makeRowSVG(entry.rank);
+                            card.appendChild(cbg);
+
+                            var cc=document.createElement("div");
+                            cc.className="col-card-content";
+
+                            var rankEl=document.createElement("div");
+                            rankEl.className="col-rank";
+                            rankEl.textContent="#"+(entry.rank+1);
+                            cc.appendChild(rankEl);
+
+                            var nameEl=document.createElement("div");
+                            nameEl.className="col-name";
+                            nameEl.textContent=entry.player.name;
+                            nameEl.style.position='absolute';
+                            nameEl.style.left='55px';
+                            cc.appendChild(nameEl);
+
+                            card.appendChild(cc);
+
+                            if(entry.player.avatarUrl){
+                                var img=document.createElement("img");
+                                img.src=entry.player.avatarUrl;
+                                img.style.cssText=
+                                    'position:absolute;'+
+                                    'left:-40px;'+
+                                    'top:-52px;'+
+                                    'width:160px;'+
+                                    'height:160px;'+
+                                    'z-index:4;'+
+                                    'pointer-events:none;';
+                                card.appendChild(img);
+                            }
+
+                            card.addEventListener("click",function(){openDetail(entry.player,entry.rank);});
+                            colPlayers.appendChild(card);
+                        })(entries[ei]);
+                    }
+
+                    col.appendChild(colPlayers);
+                    inner.appendChild(col);
+                })(tierOrder[ti],byTier[tierOrder[ti]]);
+            }
+
+            page.appendChild(inner);
+            pagesStylesEl.appendChild(page);
+        })(styles[si]);
+    }
+}
+
+// ============================================================
+// TAB SWITCHING
+// ============================================================
+var switchTab=function(key){
+    document.getElementById("page-all").style.display=key==="all"?"flex":"none";
+    document.getElementById("page-news").style.display=key==="news"?"flex":"none";
+    var sPages=document.querySelectorAll(".style-page");
+    for(var i=0;i<sPages.length;i++){sPages[i].classList.remove("open");}
+    if(key!=="all"){ var pg=document.getElementById("page-"+key); if(pg){pg.classList.add("open");} }
+    var tabs=document.querySelectorAll(".tab");
+    var allKeys=["all","news"].concat(styles.map(function(s){return s.key;}));
+    for(var i=0;i<tabs.length;i++){
+        tabs[i].classList.remove("active");
+        if(allKeys[i]===key){tabs[i].classList.add("active");}
+    }
+};
+
+// ============================================================
+// DETAIL
+// ============================================================
+var openDetail=function(player,rank){
+    document.getElementById("detail-name").textContent=player.name;
+    document.getElementById("detail-pos").textContent="Global Rank #"+(rank+1);
+
+    var rc=rowColors[Math.min(rank,3)];
+    var dq=document.getElementById("detail-quad");
+    dq.setAttribute("fill",rc.quad);
+    dq.setAttribute("opacity","0.9");
+
+    var detailLeft=document.getElementById("detail-left");
+    var oldImg=detailLeft.querySelector("img");
+    if(oldImg){detailLeft.removeChild(oldImg);}
+    if(player.avatarUrl){
+        var img=document.createElement("img");
+        img.src = player.avatarUrl;
+        img.style.cssText=
+            'position:absolute;'+
+            'left:-360px;'+
+            'top:-240px;'+
+            'width:900px;'+
+            'height:900px;'+
+            'z-index:3;'+
+            'pointer-events:none;';
+        detailLeft.appendChild(img);
+    }
+
+    var tiersEl=document.getElementById("detail-tiers");
+    tiersEl.innerHTML="";
+    for(var i=0;i<styles.length;i++){
+        var t=player.tiers[styles[i].key]||"LT5";
+        var item=document.createElement("div");
+        item.className="detail-tier-item";
+        item.innerHTML=makeTierCircle(t,styles[i],52)+
+            '<div class="detail-style-lbl">'+styles[i].label+'</div>';
+        tiersEl.appendChild(item);
+    }
+
+    document.getElementById("scene-player").classList.add("open");
+};
+
+var closeDetail=function(){
+    document.getElementById("scene-player").classList.remove("open");
+};
+
+document.getElementById("scene-player").addEventListener("click",function(e){
+    if(e.target===this){closeDetail();}
+});
+
+// ============================================================
+// INIT
+// ============================================================
+preloadSkins(function(){
+    document.getElementById("loading-screen").classList.add("hidden");
+    addTab("All",null,"all");
+    addTab("News", null, "news");
+    for(var si=0;si<styles.length;si++){ addTab(styles[si].label,styles[si],styles[si].key); }
+    buildAllPage();
+    buildStylePages();
+    buildNewsPage();
+    switchTab("all");
+});
+
+</script>
+</body>
+</html>
