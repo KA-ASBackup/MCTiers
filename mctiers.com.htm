@@ -247,16 +247,19 @@ filter: drop-shadow(0px 0px 2px rgba(0,0,0,1))
             background:#141414; border:1px solid #222; border-radius:12px;
             width:700px; min-height:360px; position:relative; overflow:hidden; display:flex;
         }
-        .detail-left {
-            width:170px; flex-shrink:0; position:relative;
-            display:flex; align-items:center; justify-content:center;
-            overflow:visible; min-height:360px;
-        }
+.detail-left {
+    width:170px; flex-shrink:0; position:relative;
+    display:flex; align-items:center; justify-content:center;
+    overflow:visible; min-height:360px;
+    z-index:2;
+}
         .detail-left svg { position:absolute; inset:0; width:100%; height:100%; }
         .detail-avatar-placeholder { font-size:56px; opacity:0.2; position:relative; z-index:2; }
         .detail-right {
             flex:1; padding:28px 28px 24px;
             display:flex; flex-direction:column; gap:12px; overflow-y:auto;
+    position:relative;
+    z-index:2;
         }
         .detail-name { font-size:24px; font-weight:900; }
         .detail-pos  { font-size:12px; margin-top:10px; opacity:0.5; }
@@ -412,6 +415,7 @@ filter: drop-shadow(0px 0px 2px rgba(0,0,0,1))
             <div>
                 <div class="detail-name" id="detail-name"></div>
                 <div class="detail-pos"  id="detail-pos"></div>
+<div class="detail-pos" id="detail-title-label"></div>
             </div>
             <div class="detail-tiers" id="detail-tiers"></div>
         </div>
@@ -423,6 +427,15 @@ filter: drop-shadow(0px 0px 2px rgba(0,0,0,1))
 <script>
 
 var news = [
+    {
+        type: "tiertest",
+        date: "2026-06-09",
+        title: "Tier Test",
+        styles: ["cart","vanilla","smp","smp","axe","pot","sword"],
+        playerA: { name:"ASBackup",  results:["L","W","L","L","L","L","L"] },
+        playerB: { name:"SpittFire", results:["W","L","W","W","W","W","W"] },
+        writeup: "ASBackup dominated cart before pearl-dying. ASBackup then dominated the Crystal match, but SpittFire showed insane improvement and was promoted. ASBackup then dominated both SMP matches, in which SpittFire, miraculously, came back from both. The second SMP match, SpittFire was completely drained in two minutes, but due to his excellence in swordsmanship, he came back. SpittFire won a very close axe match, before dominating in Pot, then winning a sword match by one heart (HT1 btw). This test included other gamemodes like 'Fireball Fight' (ASBackup w), 1.8 axe PVP (ASBackup w), and trident PVP (SpittFire w). These fights highlighted ASBackup's growth and both their skills, but emphasized ASBackup's disability to finish the job, and SpittFire's amazing skill under pressure, or when losing."
+    },
     {
         type: "text",
         date: "2026-06-03",
@@ -668,7 +681,7 @@ skinBitmap: [
     },
     {
         name: "SpittFire",
-        tiers: { vanilla:"LT4", sword:"HT1", axe:"LT1", pot:"LT1", smp:"LT2", mace:"HT2", cart:"LT3" },
+        tiers: { vanilla:"LT2", sword:"HT1", axe:"LT1", pot:"LT1", smp:"HT2", mace:"HT2", cart:"LT3" },
 	bannerUrl: "https://www.khanacademy.org/computer-programming/pic2pix/4972175662891008/5886425243697152.png",
 skinPalette: {
     ' ' : [255, 255, 255, 0],
@@ -1010,7 +1023,7 @@ skinBitmap: [
     },
     {
         name: "Dudadude111",
-        tiers: { vanilla:"HT5", sword:"HT3", axe:"LT3", pot:"HT4", smp:"HT4", mace:"LT2", cart:"LT4" },
+        tiers: { vanilla:"LT4", sword:"HT3", axe:"LT3", pot:"HT4", smp:"HT4", mace:"LT2", cart:"LT4" },
 skinPalette: {
     ' ' : [255, 255, 255, 0],
     'a' : [49, 49, 49, 255], 'b' : [81, 81, 81, 255], 'c' : [90, 90, 90, 255], 'd' : [23, 23, 23, 255],
@@ -2196,7 +2209,10 @@ var switchTab=function(key){
 // ============================================================
 var openDetail=function(player,rank){
     document.getElementById("detail-name").textContent=player.name;
-    document.getElementById("detail-pos").textContent="Global Rank #"+(rank+1);
+var points = getPoints(player);
+var title = getTitle(points);
+document.getElementById("detail-pos").textContent = "Global Rank #" + (rank + 1);
+document.getElementById("detail-title-label").textContent = title.label + " • " + points + " pts";
 
 var rc = rowColors[Math.min(rank, 3)];
 var dq = document.getElementById("detail-quad");
@@ -2239,6 +2255,29 @@ dq.parentNode.appendChild(shinePoly);
             '<div class="detail-style-lbl">'+styles[i].label+'</div>';
         tiersEl.appendChild(item);
     }
+
+var oldTitleBg = document.getElementById("detail-title-bg");
+if (oldTitleBg) oldTitleBg.parentNode.removeChild(oldTitleBg);
+
+var points = getPoints(player);
+var title = getTitle(points);
+
+var titleBgImg = document.createElement("img");
+titleBgImg.id = "detail-title-bg";
+titleBgImg.src = title.iconUrl;
+titleBgImg.style.cssText =
+    'position:absolute;' +
+    'right:-23%;' +
+    'top:50%;' +
+    'transform:translateY(-50%);' +
+    'height:115%;' +
+    'width:auto;' +
+    'opacity:0.3;' +
+    'pointer-events:none;' +
+    'z-index:1;' +
+    'object-fit:contain;';
+
+document.querySelector(".detail-box").appendChild(titleBgImg);
 
     document.getElementById("scene-player").classList.add("open");
 };
