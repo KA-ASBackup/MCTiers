@@ -1,0 +1,3220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ㅤ</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Jersey+15&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="https://www.khanacademy.org/computer-programming/assets-wip/6435356132360192/4945022646861824.png">
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        ::-webkit-scrollbar { height:6px; width:6px; }
+        ::-webkit-scrollbar-track { background:#0a0a0a; }
+        ::-webkit-scrollbar-thumb { background:#2a2a2a; border-radius:3px; }
+        ::-webkit-scrollbar-thumb:hover { background:#3a3a3a; }
+        ::-webkit-scrollbar-corner { background:#0a0a0a; }
+
+        body {
+            background:#0d0d0d;
+            color:#fff;
+            font-family:'Jersey 15', 'Segoe UI', sans-serif;
+            height:100vh;
+            display:flex;
+            flex-direction:column;
+            overflow:hidden;
+        }
+        body * {
+            color:#fff;
+            text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+        }
+
+        /* ── TAB BAR ── */
+        .tabs {
+            background:#222222;
+            border-bottom: 2px solid #2a2a2a;
+            padding:0 40px;
+            display:flex;
+            gap:4px;
+            flex-shrink:0;
+            align-items:flex-end;
+            position:relative;
+            z-index:50;
+        }
+
+        .tab {
+            padding:10px 14px;
+            font-size:15px;
+            color:#fff;
+            cursor:pointer;
+            white-space:nowrap;
+            transition:all 0.15s;
+            display:flex;
+            align-items:center;
+            gap:7px;
+            user-select:none;
+            position:relative;
+            border:1.5px solid transparent;
+            border-bottom:none;
+            border-radius: 8px 8px 0 0;
+            margin-bottom:-1px;
+        }
+        .tab:hover { filter:brightness(1.3); }
+        .tab.active {
+            border-color:#7c3aed;
+            border-bottom:none;
+            background:transparent;
+        }
+
+        /* Tab with sub-modes gets extra right padding for arrow */
+.tab.has-sub {
+    padding-right: 14px;
+}
+
+.tab.has-sub.active {
+    padding-right: 30px;
+}
+
+.tab .tab-arrow {
+    display: none;
+}
+
+.tab.active.has-sub .tab-arrow {
+    display: inline;
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 16px !important;
+    text-shadow: none !important;
+    color: #fff !important;
+    pointer-events: auto;
+    line-height: 1;
+}
+
+        .tab-icon {
+            width:15px; height:15px;
+            display:flex; align-items:center; justify-content:center;
+            font-size:13px; line-height:1; flex-shrink:0;
+        }
+        .tab-icon img { width:15px; height:15px; object-fit:contain; }
+
+        /* Sub-mode dropdown menu */
+.tab-submenu {
+    display: none;
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: #141414;
+    border: 2px solid #2a2a2a;
+    border-radius: 10px;
+    padding: 5px;
+    z-index: 200;
+    flex-direction: column;
+    gap: 4px;
+    white-space: nowrap;
+    width: max-content;
+}
+
+.tab-submenu.open { display: flex; }
+
+.tab-subitem {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 10px;
+    border-radius: 8px;
+    border: 1.5px solid #7c3aed;
+    background: transparent;
+    cursor: pointer;
+    font-size: 13px;
+    font-family: 'Jersey 15', 'Segoe UI', sans-serif;
+    white-space: nowrap;
+    transition: filter 0.15s;
+}
+
+.tab-subitem:hover { filter: brightness(1.3); }
+.tab-subitem img { width: 14px; height: 14px; object-fit: contain; }
+
+        /* ── UTILITY BUTTONS (right side of tab bar) ── */
+        .tabbar-btn {
+            padding:8px 12px;
+            background:none;
+            border:none;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            cursor:pointer;
+            border-radius:6px;
+            flex-shrink:0;
+            transition:filter 0.15s;
+            z-index:10;
+        }
+        .tabbar-btn:hover { filter:brightness(1.4); }
+        .panorama-btn { margin-left:auto; }
+
+        /* ── INFO POPUP ── */
+        #scene-info {
+            display:none; position:fixed; inset:0;
+            background:rgba(0,0,0,0.85); z-index:200;
+            align-items:center; justify-content:center;
+        }
+        #scene-info.open { display:flex; }
+#scene-settings {
+    display:none; position:fixed; inset:0;
+    background:rgba(0,0,0,0.85); z-index:200;
+    align-items:center; justify-content:center;
+}
+#scene-settings.open { display:flex; }
+        .info-box {
+            background:#141414; border:1px solid #2a2a2a;
+            border-radius:14px; padding:28px 32px 24px;
+            display:flex; flex-direction:column;
+            align-items:center; gap:10px;
+            position:relative; min-width:300px; max-width:380px;
+            text-align:center;
+        }
+        .info-logo {
+            width:48px; height:48px; object-fit:contain;
+            margin-bottom:4px;
+        }
+        .info-email {
+            font-size:13px; color:#fff; opacity:0.85;
+        }
+        .info-body {
+            font-size:12px; color:#aaa;
+            line-height:1.7; opacity:0.8;
+        }
+        .info-close {
+            position:absolute; top:12px; right:14px;
+            background:none; border:none; color:#fff;
+            font-size:18px; cursor:pointer;
+            text-shadow:-1px -1px 0 #000,1px -1px 0 #000,
+                         -1px 1px 0 #000,1px 1px 0 #000;
+        }
+        .info-close:hover { filter:brightness(1.5); }
+
+        /* ── BANNER TEST SCENE ── */
+        #scene-banner-test {
+            display:none; position:fixed; inset:0;
+            background:rgba(0,0,0,0.95); z-index:100;
+            align-items:flex-start; justify-content:center;
+            flex-direction:column; gap:24px; padding-top:40px;
+        }
+        #scene-banner-test.open { display:flex; }
+
+        .bt-panel {
+            margin:0 auto;
+            background:#141414; border:1px solid #222; border-radius:12px;
+            padding:20px 24px; display:flex; flex-direction:column; gap:14px;
+            width:calc(100% - 80px); max-width:none; align-self:stretch;
+        }
+        .bt-row { display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
+        .bt-label { font-size:12px; opacity:0.6; width:90px; flex-shrink:0; }
+        .bt-input {
+            background:#1a1a1a; border:1px solid #333; border-radius:6px;
+            color:#fff; font-family:'Jersey 15','Segoe UI',sans-serif;
+            font-size:14px; padding:6px 10px; outline:none;
+            text-shadow:-1px -1px 0 #000,1px -1px 0 #000,
+                        -1px 1px 0 #000,1px 1px 0 #000;
+        }
+        .bt-input:focus { border-color:#7c3aed; }
+        .bt-btn {
+            background:#7c3aed; border:none; border-radius:6px;
+            color:#fff; font-family:'Jersey 15','Segoe UI',sans-serif;
+            font-size:14px; padding:6px 14px; cursor:pointer; text-shadow:none;
+        }
+        .bt-btn:hover { filter:brightness(1.2); }
+        .bt-hint { font-size:10px; opacity:0.4; }
+        .bt-select {
+            background:#1a1a1a; border:1px solid #333; border-radius:6px;
+            color:#fff; font-family:'Jersey 15','Segoe UI',sans-serif;
+            font-size:13px; padding:5px 8px; outline:none; cursor:pointer;
+        }
+        .bt-preview-wrap {
+            width:calc(100% - 80px); max-width:none;
+            position:relative; height:68px; align-self:center;
+        }
+        #bt-close {
+            position:absolute; top:16px; right:20px;
+            background:none; border:none; color:#fff; font-size:18px;
+            cursor:pointer; z-index:10;
+            text-shadow:-1px -1px 0 #000,1px -1px 0 #000,
+                        -1px 1px 0 #000,1px 1px 0 #000;
+        }
+        #bt-close:hover { filter:brightness(1.5); }
+        .bt-tiers-grid { display:flex; flex-wrap:wrap; gap:6px; }
+        .bt-tier-dropdown { position:relative; display:inline-block; }
+        .bt-tier-btn {
+            background:#1a1a1a; border:1.5px solid #333; border-radius:6px;
+            color:#fff; font-family:'Jersey 15','Segoe UI',sans-serif;
+            font-size:12px; padding:4px 8px; cursor:pointer;
+            min-width:60px; text-align:center;
+            text-shadow:-1px -1px 0 #000,1px -1px 0 #000,
+                        -1px 1px 0 #000,1px 1px 0 #000;
+        }
+        .bt-tier-btn:hover { border-color:#7c3aed; }
+        .bt-tier-popup {
+            display:none; position:absolute; top:110%; left:0;
+            background:#1a1a1a; border:1px solid #333; border-radius:8px;
+            padding:6px; z-index:200; min-width:220px;
+            flex-wrap:wrap; gap:4px;
+        }
+        .bt-tier-popup.open { display:flex; }
+        .bt-tier-option {
+            font-size:11px; font-family:'Jersey 15','Segoe UI',sans-serif;
+            padding:4px 8px; border-radius:5px; cursor:pointer;
+            border:1.5px solid transparent; text-align:center; min-width:44px;
+            text-shadow:-1px -1px 0 #000,1px -1px 0 #000,
+                        -1px 1px 0 #000,1px 1px 0 #000;
+            background:rgba(0,0,0,0.4);
+        }
+        .bt-tier-option:hover { filter:brightness(1.3); }
+        .bt-tier-option.ht { opacity:1; }
+        .bt-tier-option.lt { opacity:0.45; }
+
+        /* ── ALL PAGE ── */
+        #page-all { display:flex; flex-direction:column; flex:1; overflow-y:auto; overflow-x:hidden; }
+        .player-list { padding:16px 40px; display:flex; flex-direction:column; gap:30px; }
+        .player-row {
+            position:relative; height:68px; cursor:pointer;
+            border-radius:6px; overflow:visible; flex-shrink:0;
+            transition:filter 0.15s;
+        }
+        .player-row:hover { filter:brightness(1.05); }
+        .row-bg {
+            position:absolute; inset:0; width:100%; height:100%;
+            z-index:0; border-radius:6px; overflow:hidden;
+        }
+        .row-bg svg { width:100%; height:100%; position:absolute; inset:0; }
+        .row-content {
+            position:absolute; inset:0; display:flex; align-items:center;
+            padding:0 22px; gap:12px; z-index:2; overflow:hidden;
+        }
+        .row-pos {
+            font-size:18px; font-weight:900; color:#fff !important;
+            text-shadow:-1px -1px 0 #000,1px -1px 0 #000,
+                        -1px 1px 0 #000,1px 1px 0 #000 !important;
+            width:28px; flex-shrink:0; text-align:center;
+        }
+        .row-name {
+            font-size:15px; font-weight:700; flex-shrink:0; width:160px;
+            position:absolute; left:120px; top:50%; transform:translateY(-80%);
+            white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+        }
+        .row-title {
+            position:absolute; left:120px; top:50%; transform:translateY(40%);
+            display:flex; align-items:center; gap:4px;
+        }
+        .row-title-icon {
+            width:14px; height:14px; object-fit:contain;
+            filter: drop-shadow(0px 0px 2px rgba(0,0,0,1))
+                    drop-shadow(0px 0px 4px rgba(0,0,0,1))
+                    drop-shadow(0px 0px 6px rgba(0,0,0,1));
+        }
+        .row-title-label { font-size:9px; opacity:1; }
+        .row-tiers { display:flex; gap:6px; margin-left:auto; align-items:center; flex-shrink:0; }
+        .tier-circle-wrap { display:flex; flex-direction:column; align-items:center; gap:0; flex-shrink:0; }
+
+        /* ── STYLE PAGES ── */
+        .style-page { display:none; flex:1; flex-direction:column; overflow:hidden; }
+        .style-page.open { display:flex; }
+        .col-page-inner {
+            display:flex; gap:10px; padding:16px 40px 16px;
+            flex:1; overflow-x:auto; overflow-y:auto; align-items:flex-start;
+        }
+        .col-player-card {
+            position:relative; height:44px; border-radius:4px;
+            overflow:visible; cursor:pointer; flex-shrink:0;
+            transition:filter 0.15s;
+        }
+        .col-player-card:hover { filter:brightness(1.05); }
+        .col-card-bg { position:absolute; inset:0; border-radius:4px; overflow:hidden; }
+        .col-card-bg svg { width:100%; height:100%; position:absolute; inset:0; }
+        .col-card-content {
+            position:absolute; inset:0; display:flex; align-items:center;
+            gap:6px; padding:0 8px; z-index:2; overflow:hidden;
+        }
+        .col-rank { font-size:11px; color:#fff !important; width:18px; flex-shrink:0; text-align:right; }
+        .col-name { font-size:13px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+
+        /* ── DETAIL / PLAYER POPUP ── */
+        #scene-player {
+            display:none; position:fixed; inset:0;
+            background:rgba(0,0,0,0.92); z-index:100;
+            align-items:center; justify-content:center;
+        }
+        #scene-player.open { display:flex; }
+        .detail-box {
+            background:#141414; border:1px solid #222; border-radius:12px;
+            width:700px; min-height:360px; position:relative;
+            overflow:hidden; display:flex;
+        }
+        .detail-left {
+            width:170px; flex-shrink:0; position:relative;
+            display:flex; align-items:center; justify-content:center;
+            overflow:visible; min-height:360px; z-index:2;
+        }
+        .detail-left svg { position:absolute; inset:0; width:100%; height:100%; }
+        .detail-right {
+            flex:1; padding:28px 28px 24px;
+            display:flex; flex-direction:column; gap:12px;
+            overflow-y:auto; position:relative; z-index:2;
+        }
+        .detail-name { font-size:24px; font-weight:900; }
+        .detail-pos  { font-size:12px; margin-top:10px; opacity:0.5; }
+        .detail-tiers { display:flex; flex-wrap:wrap; gap:10px; margin-top:4px; }
+        .detail-tier-item {
+            display:flex; flex-direction:column; align-items:center; gap:4px;
+            position:relative;
+        }
+        .detail-style-lbl { font-size:10px; opacity:0.5; }
+
+        /* Sub-tier hover panel in detail popup */
+        .detail-sub-tiers {
+            display:none;
+            position:absolute;
+            bottom:calc(100% + 6px);
+            left:50%;
+            transform:translateX(-50%);
+            background:#1a1a1a;
+            border:1px solid #333;
+            border-radius:8px;
+            padding:6px 8px;
+            flex-direction:row;
+            gap:6px;
+            z-index:10;
+            white-space:nowrap;
+        }
+        .detail-tier-item:hover .detail-sub-tiers { display:flex; }
+
+        .close-btn {
+            position:absolute; top:12px; right:14px;
+            background:none; border:none; color:#fff; font-size:18px;
+            cursor:pointer; z-index:10; transition:color 0.1s;
+            text-shadow:-1px -1px 0 #000,1px -1px 0 #000,
+                        -1px 1px 0 #000,1px 1px 0 #000;
+        }
+        .close-btn:hover { color:#fff; filter:brightness(1.5); }
+
+        /* ── LOADING ── */
+#loading-screen {
+    z-index: 9999;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: #0d0d0d;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#loading-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+}
+
+#loading-skin {
+    width: auto;
+    height: calc(100vh - 60px);
+    max-height: 600px;
+    max-width: 100%;
+    image-rendering: pixelated;
+    display: none;
+    object-fit: contain;
+}
+
+#loading-bar-wrap {
+    width: 220px;
+    height: 6px;
+    background: #2a2a2a;
+    border-radius: 3px;
+    position: absolute;
+    bottom: 220px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+#loading-bar {
+    height: 100%;
+    background: #7c3aed;
+    border-radius: 3px;
+    width: 0%;
+    transition: width 0.2s ease;
+}
+
+#loading-screen.hidden { display: none; }
+        #loading-label { font-size:13px; }
+
+        /* ── NEWS ── */
+        .news-list { padding:16px 40px; display:flex; flex-direction:column; gap:10px; }
+        .news-box {
+            position: relative;
+            background:#141414; border:1px solid #1e1e1e;position: relative;
+            border-radius:8px; padding:18px 22px;
+            display:flex; flex-direction:column; gap:8px;
+        }
+        .news-box.news-unread {
+            border-color: #7c3aed;
+        }
+        .news-date { font-size:10px; color:#444; letter-s
+pacing:1px; }
+        .news-title { font-size:16px; font-weight:700; color:#fff; }
+        .news-body { font-size:13px; color:#aaa; line-height:1.6;white-space: pre-wrap; }
+        .tiertest-main { display:flex; gap:16px; align-items:stretch; }
+        .tiertest-players {
+            display:flex; flex-direction:column; gap:8px;
+            flex-shrink:0; justify-content:space-between;
+        }
+        .tiertest-player { display:flex; flex-direction:column; align-items:center; gap:2px; position:relative; }
+        .tiertest-player-name { font-size:11px; color:#fff; white-space:nowrap; }
+        .tiertest-player-img { position:relative; width:96px; height:96px; overflow:visible; }
+        .tiertest-player-img img {
+            position:absolute; left:-103px; top:-97px;
+            width:300px; height:300px; pointer-events:none;
+        }
+        .tiertest-result {
+            font-size:18px; font-weight:900;
+            font-family:'Jersey 15',sans-serif;
+            position:absolute; right:-8px; top:0;
+        }
+        .tiertest-result.W { color:#4caf50; text-shadow:-1px -1px 0 #000,1px -1px 0 #000,-1px 1px 0 #000,1px 1px 0 #000; }
+        .tiertest-result.L { color:#f44336; text-shadow:-1px -1px 0 #000,1px -1px 0 #000,-1px 1px 0 #000,1px 1px 0 #000; }
+        .tiertest-result.D { color:#aaa;    text-shadow:-1px -1px 0 #000,1px -1px 0 #000,-1px 1px 0 #000,1px 1px 0 #000; }
+        .tiertest-styles { display:flex; flex-direction:row; gap:16px; align-items:stretch; }
+        .tiertest-style-row { display:flex; align-items:center; gap:8px; }
+        .tiertest-writeup {
+            font-size:13px; color:#aaa; line-height:1.6;white-space: pre-wrap;
+            border-top:1px solid #1e1e1e; padding-top:12px; margin-top:4px;
+        }
+    </style>
+</head>
+<body>
+<div id="loading-screen">
+    <div id="loading-content">
+        <img id="loading-skin" src="" />
+        <div id="loading-bar-wrap">
+            <div id="loading-bar"></div>
+        </div>
+    </div>
+</div>
+
+<div class="tabs" id="tabs">
+    <div style="margin-left:auto;display:flex;align-items:center;gap:0;">
+        <button class="tabbar-btn panorama-btn" title="Preview">
+            <span class="material-icons" style="color:#fff;font-size:22px;text-shadow:none;pointer-events:none;">panorama</span>
+        </button>
+        <button class="tabbar-btn" id="info-btn" title="Info">
+            <span class="material-icons" style="color:#fff;font-size:22px;text-shadow:none;pointer-events:none;">info</span>
+        </button>
+<button class="tabbar-btn" id="settings-btn" title="Settings">
+    <span class="material-icons" style="color:#fff;font-size:22px;text-shadow:none;pointer-events:none;">settings</span>
+</button>
+    </div>
+</div>
+
+<div id="page-all"><div class="player-list" id="list-all"></div></div>
+
+<div id="page-news" style="display:none;flex:1;flex-direction:column;overflow-y:auto;overflow-x:hidden;">
+    <div class="news-list" id="list-news"></div>
+</div>
+
+<div id="pages-styles"></div>
+
+<div id="scene-player">
+    <div class="detail-box">
+        <button class="close-btn" onclick="closeDetail()">✕</button>
+        <div class="detail-left" id="detail-left">
+            <svg viewBox="0 0 170 360" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+                <rect width="170" height="360" fill="#0f0f0f"/>
+                <polygon id="detail-quad" points="0,0 170,0 170,360 0,360" fill="#1e1e1e" opacity="1"/>
+            </svg>
+        </div>
+        <div class="detail-right">
+            <div>
+                <div class="detail-name" id="detail-name"></div>
+                <div class="detail-pos"  id="detail-pos"></div>
+                <div class="detail-pos"  id="detail-title-label"></div>
+            </div>
+            <div class="detail-tiers" id="detail-tiers"></div>
+        </div>
+    </div>
+</div>
+
+<!-- Info popup -->
+<div id="scene-info">
+    <div class="info-box">
+        <button class="info-close" onclick="closeInfo()">✕</button>
+        <img class="info-logo" src="https://www.khanacademy.org/computer-programming/assets-wip/6435356132360192/4945022646861824.png" alt="MCTiers">
+        <div class="info-email">silas.boram@outlook.com</div>
+        <div class="info-body"><br>Want to get tested? Wrong skin or name?<br>Change or add a banner? Retire in a gamemode?<br>Ask a question? Report an issue?<br><br>Contact me.</div>
+    </div>
+</div>
+
+<div id="scene-settings">
+    <div class="info-box">
+        <button class="info-close" onclick="closeSettings()">✕</button>
+        <div style="font-size:15px;font-weight:700;margin-bottom:4px;">Notifications</div>
+        <div style="font-size:11px;color:#aaa;margin-bottom:12px;">What news do you wish to be notified of?</div>
+        <div id="settings-checks" style="display:flex;flex-direction:column;gap:10px;width:100%;"></div>
+    </div>
+</div>
+
+<canvas id="skin-canvas" width="1600" height="1600" style="display:none;"></canvas>
+
+<div id="scene-banner-test">
+    <button id="bt-close" onclick="closeBannerTest()">✕</button>
+    <div class="bt-panel">
+        <div class="bt-row">
+            <span class="bt-label">Name</span>
+            <input class="bt-input" id="bt-name" type="text" value="Player" oninput="btUpdate()">
+        </div>
+        <div class="bt-row">
+            <span class="bt-label">Banner</span>
+            <input type="file" id="bt-file" accept="image/*" style="display:none">
+            <button class="bt-btn" onclick="document.getElementById('bt-file').click()">Upload</button>
+            <span class="bt-hint">Recommended: 1200 × 68px</span>
+        </div>
+        <div class="bt-row">
+            <span class="bt-label">Rank</span>
+            <input class="bt-input" id="bt-rank" type="number" min="1" value="1" style="width:70px;" oninput="btUpdate()">
+        </div>
+        <div class="bt-row" style="align-items:flex-start;">
+            <span class="bt-label" style="padding-top:6px;">Tiers</span>
+            <div class="bt-tiers-grid" id="bt-tiers-grid"></div>
+        </div>
+        <div class="bt-row">
+            <span class="bt-label">Skin</span>
+            <select class="bt-select" id="bt-skin" onchange="btUpdate()">
+                <option value="">— none —</option>
+            </select>
+        </div>
+    </div>
+    <div class="bt-preview-wrap" id="bt-preview"></div>
+</div>
+
+<script>
+var tabsEl = document.getElementById("tabs");
+
+// ============================================================
+// NEWS
+// ============================================================
+var news = [
+    {
+        type: "text",
+        date: "2026-0x-0x",
+        title: "v3 changed tier system",
+        body: "Some additional info, Mace and Cart PVP rankings are an average of sub-modes. Clicking on their respective tiles will show you total averages and clicking on the pop-down menu's sub-mode buttons will show you the sub-mode rankings, though unnecessary. Hover over mace/cart tiers in player pop-up UI (accessible by clicking on any player bar) to see specific rankings. Also, points per tier and points per rank have changed:<br><br>Tier: LT5, HT5, LT4, HT4, LT3, HT3, LT2, HT2, LT1, HT1<br>Points: 1      2     4     6     10    15    25    30   40   60<br><br>Rank/Title: Rookie, Combat Novice, Combat Cadet, Combat Specialist, Combat Ace, Combat Master, Combat Grandmaster<br>Required Points: 0                      15                     30                            80                 180                     250                                400"
+    },
+    {
+        type: "text",
+        date: "2026-0x-0x",
+        title: "v3",
+        body: "v3 full release!<br><br>UHC added!<br>Sub-modes Spear/Rocket/Elytra Mace and Bow/XBow Cart added!<br>Retiring gamemodes added!<br>New player pop-up UI!<br>Players can now be tied in global rankings.<br><br>Updated points/ranks.<br>'Sword' icon changed from Netherite to Diamond.<br><br>Menu redesigned.<br>Info and notification settings added.<br>Unread messages added.<br><br>Loading screen redone.<br>General color, consistency, UI, and GUI fixes."
+    },
+/*{
+    type: "promotion",
+    date: "2026-08-21",
+    player: "AgentStudios",
+    style: "smace",
+    fromTier: "HT4",
+    toTier: "LT4",
+    text: "Showed improvement in spear mace." // optional
+},*/
+    {
+        type: "tiertest",
+        date: "2026-08-20",
+        title: "Tier Test",
+        styles: ["smp","smp","smp","smace","bcart","xbow","rmace","uhc"],
+        playerA: { name:"ASBackup",     results:["W","W","W","W","W","W","W","W"] },
+        playerB: { name:"AgentStudios", results:["L","L","L","L","L","L","L","L"] },
+        writeup: "AgentStudios showcased actually impressive XBow tallent, and cart intellegence."
+    },
+    {
+        type: "tiertest",
+        date: "2026-08-18",
+        title: "Tier Test",
+        styles: ["vanilla","emace","sword","axe","pot"],
+        playerA: { name:"ASBackup",     results:["W","W","W","W","W"] },
+        playerB: { name:"AgentStudios", results:["L","L","L","L","L"] },
+        writeup: "AgentStudios showcased growth, namely in axe and sword."
+    },
+    {
+        type: "text",
+        date: "2026-06-03",
+        title: "v0.3.1",
+        body: "v3 snapshot 1 complete. Player titles/points added to player pop-ups."
+    },
+    {
+        type: "tiertest",
+        date: "2026-08-08",
+        title: "Tier Test",
+        styles: ["cart"],
+        playerA: { name:"ASBackup",     results:["W"] },
+        playerB: { name:"AgentStudios", results:["L"] },
+        writeup: "ASBackup cooked in cart, with an insta-bow pop and insta-bow kill, showing at least HT2 skill, but only promoted once to LT2 due to the calibre of the opposition."
+    },
+    {
+        type: "tiertest",
+        date: "2026-06-09",
+        title: "Tier Test",
+        styles: ["cart","vanilla","smp","smp","axe","pot","sword"],
+        playerA: { name:"ASBackup",  results:["L","W","L","L","L","L","L"] },
+        playerB: { name:"SpittFire", results:["W","L","W","W","W","W","W"] },
+        writeup: "ASBackup dominated cart before pearl-dying. ASBackup then dominated the Crystal match, but SpittFire showed insane improvement and was promoted. ASBackup then dominated both SMP matches, in which SpittFire, miraculously, came back from both. The second SMP match, SpittFire was completely drained in two minutes, but due to his excellence in swordsmanship, he came back. SpittFire won a very close axe match, before dominating in Pot, then winning a sword match by one heart (HT1 btw)."
+    },
+    {
+        type: "text",
+        date: "2026-06-03",
+        title: "v2",
+        body: "v2 complete. Preview row added, score system modernized, titles and pts added, and tier system fixed. New skins added."
+    },
+    {
+        type: "text",
+        date: "2026-05-26",
+        title: "Updates",
+        body: "Banner system added! You can have a custom tile on the 'All' page now! Minor tech issues also resolved. Contact me for how to add ur own banner."
+    },
+    {
+        type: "tiertest",
+        date: "2026-05-25",
+        title: "Tier Test",
+        styles: ["mace","sword","sword","sword","vanilla"],
+        playerA: { name:"ASBackup",  results:["W","L","L","L","D"] },
+        playerB: { name:"SpittFire", results:["L","W","W","W","D"] },
+        writeup: "This was a masterclass in ragebaiting by SpittFire. ASBackup won the mace match after killing an AFK SpittFire who left MID-MATCH, SpittFire, naturally, won the sword matches, then SpittFire, for 25 MINUTES, ran in a crystal match forcing a draw on time."
+    },
+    {
+        type: "tiertest",
+        date: "2026-05-07",
+        title: "Tier Test",
+        styles: ["sword","vanilla"],
+        playerA: { name:"ASBackup",      results:["W","W"] },
+        playerB: { name:"EmersonJenner", results:["L","L"] },
+        writeup: "Yeah, it wasn't even close."
+    },
+    {
+        type: "text",
+        date: "2026-05-05",
+        title: "New Style!",
+        body: "MineCart PVP has been added to MCTiers! Testing includes default and exbo cart pvp."
+    }
+];
+
+// After your news array is defined, auto-assign IDs
+for (var i = 0; i < news.length; i++) {
+    if (!news[i].id) news[i].id = news[i].date + '_' + i;
+}
+
+
+// ============================================================
+// ASSET URLS
+// ============================================================
+var ICON_URLS = {
+    vanilla: "https://www.khanacademy.org/computer-programming/assets-wip/6435356132360192/6265364849999872.png",
+    sword:   "https://www.khanacademy.org/computer-programming/assets-wip/6435356132360192/5172802069315584.png",
+    axe:     "https://www.khanacademy.org/computer-programming/assets-wip/6435356132360192/4589745837817856.png",
+    pot:     "https://www.khanacademy.org/computer-programming/assets-wip/6435356132360192/6733981685235712.png",
+    smp:     "https://www.khanacademy.org/computer-programming/assets-wip/6435356132360192/5941607732199424.png",
+    mace:    "https://www.khanacademy.org/computer-programming/assets-wip/6435356132360192/5155319747821568.png",
+    cart:    "https://www.khanacademy.org/computer-programming/assets-wip/6435356132360192/4823883614371840.png",
+    uhc:     "https://www.khanacademy.org/computer-programming/assets-wip/6435356132360192/5139116775030784.png",
+    smace:   "https://www.khanacademy.org/computer-programming/assets-wip/6435356132360192/5133717195833344.png",
+    rmace:   "https://www.khanacademy.org/computer-programming/assets-wip/6435356132360192/5966012400123904.png",
+    emace:   "https://www.khanacademy.org/computer-programming/assets-wip/6435356132360192/5071064830164992.png",
+    bcart:   "https://www.khanacademy.org/computer-programming/assets-wip/6435356132360192/5433011790528512.png",
+    xbow:    "https://www.khanacademy.org/computer-programming/assets-wip/6435356132360192/5301739017584640.png"
+};
+
+var RING_URLS = {
+    gold:   "https://www.khanacademy.org/computer-programming/assets-wip/6435356132360192/4922574698299392.png",
+    silver: "https://www.khanacademy.org/computer-programming/assets-wip/6435356132360192/5654721532903424.png",
+    bronze: "https://www.khanacademy.org/computer-programming/assets-wip/6435356132360192/4534535442513920.png",
+    grey:   "https://www.khanacademy.org/computer-programming/assets-wip/6435356132360192/5304779543003136.png"
+};
+
+// ============================================================
+// STYLES  (main gamemodes shown in tab bar + all page)
+// ============================================================
+var styles = [
+    { key:"vanilla", label:"Vanilla", iconUrl: ICON_URLS.vanilla },
+    { key:"sword",   label:"Sword",   iconUrl: ICON_URLS.sword   },
+    { key:"axe",     label:"Axe",     iconUrl: ICON_URLS.axe     },
+    { key:"pot",     label:"Pot",     iconUrl: ICON_URLS.pot     },
+    { key:"smp",     label:"SMP",     iconUrl: ICON_URLS.smp     },
+    { key:"mace",    label:"Mace",    iconUrl: ICON_URLS.mace,
+subs: [
+    { key:"smace", label:"Spear Mace",  iconUrl: ICON_URLS.smace },
+    { key:"rmace", label:"Rocket Mace", iconUrl: ICON_URLS.rmace },
+    { key:"emace", label:"Elytra Mace", iconUrl: ICON_URLS.emace }
+]
+    },
+    { key:"cart",    label:"Cart",    iconUrl: ICON_URLS.cart,
+      subs: [
+          { key:"bcart", label:"Bow Cart", iconUrl: ICON_URLS.bcart },
+          { key:"xbow",  label:"XBow",     iconUrl: ICON_URLS.xbow  }
+      ]
+    },
+    { key:"uhc",     label:"UHC",     iconUrl: ICON_URLS.uhc     }
+];
+
+// ============================================================
+// TIER SYSTEM
+// ============================================================
+var tierOrder = ["HT1","LT1","HT2","LT2","HT3","LT3","HT4","LT4","HT5","LT5"];
+
+// Points scaled down so extra gamemodes don't make titles too easy
+var tierPoints = {
+    "LT5":1,  "HT5":2,
+    "LT4":4,  "HT4":6,
+    "LT3":10, "HT3":15,
+    "LT2":25, "HT2":30,
+    "LT1":40, "HT1":60
+};
+
+// R-Tier: prefix "R" means same tier value but with special styling
+// Normalise a tier string — strips leading R if present
+function normTier(t) {
+    if (!t) return "LT5";
+    if (t.charAt(0) === 'R') return t.slice(1);
+    return t;
+}
+function isRTier(t) {
+    return t && t.charAt(0) === 'R';
+}
+
+var titles = [
+    { min:0,   label:"Rookie",             iconUrl:"https://www.khanacademy.org/computer-programming/music-thing/5268100769562624/4514763306811392.png" },
+    { min:15,  label:"Combat Novice",      iconUrl:"https://www.khanacademy.org/computer-programming/music-thing/5268100769562624/4901826187345920.png" },
+    { min:30,  label:"Combat Cadet",       iconUrl:"https://www.khanacademy.org/computer-programming/music-thing/5268100769562624/6741328711237632.png" },
+    { min:80,  label:"Combat Specialist",  iconUrl:"https://www.khanacademy.org/computer-programming/music-thing/5268100769562624/6740174841430016.png" },
+    { min:180, label:"Combat Ace",         iconUrl:"https://www.khanacademy.org/computer-programming/music-thing/5268100769562624/6563019922718720.png" },
+    { min:250, label:"Combat Master",      iconUrl:"https://www.khanacademy.org/computer-programming/music-thing/5268100769562624/5718119806255104.png" },
+    { min:400, label:"Combat Grandmaster", iconUrl:"https://www.khanacademy.org/computer-programming/music-thing/5268100769562624/5004809705209856.png" }
+];
+
+// Average sub-tiers to produce overall tier for mace / cart
+// Returns a tier string like "HT2"
+function avgSubTiers(tierArr) {
+    var total = 0;
+    for (var i = 0; i < tierArr.length; i++) {
+        total += tierOrder.indexOf(normTier(tierArr[i]));
+    }
+    var avg = Math.round(total / tierArr.length);
+    return tierOrder[Math.max(0, Math.min(avg, tierOrder.length - 1))];
+}
+
+// Get the effective display tier for a style key from a player's tiers object
+function getEffectiveTier(p, styleKey) {
+    var style = null;
+    for (var i = 0; i < styles.length; i++) {
+        if (styles[i].key === styleKey) { style = styles[i]; break; }
+    }
+    if (!style) return p.tiers[styleKey] || "LT5";
+    if (style.subs) {
+        var subVals = [];
+        for (var s = 0; s < style.subs.length; s++) {
+            subVals.push(p.tiers[style.subs[s].key] || "LT5");
+        }
+        return avgSubTiers(subVals);
+    }
+    return p.tiers[styleKey] || "LT5";
+}
+
+function getPoints(p) {
+    var total = 0;
+    for (var i = 0; i < styles.length; i++) {
+        var style = styles[i];
+        if (style.subs) {
+            var subPoints = 0;
+            for (var s = 0; s < style.subs.length; s++) {
+                subPoints += tierPoints[normTier(p.tiers[style.subs[s].key] || "LT5")] || 1;
+            }
+            total += subPoints / style.subs.length;
+        } else {
+            var t = normTier(getEffectiveTier(p, style.key));
+            total += tierPoints[t] || 1;
+        }
+    }
+    return total; // precise decimal for sorting
+}
+
+function getDisplayPoints(p) {
+    return Math.round(getPoints(p)); // rounded for display and title lookup
+}
+function getTitle(points) {
+    var title = titles[0];
+    for (var i = 0; i < titles.length; i++) {
+        if (points >= titles[i].min) title = titles[i];
+    }
+    return title;
+}
+
+var tierColors = {
+    "HT1":{ bg:"#130f00", stroke:"#FFD700", text:"#FFD700", ring:"gold",   glow:"#FFD700" },
+    "HT2":{ bg:"#111",    stroke:"#C0C0C0", text:"#C0C0C0", ring:"silver", glow:"#C0C0C0" },
+    "HT3":{ bg:"#100800", stroke:"#CD7F32", text:"#CD7F32", ring:"bronze", glow:"#CD7F32" },
+    "HT4":{ bg:"#0d0d0d", stroke:"#383838", text:"#666",    ring:"grey",   glow:"#555"    },
+    "HT5":{ bg:"#0d0d0d", stroke:"#343434", text:"#606060", ring:"grey",   glow:"#555"    },
+    "LT1":{ bg:"#130f00", stroke:"#FFD700", text:"#FFD700", ring:"gold",   glow:null      },
+    "LT2":{ bg:"#111",    stroke:"#C0C0C0", text:"#C0C0C0", ring:"silver", glow:null      },
+    "LT3":{ bg:"#100800", stroke:"#CD7F32", text:"#CD7F32", ring:"bronze", glow:null      },
+    "LT4":{ bg:"#0d0d0d", stroke:"#383838", text:"#666",    ring:"grey",   glow:null      },
+    "LT5":{ bg:"#0d0d0d", stroke:"#282828", text:"#4e4e4e", ring:"grey",   glow:null      }
+};
+
+var rowColors = [
+    { bg:"#202020", quad:"#FFD700", quadLight:"rgba(255,255,200,0.3)"  },
+    { bg:"#202020", quad:"#C0C0C0", quadLight:"rgba(255,255,255,0.22)" },
+    { bg:"#202020", quad:"#CD7F32", quadLight:"rgba(255,220,180,0.16)" },
+    { bg:"#202020", quad:"#606060", quadLight:"rgba(200,200,200,0.1)"  }
+];
+
+// ============================================================
+// PLAYERS
+// ============================================================
+var players = [
+    {
+        name: "ASBackup",
+        tiers: {
+            vanilla:"RHT1", sword:"HT2", axe:"HT2", pot:"LT1", smp:"HT2",
+            smace:"HT2", rmace:"RHT1", emace:"LT1",
+            bcart:"LT1", xbow:"LT2",
+            uhc:"HT2"
+        },
+        bannerUrl: "https://www.khanacademy.org/computer-programming/pic2pix/4972175662891008/5785892222779392.png",
+        skinPalette: {
+            ' ':[255,255,255,0],
+            'a':[140,140,140,255],'b':[153,153,153,255],'c':[230,230,230,255],'d':[166,166,166,255],
+            'e':[128,128,128,255],'f':[179,179,179,255],'g':[89,89,89,255],'h':[64,64,64,255],
+            'i':[115,115,115,255],'j':[255,255,255,255],'k':[110,110,110,255],'l':[77,77,77,255],
+            'm':[102,102,102,255]
+        },
+        skinBitmap: [
+'        aaaaaaabcccccccc                ddddddd',
+'        aabbbbaacccccccc                dddddddd',
+'        abbbbbbacccccccc                 d ddddd',
+'        abbbbbbacccccccc                     ddd',
+'        aabbbbaacccccccc                 d   ddd',
+'        aabbbbbacccccccc                ddd dddd',
+'        aaaaabbbcccccccc                ddddddd',
+'        aaaaaaabcccccccc                 dddddd',
+'baaaaaaaaaaaaaabbbaaaabbbaaaaabbddd  dd   dddd   ddddd   ddddddd',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaadddddddddddddddddddddddddddddd d',
+'eeeeeeeeeeeeaaaeeeeeeeeeeeeeeeeeddddddddddd   dd dddddddddddd dd',
+'eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee   dd               dd     dd',
+'ccceeeeeeeeeeeeeeeeeeccccccccccc',
+'cccccccccccccffccccccccccccccccc',
+'cccccccccccccfcccccccccccccccccc',
+'cccccccccccccccccccccccccccccccc',
+'    gggghhhh        iiiiiiiiiiiiiiii        iiiijjjj',
+'    gggghhhh        iiiiiiiiiiiiiiii        iiiijjjj',
+'    gggghhhh        iiiiiiiiiiiiiiii        iiiijjjj',
+'    gggghhhh        iiiiiiiiiiiiiiii        iiiijjjj',
+'giigggggggggggggiiiiiiihhiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii',
+'ggggggggggggggggiiiiiiikhiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii',
+'ggggggggggggggggiiiiiiihhiiiiiiiiiiiiiiijjjjjjjjjjjjjjjj',
+'ggggggggggggggggiiiiiiihhiiiiiiiiiiiiiiijjjjjjjjjjjjjjjj',
+'ggggggggggggggggiiiiiiihhiiiiiiiiiiiiiiijjjjjjjjjjjjjjjj',
+'ggggggggggggggggiiiiiiihhiiiiiiiiiiiiiiijjjjjjjjjjjjjjjj',
+'ggggggggggggggggiiiiiiihhiiiiiiiiiiiiiiijjjjjjjjjjjjjjjj',
+'ggggggggggggggggiiiiiiihhiiiiiiiiiiiiiiijjjjjjjjjjjjjjjj',
+'ggggggggggggggggiiiiiiihhiiiiiiiiiiiiiiijjjjjjjjjjjjjjjj',
+'ggggggggggggggggiiiiiiihhiiiiiiiiiiiiiiijjjjjjjjjjjjjjjj',
+'ggggggggggggggggiiiiiiikhiiiiiiiiiiiiiiijjjjjjjjjjjjjjjj',
+'hhhhhhhhhhhhhhhhliiiillmmliiiiillllllllljjjjjjjjjjjjjjjj',
+'                    dd    dd                dddd',
+'                    d      d                dddd',
+'                    d      d                dddd',
+'                    dd    dd                dddd',
+'                dddddd    dddddddddddddddddddddddddddddd',
+'                dddddd    dddddddddddddddddddddddddddddd',
+' ll          ll dddddd    dddddddddddddddddddddddddddddd',
+' ll          ll ddddddd  ddddddddddddddddddddddddddddddd',
+' ll          ll ddddddd  ddddddddddddddddddddddddddddddd',
+' ll          ll dddddaaddddddddddddddddddddddddddddddddd',
+'                ddddddddbddddddddddddddddddddddddddddddd',
+'                dddddddddddddddddddddddddddddddddddddddd',
+'                ddddddddbddddddddddddddddddddddddddddddd',
+'                dddddddddddddddddddddddddddddddddddddddd',
+'                ddddddddbddddddddddddddddddddddddddddddd',
+'                dddddddddddddddddddddddd',
+'                    gggghhhh        iiiijjjj        dddd',
+'                    gggghhhh        iiiijjjj        dddd',
+'                    gggghhhh        iiiijjjj        dddd',
+'                    gggghhhh        iiiijjjj        dddd',
+'                gggggggiiiggggggiiiiiiiiiiiiiiiidddddddddddddddd',
+'                ggggggggggggggggiiiiiiiiiiiiiiiidddddddddddddddd',
+'         ll  ll ggggggggggggggggjjjjjjjjjjjjjjjjdddddddddddddddd',
+'         ll  ll ggggggggggggggggjjjjjjjjjjjjjjjjdddddddddddddddd',
+'         ll  ll ggggggggggggggggjjjjjjjjjjjjjjjjdddddddddddddddd',
+'         ll  ll ggggggggggggggggjjjjjjjjjjjjjjjjdddddddddddddddd',
+'                ggggggggggggggggjjjjjjjjjjjjjjjjdddddddddddddddd',
+'                ggggggggggggggggjjjjjjjjjjjjjjjjdddddddddddddddd',
+'                ggggggggggggggggjjjjjjjjjjjjjjjjdddddddddddddddd',
+'                ggggggggggggggggjjjjjjjjjjjjjjjjdddddddddddddddd',
+'                ggggggggggggggggjjjjjjjjjjjjjjjjdddddddddddddddd',
+'                hhhhhhhhhhhhhhhhjjjjjjjjjjjjjjjj'
+        ]
+    },
+    {
+        name: "SpittFire",
+        tiers: {
+            vanilla:"LT2", sword:"HT1", axe:"LT1", pot:"LT1", smp:"HT2",
+            smace:"LT1", rmace:"LT2", emace:"HT1",
+            bcart:"LT3", xbow:"HT3",
+            uhc:"HT2"
+        },
+        bannerUrl: "https://www.khanacademy.org/computer-programming/pic2pix/4972175662891008/5886425243697152.png",
+        skinPalette: {
+            ' ':[255,255,255,0],
+            'a':[45,81,111,255],'b':[37,69,96,255],'c':[13,43,69,255],'d':[188,163,131,255],
+            'e':[211,190,163,255],'f':[254,236,214,255],'g':[78,68,54,255],'h':[174,149,117,255],
+            'i':[22,38,51,255],'j':[20,31,40,255],'k':[32,55,74,255],'l':[66,51,32,255],
+            'm':[231,175,87,255],'n':[39,36,32,255],'o':[255,209,137,255]
+        },
+        skinBitmap: [
+'        abccccbadeeeeeed                   bb',
+'        bbccccbbeeeeeeee                   bb',
+'        cccccccceeddddee                cccbbccc',
+'        ccccccccfeddddef                bbbccbbb',
+'        ccccccccfeddddef                bbbccbbb',
+'        cccccccceeddddee                cccbbccc',
+'        bbccccbbeeeeeeee                  cbbc',
+'        abccccbadeeeeeed                  cbbc',
+'abccccbaabccccbaabccccbaabccccba  cbbc    cbbc    cbbc     bb',
+'bbccccbbbbeeeebbbbccccbbbbccccbb  cbbc            cbbc     cc',
+'cccccccccccbbcccccccccccccccccccc cbbc            cbbc ccccccccc',
+'deeeeeeddeeeeeeddeeeeeeddeeeeded',
+'fffefffffggffggfffffefffffeffeff',
+'ffffhefffffhhfffffehffffffffefff',
+'efeffffffggggggffffffffeeffffefe',
+'deeffeeddeeeeeeddeeffeeddeeeeeed',
+'    iiijiiij        kbbbbbbkkkkkkkkk        bbkedf',
+'    iiijiiij        kbbllbbkkkkkkkkk        bbkfff',
+'    iiijiiij        kblfflbkkkkkkkkk        bbkedf',
+'    iiijiiij        kblfflbkkkkkkkkk        bbkfff',
+'iiiiiiijjjjjjiiikkkkkblfflbkkkkkkbbbbbbkbbbbbbkkkkkkbb',
+'iiiiiijjjjjjjjiikkkkkblbblbkkkkkkbbbbbbkbaabbbkkkkkkbb',
+'iiiiiiijjjjjjiiikkkkkblblbbkkkkkkbaaaabkbaabbbkkkkkkbb',
+'iiiiiiijjjjjjiiikkkkkbblbbbkkkkkkbbbbbbkbbbbbkkkkkkkkb',
+'iiiiiiijjjjjjiiikkkkkbbmbbbkkkkkkbbaabbkbbbbbbkkkkkkbb',
+'iiiiiijjjjjjjjiikkkkkbbbbbbkkkkkkbbbbbbkbbbbbbkkkkkkbb',
+'iiiiiiijjjjjjiiikkkkkbaaaabkkkkkkbbbbbbkeheheehhhhhhee',
+'iiiiiiijjjjjjiiikkkkkbbkkbbkkkkkkbbkkbbkfeheffeeeeeeff',
+'bbbbbffkkkkkkbbbkkkkkbbbbbbkkkkkkbbbbbbkehfeffffffffff',
+'fffffnneeeeeefffkkkkkbkkkkbkkkkkkbkkkkbkffffffffffffff',
+'fffffnneeeeeefffkkkkkbbbbbbkkkkkkbbbbbbkefefedffffffde',
+'fffffffeeeeeefffkkkkkkkkkkkkkkkkkkkkkkkkefeffdffffffdf',
+'        fffe','        fffe','        fffe','        fffe','','',
+'iiiiiii      iii','iiiiiii      iii',
+'iiiiiii      iii       o                baabaa      ab',
+'                                        bbbbbb      bb',
+'iiiiiii      iii','iiiiiii      iii',
+'     ff','fffff  eeeeeefff','     ff','fffffffeeeeeefff',
+'        efff        jiiijiii        kbbfde',
+'        efff        jiiijiii        kbbfff',
+'        efff        jiiijiii        kbbfde',
+'        efff        jiiijiii        kbbfff',
+'                jjjjjiiiiiiiiiijkkkkkbbbbbbbbk',
+'                jjjjjjiiiiiiiijjkkkkkbbbaabbbk',
+'     iiiiiiiiii jjjjjiiiiiiiiiijkkkkkbbbaabbbk',
+'     iiiiiiiiii jjjjjiiiiiiiiiijkkkkkkbbbbbbkk',
+'     iiiiiiiiii jjjjjiiiiiiiiiijkkkkkbbbbbbbbk       aabaabba',
+'                jjjjjjiiiiiiiijjkkkkkbbbbbbbbk       bbbbbbbb',
+'     iiiiiiiiii jjjjjiiiiiiiiiijhhhhheeheheeeh',
+'     iiiiiiiiii jjjjjiiiiiiiiiijeeeeeffehefffe',
+'     ff         kkkkkffbbbbbbbbkfffffffefhefff',
+'eeeee  ffffffffeeeeeennffffffffeffffffffffffff',
+'     ff         eeeeennffffffffefffffdefefeedf',
+'eeeeeffffffffffeeeeeeffffffffffefffffdffefefdf'
+        ]
+    },
+    {
+        name: "4Futurz",
+        tiers: {
+            vanilla:"HT1", sword:"HT2", axe:"HT2", pot:"LT2", smp:"LT2",
+            smace:"LT5", rmace:"LT5", emace:"HT4",
+            bcart:"LT4", xbow:"HT4",
+            uhc:"LT2"
+        },
+        bannerUrl: "https://www.khanacademy.org/computer-programming/pic2pix/4972175662891008/5763368306982912.png",
+        skinPalette: {
+            ' ':[255,255,255,0],
+            'a':[30,30,30,255],'b':[255,255,255,255]
+        },
+        skinBitmap: [
+'        aaaaaaaaaaaaaaaa','        aaaaaaaaaaaaaaaa','        aaaaaaaaaaaaaaaa',
+'        aaaaaaaaaaaaaaaa','        aaaaaaaaaaaaaaaa','        aaaaaaaaaaaaaaaa',
+'        aaaaaaaaaaaaaaaa','        aaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa','aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa','aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaabbaabbaaaaaaaaaaaaaaaaa','aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa','aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'    aaaaaaaa        aaaaaaaaaaaaaaaa        aaaaaaaa',
+'    aaaaaaaa        aaaaaaaaaaaaaaaa        aaaaaaaa',
+'    aaaaaaaa        aaaaaaaaaaaaaaaa        aaaaaaaa',
+'    aaaaaaaa        aaaaaaaaaaaaaaaa        aaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'','','','','','','','','','','','','','','','',
+'                    aaaaaaaa        aaaaaaaa',
+'                    aaaaaaaa        aaaaaaaa',
+'                    aaaaaaaa        aaaaaaaa',
+'                    aaaaaaaa        aaaaaaaa',
+'                aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'                aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'                aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'                aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'                aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'                aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'                aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'                aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'                aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'                aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'                aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'                aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+        ]
+    },
+    {
+        name: "Dudadude111",
+        tiers: {
+            vanilla:"LT4", sword:"HT3", axe:"LT3", pot:"HT4", smp:"HT4",
+            smace:"HT3", rmace:"LT1", emace:"LT1",
+            bcart:"LT4", xbow:"LT4",
+            uhc:"LT3"
+        },
+        skinPalette: {
+            ' ':[255,255,255,0],
+            'a':[49,49,49,255],'b':[81,81,81,255],'c':[90,90,90,255],'d':[23,23,23,255],
+            'e':[99,99,99,255],'f':[28,28,28,255],'g':[33,33,33,255],'h':[70,70,70,255],
+            'i':[60,60,60,255],'j':[193,193,193,255],'k':[177,177,177,255],'l':[157,157,157,255],
+            'm':[0,0,0,255],'n':[209,209,209,255],'o':[40,40,40,255],'p':[135,135,135,255],
+            'q':[145,145,145,255],'r':[16,16,16,255],'s':[19,19,19,255],'t':[39,39,39,255],
+            'u':[206,206,206,255],'v':[55,55,55,255],'w':[31,31,31,255]
+        },
+        skinBitmap: [
+'        aaaaaaaaaaaaaaaa                 bccccb dddddddd',
+'        aaaaaaaaaaaaaaaa                bccccccbdddddddd',
+'        aaaaaaaaaaaaaaaa                cceeeeccdddddddd',
+'        aaaaaaaaaaaaaaaa                ceeeeeecf      f',
+'        aaaaaaaaaaaaaaaa                ceeeeeecf      f',
+'        aaaaaaaaaaaaaaaa                cceeeeccg      g',
+'        aaaaaaaaaaaaaaaa                bccccccbg      g',
+'        aaaaaaaaaaaaaaaa                 bccccb g      g',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa bcccbh  bbbbbb  hbcccb  hbccbh',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaihbbbbhiiihhhhiiihbbbbhiihbbbbhi',
+'aaaaaaaaajkjlklaaaaaaaaaaaaaaaaaaihbbhhaaiiiiiiaahhbbhiaahhbbhha',
+'aaaaaaaakmmnnmmkaaaaaaaaaaaaaaaaoihhhhiaaa    aaaihhhhiooihhhhio',
+'aaaaaaaajmmnpmmlaaaaaaaaaaaaaaaaoaihhiaaa      aaaihhiaooaiiiiao',
+'aaaaaaaannjjlkjkaaaaaaaaaaaaaaaagoaaiaaao      oaaaiaaoggoaaaaog',
+'aaaaaaaaaakqkjaaaaaaaaaaaaaaaaaafgooaaaog      goaaaoogfffgoogff',
+'aaaaaaaaaaqaqkaaaaaaaaaaaaaaaaaafffggoggg      gggoggfffffffffff',
+'    dfdgmmmm        gogoggoffgdogdgf        bbhiaa',
+'    rssfmmmm        daaaaaaddfsgfsfd        bcbhaa',
+'    sdfgmmmm        saaaaaasdfsgfsfd        cebhaa',
+'    dfgommmm        daaaaaadfgdogdgf        bchiaa',
+'fgoffgogfgooafgfgddffaaaaaaffddggoooaoogbbcbbbhiiaoiih',
+'gooffoommmgoagoggffggaakkaaggffggaiohiaghhbhhiiaaooaai',
+'ooagmammmmgaaoaoogfoolkjlkloofgooaaaaaagihhittaaaogaai',
+'aaiommmmmmoaiaiaaooaaaauqeaaaooaaahibhoattttttttaooaav',
+'aiiaammmmmmiihiaiaaitjunplptiaaiiaohhooawwwwwwttaogaat',
+'oaiiimmmmmmhhahoiaihtaauqeathiaiiaoaaoaiwwwwwwwwioaiiw',
+'oihimmmmmmmihaioioaitikjlkitiaoiiaohhohawwlwwlwwaooaaw',
+'gmiammmmmmmiioigagoathakkahtaogaaaohbghgwwkwwlwwogfoww',
+'moimmmmmmmmaigmgofgotioaaoitogfooooooooawlklwklggflgwl',
+'fmmommmmmmmommofgffggagiagaggffggogaigoglkkklkkfflklwk',
+'mmmmmmmmmmmgmmmfgffggofaofoggffggofoaooglmjkkjkllkjklk',
+'mmmmmmmmmmmgmmmmgffgfofaofoggffggofoaoookmmjaaakkjpjka',
+'','','','','','','','','','','','','','','','',
+'                    gdfdmmmm        ihbbaa',
+'                    fssrmmmm        hbcbaa',
+'                    gfdsmmmm        hbecaa',
+'                    ogfdmmmm        ihcbaa',
+'                oogfgogffogffgfaioaiihbbbcbbbb',
+'                ogmmmooffooggogaaooaaiihhbhhhi',
+'                agmmmmamgaoooaoaagoaaattihhivv',
+'                aommmmmmoiaaaiaiaooatttttttttt',
+'                immmmmmaaiiaaihiagoattwwwwwwwt',
+'                hmmmmmmiiiaoohahiaoiwwwwwwwwww',
+'                immmmmmmihiooiahaooawwlwwkwwwl',
+'                immmmmmmaimggioiofgowwlwwkwwwl',
+'                ammmmmmmmiomgmgiglfgwlkwlklwwk',
+'                ommmmmmmommffommlklfwkklkkkllk',
+'                gmmmmmmmmmmmfmmmkjkllkjkkjalkj',
+'                gmmmmmmmmmmmmmmmjpjkkaaajaakaa'
+        ]
+    },
+    {
+        name: "Snoopy",
+        tiers: {
+            vanilla:"LT5", sword:"LT5", axe:"LT5", pot:"LT5", smp:"LT5",
+            smace:"LT5", rmace:"LT5", emace:"LT5",
+            bcart:"LT5", xbow:"LT5",
+            uhc:"LT5"
+        },
+        skinPalette: {
+            ' ':[255,255,255,0],
+            'a':[251,226,138,255],'b':[251,237,145,255],'c':[247,213,118,255],'d':[206,136,78,255],
+            'e':[170,103,48,255],'f':[232,186,109,255],'g':[246,211,141,255],'h':[252,244,170,255],
+            'i':[223,150,88,255],'j':[108,21,46,255],'k':[242,207,136,255],'l':[238,165,102,255],
+            'm':[180,114,60,255],'n':[255,255,255,255],'o':[67,103,83,255],'p':[119,67,32,255],
+            'q':[11,8,21,255],'r':[17,9,29,255],'s':[7,5,15,255],'t':[79,45,45,255],
+            'u':[8,5,15,255],'v':[9,6,18,255],'w':[12,7,23,255],'x':[72,35,35,255],
+            'y':[66,28,28,255],'z':[103,45,67,255],'A':[72,28,41,255],'B':[165,114,128,255],
+            'C':[135,66,96,255],'D':[242,206,218,255],'E':[142,55,55,255],'F':[235,191,206,255],
+            'G':[129,46,46,255],'H':[40,19,43,255],'I':[35,16,38,255],'J':[76,45,72,255],
+            'K':[110,68,107,255],'L':[145,96,144,255],'M':[31,12,34,255],'N':[37,19,43,255],
+            'O':[178,155,174,255],'P':[75,41,41,255]
+        },
+        skinBitmap: [
+'        abbcbacadddddddd',
+'        bbbacbcbdeeeeeed',
+'        aabcabaadeeeeeed',
+'        bcbacbabdeeeeeed',
+'        acbcabaadeeeeeed',
+'        babacaabdeeeeeed',
+'        babcbabbdeeeeeed',
+'        bbabbbbbdddddddd',
+'bbbbabbbbbabbbbbbbbabbbbbcbbbbcb',
+'abababbbbabbbffbbbbabababbabbabb',
+'ggggghhbbbbbdiihbhhggggggbbjjbbg',
+'gkkllhhhbdiiiiihhhhllkkgggjhhjgg',
+'kkkimbhhhnoiionhhhbmikkkkghbbhgk',
+'kkmdiahbhiiiiiibhbaidmkkkkbbbbkk',
+'memmddabbiippiibbaddmmemmkabbakm',
+'eeeeeeecbbiiiibbceeeeeeeediiiide',
+'qrsqrssstttt        uuuuuuuuuvwuuuuvuwvw    vwvviidd',
+'rrsqrqsqxyyx        udmeemduuvwuuuuvuwvu    vwvvidee',
+'srsqsqrqxyyx        udmeemduvvuuuvuwuwvu    vvwviidd',
+'sqqqsszAtttt        uddmmdduuuuwuwuwuvwu    vvwvidee',
+'sqrqsrzArsssqsqruuvwuummmmuuuwvwuwuwuvwuwvuuuvuuuwuuvwuu',
+'qrrqrrzAssrssqqquwvwvvuvvwuvuwvwvwwuuuvvwvwvuvuvwwuvvwuw',
+'qrqqrqzssqrssrsquwuvvuvvwwuvwwwvvvwvwvvwuvwvvwvvwwvwuvuw',
+'sssrsqsqsqrrsrqrvvwvuuwuwuuvwuwvvuwvwwvwuvwwuwwvuvvwuuvw',
+'sqsrssqqrqrrqqsrvuwuwuwuvuuvvwvwvuvvwwvvuuuwuuwwuuuvuuwu',
+'rqqqqsrqrqrsqsrqvuvuwuvwvwuvuwvwwuvvwvvudddddddddmmddddd',
+'rsqsrqrssqssqsrsuwvwvuvwuwuuuvuvwuvuwvwudddddddddmmddddd',
+'dddddddddddddddduuuuuuuuuuuuuuuvuuuuuuuuddddddddddmddddd',
+'iiiiiiiiiiiiiiiiAAzzzzBCzzzzAAzzzzAAAAzzdddddddddddddddd',
+'DDEEEEEEEEDDDDDDqqqruuCzruuqruuquuqrquqqiiiiiiiddddddiii',
+'FEFDDDGDDFEFFDDFqruruqCArquwwwwqruqurqqriiiiiidmmdmdmdii',
+'tttttttttttttttturuqurzAuqwuuqvurqrurquriiiiiiidmdmddiii',
+'                HHIHJKLLKKJJ                MIHH',
+'                HHIMJ      J                MIMH',
+'                MHHMJ      J                IIMM',
+'                MIHMNJ    JI                IHIM',
+'                MMMINJH  HJIHIMHHHHIHHIIIIHMHMIHHHIHIHIH',
+'                HHMINKH  HKIHIMHIHIIHHIHIMIMIMIHIIIHMHII',
+'                HHMMNKH  HKMHIIHIIKKLOIHHMMMIIIHMIMIMMII',
+'                HHIMHLH  HLMHIIMIIKHHLIHHIMIMIHMMHMIHMIM',
+'                IHIIHOH  HOMIHIMIHJHHKIIIHIHMHHMIHIHHIHM',
+'                IHMHHOH  HOMIMIMMHJJKKIMLKKLLKKJJJJKKLOO',
+'                IIMHILH  HLMIMMMMHHHHHHMKKLLKKJJJJKKLOOL',
+'                IIHMIKH  HKHIMMIMIIIMIIMIIIIMMIIIMMIIHHH',
+'                HIIMHJH  IJIIIMHHHIMMIII',
+'                KKKJJKH  IKJJKKJJJKKLOOL',
+'                KKJJKKH  IKKKKJJJKKLOOLK',
+'                IIMIHHH  IIIIIMMIIMMMMII',
+'                qssqssqsttttsqsruwvvvvvvddiiuuwu    HHMH',
+'                qqrqqsqsxyyxqqrruwuvvvwveedivuwv    HIMM',
+'                qqqqqqrqxyyxqsrsvvwvvvvvddiivvwv    HIMH',
+'                qrqqsqrqttttrsqsvvwvvvvveediuwuw    HMIH',
+'                srssrqrqssrsqqqsuvuwuvwuvuuuwwuwHMIMHMIHIHMIIHMH',
+'                sqsqrssqsqrssrssuvuwvvwwvwuvwvvwMMIMHMIMIHMIHMMI',
+'                rqsqsqsrsqsrqrsquwuvuwvwvwvwuvvwMMIIIIMMMIMMHMII',
+'                rssrqrsrqqqrrssqvwvvuwvuvvvwuuvuMIHIMIMMMIIMIMIM',
+'                rqsrqrqqqrqrqsqruuwuuvuuuvwuuuwuIHHIMIMHIHHMMIIM',
+'                qqqrqsqsrrsqrqqrdmmdddddddddddddLLKJJKKLLLLKKLLO',
+'                sqssqsrsrssqrsqqdmmdddddddddddddLKJJKKLLLLKKLLOO',
+'                ddddddddddddddddddmdddddddddddddIMMMIIIIIMMIIIII',
+'                iiiiiiiiiiiiiiiidddddddddddddddd',
+'                DDEEEEEEEEDDDDDDdddddiiiiiiiiiid',
+'                FEFDDGFDDFEFFDDFmdmdmdiiiiiiiidm',
+'                ttttttttPPttttPPddmddiiiiiiiiiid'
+        ]
+    },
+
+    {
+        name: "TemptingAnt2136",
+        tiers: {
+            vanilla:"LT5", sword:"LT5", axe:"LT5", pot:"HT5", smp:"LT5",
+            smace:"LT5", rmace:"LT5", emace:"LT5",
+            bcart:"LT5", xbow:"LT5",
+            uhc:"LT5"
+        },
+skinPalette: {
+    ' ' : [255, 255, 255, 0],
+    'a' : [0, 0, 0, 255], 'b' : [42, 35, 28, 255], 'c' : [49, 40, 32, 255], 'd' : [55, 45, 36, 255],
+    'e' : [68, 56, 45, 255], 'f' : [165, 23, 4, 255], 'g' : [81, 67, 54, 255], 'h' : [95, 78, 62, 255],
+    'i' : [79, 79, 79, 255], 'j' : [92, 92, 92, 255], 'k' : [106, 106, 106, 255], 'l' : [70, 70, 70, 255],
+    'm' : [105, 86, 70, 255], 'n' : [233, 162, 91, 255], 'o' : [255, 255, 255, 255], 'p' : [245, 176, 109, 255],
+    'q' : [184, 154, 127, 255], 'r' : [170, 143, 118, 255], 's' : [160, 130, 101, 255], 't' : [109, 89, 69, 255],
+    'u' : [118, 92, 70, 255], 'v' : [110, 90, 70, 255], 'w' : [213, 178, 147, 255], 'x' : [198, 166, 137, 255],
+    'y' : [159, 132, 103, 255], 'z' : [143, 120, 93, 255], 'A' : [120, 99, 78, 255], 'B' : [111, 90, 70, 255],
+    'C' : [127, 103, 80, 255], 'D' : [166, 137, 111, 255], 'E' : [145, 116, 90, 255], 'F' : [129, 103, 80, 255],
+    'G' : [106, 86, 68, 255], 'H' : [112, 90, 70, 255], 'I' : [134, 112, 88, 255], 'J' : [150, 125, 98, 255],
+    'K' : [162, 138, 112, 255], 'L' : [95, 76, 59, 255], 'M' : [231, 231, 231, 255], 'N' : [20, 112, 205, 255],
+    'O' : [160, 130, 100, 255], 'P' : [96, 77, 60, 255], 'Q' : [104, 86, 68, 255], 'R' : [79, 64, 50, 255],
+    'S' : [92, 146, 200, 255], 'T' : [80, 64, 50, 255], 'U' : [96, 77, 59, 255], 'V' : [89, 73, 58, 255],
+    'W' : [80, 64, 49, 255], 'X' : [64, 51, 40, 255], 'Y' : [73, 73, 73, 255], 'Z' : [164, 0, 0, 255],
+    '0' : [8, 8, 8, 255], '1' : [43, 43, 43, 255], '2' : [25, 25, 25, 255], '3' : [81, 81, 82, 255]
+},
+
+skinBitmap: [
+'        aaaaaaaabcdeedcb                 aaaaaa ffffffff',
+'        aaaaaaaacdeggedc                aaaaaaaaffffffff',
+'        aaaaaaaadeghhged                aaaaaaaaijkiljij',
+'        aaaaaaaaeghmmhge                aaaaaaaaklilkijl',
+'        aaaaaaaaennnnnne                aaaaaaaaoooooooo',
+'        aaaaaaaannnnnnnn                aaaaaaaa',
+'        aaaaaaaapppppppp                aaaaaaaa',
+'        aaaaaaaapppppppp                 aaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa aaaaaa  qrsaaa  aaaaaa  aaaaaa',
+'aaaaaaaaaatuvtaaaaaaaaaaaaaaaaaaaaaaaaaawxqrs aaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaffffaaaaaaaaaaaaaaaaaaaaaaaaaaawffffaaaaaaaaaaaaaaaaaa',
+'fffffyzABCpDEFBGHzyffffffffffffffffff              fffffffffffff',
+'AIJKKJIALMNpONMPHFEDDEFHBFEssEFB',
+'QAIJJIAQRoSppSoTPHFEEFHPUBFEEFBU',
+'VQAIIAQppppppppppPHFFHPTWUBFFBUWaaaa                aaaaaaaaaaaa',
+'XVQAAQppppppppppppPHHPTXXWUBBUWXfffaa              aafffffffffff',
+'    ffffYYYY        ZZZZZZZZffffffff        ffffpppp',
+'    ffffYYYY        ZZZZZZZZffffffff        ffffpppp',
+'    ffffYYYY        ZZZZZZZZffffffff        0000pppp',
+'    ffffYYYY        ZZZnnZZZffffffff        ffffpppp',
+'ffffffffffffffffffffffffffffffffffffffffff0fffffffffffff',
+'aaa00ffffffffffaffffffffffffffffffffffffff0fffffffffffff',
+'00000aaaaaaaaaa0ffffffffffffffffffffffffff0fffffffffffff',
+'000a0aaaaaaa0000fffffffffffffffffffffffaff0fffffffffffff',
+'000001Yaaaaa0000ffffffffffffffffffffffafff0fffffffffffff',
+'00002YpYaaaa0000fffffffffffffffffaffaaffff0fffffffffffff',
+'0000YppYaaaa0000fffffffffffffffffaaaafffff0fffffffffffff',
+'00000YY1aaaa0000ffffffffffffffffffaaffffff0fffffffffffff',
+'aaaa2aaaaaaaaaaaffffffffffffffffffffffffff0fffffffffffff',
+'aaaaaYYaaaaaaaaaffffffffffffffffffffffffff0fffffffffffff',
+'YYYYY11YYYYYYYYYffffffffffffffffffffffffff0fffffffffffff',
+'YYYYYYYYYYYYYYYYffffffffffffffffffffffffpppppppppppppppp',
+'',
+'',
+'                                            aaaa',
+'',
+'                      a  a                a',
+'                      a  a                a',
+'                      a  a                a',
+'      a               a  3             a  a',
+'     1                a               a   a',
+'     Y                3          a  aa    a',
+'    Y  Y                         aaaa     a',
+'     YY                           aa      a',
+'                                          a',
+'                                          a',
+'     Y                                    a',
+'',
+'                    ffffYYYY        ffffpppp',
+'                    ffffYYYY        ffffpppp',
+'                    ffffYYYY        0000pppp         aaa',
+'                    ffffYYYY        ffffpppp',
+'                fffffffffffffffffffffffff0ffffff         a',
+'                fffffff00aaaaffffffffffff0ffffff         a',
+'                aaaa0aa000000aaafffffffff0ffffff         a',
+'     Y a        aaaaaYY100000000fffffffff0ffffff         a',
+'    Y  Y        aaaaYppY00000000fffffffff0ffffff         a',
+'      Y         aaaa2YY000000000fffffffff0ffffff         a',
+'      a         aaaaa00000000000fffffffff0ffffff         a',
+'                aaaaaa0aaaaaaaaafffffffff0ffffff         a',
+'                aaaaaaaaaaaaaaaafffffffff0ffffff         a',
+'                aaaaaYYaaaaaaaaafffffffff0ffffff         a',
+'                YYYYY11YYYYYYYYYfffffffff0ffffff         a',
+'                YYYYYYYYYYYYYYYYpppppppppppppppp'
+]
+},
+
+    {
+        name: "MRChevyGuys",
+        tiers: {
+            vanilla:"LT5", sword:"LT5", axe:"HT5", pot:"HT5", smp:"LT5",
+            smace:"LT5", rmace:"LT5", emace:"LT5",
+            bcart:"LT5", xbow:"LT5",
+            uhc:"LT5"
+        },
+        skinPalette: {
+            ' ':[255,255,255,0],
+            'a':[0,143,255,255],'b':[54,161,255,255],'c':[23,122,212,255],'d':[25,125,216,255],
+            'e':[0,144,255,255],'f':[24,133,227,255],'g':[24,132,227,255],'h':[33,138,233,255],
+            'i':[10,142,255,255],'j':[18,145,255,255],'k':[28,147,255,255],'l':[28,148,255,255],
+            'm':[28,149,255,255],'n':[25,124,216,255],'o':[28,122,207,255],'p':[18,144,255,255],
+            'q':[20,125,220,255],'r':[17,134,239,255],'s':[202,201,201,255],'t':[25,114,195,255],
+            'u':[25,109,185,255],'v':[24,127,221,255],'w':[24,134,232,255],'x':[67,165,250,255],
+            'y':[76,171,255,255],'z':[26,125,214,255],'A':[25,115,195,255],'B':[26,131,225,255],
+            'C':[25,123,216,255],'D':[26,124,214,255],'E':[26,123,214,255],'F':[26,115,200,255],
+            'G':[20,124,220,255],'H':[26,122,214,255],'I':[25,123,211,255],'J':[25,122,211,255],
+            'K':[26,114,200,255]
+        },
+        skinBitmap: [
+'        aaaaaaaabbbbbbbb                        ccddddcc',
+'        aaeeeeaabbbbbbbb                        cfdggdfc',
+'        aeeaaaeabbbbbbbb                        ffg  gff',
+'        aaaaaaaabbbbbbbb                        fh    hf',
+'        aaaaaaaabbbbbbbb                        h      h',
+'        aaaaaaaabbbbbbbb',
+'        aaaaaaaabbbbbbbb',
+'        aaaaaaaabbbbbbbb',
+'iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii',
+'aiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii',
+'jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj',
+'jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj',
+'klllllllklkkklklkkkklllmlllllllm                        dnnnnnnd',
+'klllllllkkllllklllllmmmmllllllllgdd                  ddgddnnnnnn',
+'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbghhdd              ddhhgcdnnnnnc',
+'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbggghgd            dghgggccdnndcc',
+'    oooopppp        qqrrrrqqoooooooo        srrdsjjj',
+'    oooopppp        rrrttrrroooooooo        srrdsjjj',
+'    oooopppp        rrtkktrroooooooo        srrdsjjj',
+'    oooopppp        rrujjurroooooooo        srrdsjjj',
+'oooooooooooooooovwrrrrujjurrrrwvqqvrrvqqrrrrsrrddddddrrs',
+'xxxxxxxxyyyyxxxxvwrrrrruurrrrrwvqqrrrrqqzzzzszzAAttAAzzs',
+'bbbbbbbbbbbbbbbbvwrrrrrrrrrrrrwvqvrrBrvqrrrrsrrddnnddrrs',
+'bbbbbbbbbbbbbbbbvwrrrrrrrrrrrrwvqvrvBrvqzzzzszzAAttAAzzs',
+'llllllllmmmmllllvwrrrrrrrrrrrrwvqrrrBrrqrrrrsrrnCCCddrrs',
+'mmmmmmmlmmmmmmmmvwrrrrrrrrrrrrwvvrrrBrrvrrrrsrrCCCCCdrrs',
+'ppppppppppppppppvwrrrrrrrrrrrrwvvrrrrrrvzzzzsDEttttAAzzs',
+'ppppppppppppppppvwrrrrrrrrrrrrwvvrrrqrrvrrrrsrrnCnnddrrs',
+'aaaaaaaaaaaaaaaavwrrrrrrrrrrrrwvvrrvvvrvrrrrsrrddnnndrrs',
+'aaaaaaaaaaaaaaaaqwrrrrrrrrrrrrwvqrrrrrrqrrrrsrrddnnddrrs',
+'ppppppppppppppppqwwwwwwwwrrrrrwqqvrvqrvqDDDDsDDFFFFFFDDs',
+'ppppppppppppppppqqqqqqqqqGGGqqqqqvvvqqvqjjjjsjjjjjjjjjjs',
+'                                            s   s',
+'                                            s   s',
+'                                            s   s',
+'                                            s   s',
+'                                            s          s',
+'                                        zzzzszzAttttAzzs',
+'                                            s          s',
+'                                        zzzzszzAttttAzzs',
+'                                            s          s',
+'                                            s          s',
+'                                        zzzzsEEE  tttzzs',
+'                                            s          s',
+'                                        rrrrsrrEDDDDDrrs',
+'                                        rrrrsrrEDDDDDrrs',
+'                           H            EEEEsEEFFFFFFEEs',
+'                                            s          s',
+'                    oooopppp        drrsjjjs           s   s',
+'                    oooopppp        drrsjjjs           s   s',
+'                    oooopppp        drrsjjjs           s   s',
+'                    oooopppp        drrsjjjs           s   s',
+'                oooooooooooooooodddddrrsrrrrsrrd       s    s',
+'                yyyyxxxxxxxxxxxxAttAAzzszzzzszzAtttttzzszzzzszzA',
+'                bbbbbbbbbbbbbbbbdnndIrrsrrrrsrrd       s    s',
+'                bbbbbbbbbbbbbbbbAtttAzzszzzzszzAtttttzzszzzzszzA',
+'                mmmmlllllllllllldnndJrrsrrrrsrrd       s    s',
+'                mmmmmmmmllllmmmmdnnCJrrsrrrrsrrd       s    s',
+'                ppppppppjpppppppAttttDzszzzzszzAtt    zszzzzszzt',
+'                ppppppppppppppppdCCCJrrsrrrrsrrd       s    s',
+'                aaaaaaaaaaaaaaaadCCCJrrsrrrrsrrdDD    rsrrrrsrrD',
+'                aaaaaaaaaaaaaaaadCCCJrrsrrrrsrrdDD    rsrrrrsrrD',
+'                ppppppppppppppppFFKKKEEsEEEEsEEFFFFHHEEsEEEEsEEF',
+'                ppppppppapppppppjjjjjjjsjjjjsjjj       s    s'
+        ]
+    },
+
+    {
+        name: "AgentStudios",
+        tiers: {
+            vanilla:"LT5", sword:"LT5", axe:"LT5", pot:"LT5", smp:"LT5",
+            smace:"LT5", rmace:"LT5", emace:"HT5",
+            bcart:"LT5", xbow:"HT5",
+            uhc:"LT5"
+        },
+        bannerUrl: "https://www.khanacademy.org/computer-programming/pic2pix/4972175662891008/4619759981543424.png",
+        skinPalette: {
+            ' ':[255,255,255,0],
+            'a':[220,203,125,255],'b':[210,33,23,255],'c':[12,1,0,255],'d':[147,124,56,255],
+            'e':[121,102,46,255],'f':[154,131,59,255],'g':[150,127,57,255],'h':[127,109,49,255],
+            'i':[254,253,253,255],'j':[211,186,68,255],'k':[25,21,1,255],'l':[94,223,63,255],
+            'm':[4,74,144,255],'n':[135,132,131,255],'o':[75,195,46,255]
+        },
+        skinBitmap: [
+'        aaaaaaaaaaaaaaaa',
+'        aaaaaaaaaaaaaaaa',
+'        aaaaaaaaaaaaaaaa',
+'        aaaaaaaaaaaaaaaa',
+'        aaaaaaaaaaaaaaaa',
+'        aaaaaaaaaaaaaaaa',
+'        aaaaaaaaaaaaaaaa                         bccccb',
+'        aaaaaaaaaaaaaaaa                         bccccb',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa        defaadgh',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa        iiijaiii',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa       aikijjiki',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa        iiijjiii',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa           jj',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa         bbbbbb',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa         bccccb',
+'    aaaaaaaa        aaaaaaaallllllll        aaaaaaaa',
+'    aaaaaaaa        aaaaaaaallllllll        aaaaaaaa',
+'    aaaaaaaa        aaaaaaaallllllll        aaaaaaaa',
+'    aaaaaaaa        aaaaaaaallllllll        aaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'    mmmmnnnn                            llllllll',
+'    mmmmnnnn                            llllllll',
+'    mmmmnnnn                            llllllll',
+'    mmmmnnnn                            llllllll',
+'mmmmmmmmmmmmmmmmlllllbccccblllllllllllllllllllllllllllll',
+'mmmmmmmmmmmmmmmmlllllbccccblllllllllllllllllllllllllllll',
+'mmmmmmmmmmmmmmmmlllllbccccblllllllllllllllllllllllllllll',
+'mmmmmmmmmmmmmmmmllllllbccbllllllllllllllllllllllllllllll',
+'mmmmmmmmmmmmmmmmlllllllbblllllllllllllllllllllllllllllll',
+'mmmmmmmmmmmmmmmmllllllllllllllllllllllllllllllllllllllll',
+'mmmmmmmmmmmmmmmmllllllllllllllllllllllllllllllllllllllll',
+'mmmmmmmmmmmmmmmmllllllllllllllllllllllllllllllllllllllll',
+'mmmmmmmmmmmmmmmmllllllllllllllllllllllllllllllllllllllll',
+'mmmmmmmmmmmmmmmmllllllllllllllllllllllllllllllllllllllll',
+'mmmmmmmmmmmmmmmmooooolllllllooooollllllooooooooooooooooo',
+'nnnnnnnnnnnnnnnnoooooooooooooooooooooooo',
+'    mmmmnnnn        aaaaaaaa        aaaaaaaa        llll',
+'    mmmmnnnn        aaaaaaaa        aaaaaaaa        llll',
+'    mmmmnnnn        aaaaaaaa        aaaaaaaa        llll',
+'    mmmmnnnn        aaaaaaaa        aaaaaaaa        llll',
+'mmmmmmmmmmmmmmmmaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaallllllllllllllll',
+'mmmmmmmmmmmmmmmmaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaallllllllllllllll',
+'mmmmmmmmmmmmmmmmaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaallllllllllllllll',
+'mmmmmmmmmmmmmmmmaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaallllllllllllllll',
+'mmmmmmmmmmmmmmmmaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaallllllllllllllll',
+'mmmmmmmmmmmmmmmmaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaallllllllllllllll',
+'mmmmmmmmmmmmmmmmaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaallllllllllllllll',
+'mmmmmmmmmmmmmmmmaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaallllllllllllllll',
+'mmmmmmmmmmmmmmmmaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaallllllllllllllll',
+'mmmmmmmmmmmmmmmmaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaallllllllllllllll',
+'mmmmmmmmmmmmmmmmaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaoooooooooooooooo',
+'nnnnnnnnnnnnnnnnaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+        ]
+    },
+
+    {
+        name: "EmersonJenner",
+        tiers: {
+            vanilla:"HT5", sword:"LT5", axe:"LT5", pot:"LT5", smp:"LT5",
+            smace:"LT5", rmace:"LT5", emace:"LT5",
+            bcart:"LT5", xbow:"LT5",
+            uhc:"LT5"
+        },
+        skinPalette: {
+            ' ':[255,255,255,0],
+            'a':[14,4,1,255],'b':[34,22,17,255],'c':[27,17,13,255],'d':[74,49,33,255],
+            'e':[95,62,41,255],'f':[43,29,24,255],'g':[109,72,48,255],'h':[126,83,55,255],
+            'i':[146,103,76,255],'j':[255,255,255,255],'k':[65,30,2,255],'l':[117,60,40,255],
+            'm':[184,153,117,255],'n':[34,34,34,255],'o':[127,37,52,255],'p':[185,142,150,255],
+            'q':[134,95,72,255],'r':[202,38,66,255],'s':[219,47,76,255],'t':[133,90,63,255],
+            'u':[147,109,81,255],'v':[52,52,52,255],'w':[162,40,60,255],'x':[161,124,103,255],
+            'y':[216,184,148,255],'z':[207,173,133,255],'A':[200,166,172,255],'B':[187,36,61,255],
+            'C':[108,62,39,255],'D':[129,156,181,255],'E':[60,60,60,255],'F':[81,81,81,255],
+            'G':[254,253,253,255]
+        },
+        skinBitmap: [
+'        abcacaacddeeeedd',
+'        cacbcacadddeeddd',
+'        acbcbabcdddddddd',
+'        cbacacaadddddddd',
+'        aacbbcacdddddddd',
+'        acbbbbcadddddddd',
+'        bcbfbcbaddeeeedd',
+'        cbbfbbcadeeeeeed',
+'cabcaccaaacbbcaaaaacacaacacacaaa',
+'acbacbabaeghhgeacacbcaaababcabac',
+'aaaaaaegghhhhhhggeaacbabacacaacb',
+'abaihegghhhhhhhhggehibaccacabaca',
+'ccdhegghhjkhhkjggggehdcaaabcacba',
+'ggeghgghihhhhhhiggghgeggdcaacacd',
+'edeeggghhhhllhhgggggeedeegggggge',
+'ddddddddeghhhhgeedddddddddeeeedd',
+'    mmmmnnnn        opeeeepommqqqqmm        rssrhttu',
+'    mmmmvnnv        opeddepommmmmmmm        ssrwhgdd',
+'    xxxxvnnv        opeddepoyyymmyyy        sssrhttu',
+'    xxxxvvvv        opgeegpoyyymmyyy        rssrhgdd',
+'mxmzzyyzzmxmzzzzwoossAggggpssoowwppppppwBBrsssrrwoowBrrr',
+'mmmzzzzzzmmmzzzzroowrsAAppsrBoowwssswwBBBrBBsrwwoooowrBr',
+'mmzzzyyzzzmmzmmzBwwBrssrrBBBBwwrssrrrrrsBBBrrrrwoooowBwB',
+'mzzzyyyyzzzmmmmmBwwBssssrrsrBwBBBrBBBrrroooooooooooooooo',
+'mzzyyyymyzzmmzzmrwBBBBBrrsssrBwrBBBrsrBBgggggggeeeeeeggg',
+'mmzzyzzmzzmmzzzzBwwBBrrssssrrwwrrrssrBBrgggghhhggeegghgh',
+'mmzzzzzxzzmmzzzzwwwwwwBBBBwwwwwwwwwBBBwwhgghhghhgeeghhgh',
+'xxxxxxxxxxxxxxxxmmmmmyyyyyymmmmmmmmmmmmmhghhhghhggeghhhh',
+'xxxxxxxxxxxxxxxxCCCCCCCDDCCCCCCCCCCCCCCChghhhhhtggggthhh',
+'xxxxxxxxxxxxxxxxxxxxmmmmmmmmxxxxxxxxxxxxhhhhhttggggggtth',
+'nnvvEFEEvvnnnnnnmxxmzzzzzzzmmxxmmzzmmzzmhhghhugeegegeguh',
+'EEEvvEEvvEEEEEEEmxxmmyymxyyzmxxmzzzzzzzzhhghhtugehehguth',
+'','','','','','','',
+'                                        AGGGGGGGppppAAGA',
+'','',
+'yyyyyyyyyyyyyyyy',
+'zzmzmmzzmmzmzmmz',
+'yyyyyyyyyyyyyyyy',
+'','',
+'                    mmmmnnnn        rssrutth',
+'                    mmmmvnnv        wrssddgh',
+'                    xxxxvnnv        rsssutth',
+'                    xxxxvvvv        rssrddgh',
+'                mxmzxyyzzmxmzzzzwoowrrsssrBBrrrB',
+'                mmmzxzzzzmmmzzzzoooowwrsBBrBrBrw',
+'                mmzzmyyzzzmmzmmzoooowrrrrBBBBwBw',
+'                mzzzmyyyzzzmmmmmooooooooooooooooppppGGGGGGGAAGAA',
+'                mzzyyyyyyzzmmzzmeeeeegggggggggge',
+'                mmzzyzzyzzmmzzzzgeeggghhgggghghg',
+'                mmzzzzzzzzmmzzzzgeeghghhggghhghh',
+'yyyyyyyyyyyyyyyyxxxxxxxxxxxxxxxxggeghhhhghhhhhhh',
+'zzmzzzmmmmzmzmmzxxxxxxxxxxxxxxxxggggthhhghhhhhht',
+'yyyyyyyyyyyyyyyyxxxxxxxxxxxxxxxxgggggtthhhghhttg',
+'                nnvvEFEEvvnnnnnngegeeguhhhghhuge',
+'                EEEvvEEvvEEEEEEEheheguthhhhhhtug'
+        ]
+    },
+
+    {
+        name: "Donkeh",
+        tiers: {
+            vanilla:"LT5", sword:"LT5", axe:"LT5", pot:"LT5", smp:"LT5",
+            smace:"LT5", rmace:"LT5", emace:"LT5",
+            bcart:"LT5", xbow:"LT5",
+            uhc:"LT5"
+        },
+        skinPalette: {
+            ' ':[255,255,255,0],
+            'a':[74,50,25,255],'b':[183,131,107,255],'c':[70,58,165,255],
+            'd':[7,188,198,255],'e':[63,63,63,255],'f':[255,255,255,255],
+            'g':[121,77,60,255],'h':[132,79,64,255]
+        },
+        skinBitmap: [
+'        aaaaaaaabbaaaabb',
+'        aaaaaaaabbbbbbbb',
+'        aaaaaaaabbbbbbbb',
+'        aaaaaaaabbbbbbbb',
+'        aaaaaaaabbbbbbbb',
+'        aaaaaaaabbbbbbbb',
+'        aaaaaaaaaaaaaaaa',
+'        aaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaabbbbbbaaaaaaaaaaaaaaaaa',
+'aaaaaaaabaabbaabaaaaaaaaaaaaaaaa',
+'aaaaabbabfcbbcfbabbaaaaaaaaaaaaa',
+'aaaaaaabbbbggbbbbaaaaaaaaaaaaaaa',
+'aaabbaaaabahhabaaaabbaaaaaaaaaaa',
+'bbbbbbaaaaaaaaaaaabbbbbbbbaaaabb',
+'    cccceeee        ddddddddcccdcccc        ddddbbbb',
+'    cccceeee        ddddddddcccccccc        ddddbbbb',
+'    cccceeee        ddbbbbddcccccccc        ddddbbbb',
+'    cccceeee        ddbbbbddccccccdd        ddddbbbb',
+'ccccccccccccccccddddddbbbbdddddddddddddddddddddddddddddd',
+'ccccccccccccccccdddddddbbddddddddddddddddddddddddddddddd',
+'ccccccccccccccccdddddddddddddddddddddddddddddddddddddddd',
+'ccccccccccccccccdddddddddddddddddddddddddddddddddddddddd',
+'ccccccccccccccccddddddddddddddddddddddddbbbbbbbbbbbbbbbb',
+'ccccccccccccccccddddddddddddddddddddddddbbbbbbbbbbbbbbbb',
+'ccccccccccccccccddddddddddddddddddddddddbbbbbbbbbbbbbbbb',
+'ccccccccccccccccddddddddddddddddddddddddbbbbbbbbbbbbbbbb',
+'ccccceecccccccccddddddddddddddddddddddddbbbbbbbbbbbbbbbb',
+'eeeeeeeeeeeeeeeeddddddddddddddddddddddddbbbbbbbbbbbbbbbb',
+'eeeeeeeeeeeeeeeecccccccccdddddcccdddddccbbbbbbbbbbbbbbbb',
+'eeeeeeeeeeeeeeeeccccccccccdddcccccccdcccbbbbbbbbbbbbbbbb',
+'','','','','','','','','','','','','','','','',
+'                    cccceeee        ddddbbbb',
+'                    cccceeee        ddddbbbb',
+'                    cccceeee        ddddbbbb',
+'                    cccceeee        ddddbbbb',
+'                ccccccccccccccccdddddddddddddddd',
+'                ccccccccccccccccdddddddddddddddd',
+'                ccccccccccccccccdddddddddddddddd',
+'                ccccccccccccccccdddddddddddddddd',
+'                ccccccccccccccccbbbbbbbbbbbbbbbb',
+'                ccccccccccccccccbbbbbbbbbbbbbbbb',
+'                ccccccccccccccccbbbbbbbbbbbbbbbb',
+'                ccccccccccccccccbbbbbbbbbbbbbbbb',
+'                ccccceecccccccccbbbbbbbbbbbbbbbb',
+'                eeeeeeeeeeeeeeeebbbbbbbbbbbbbbbb',
+'                eeeeeeeeeeeeeeeebbbbbbbbbbbbbbbb',
+'                eeeeeeeeeeeeeeeebbbbbbbbbbbbbbbb'
+        ]
+    },
+
+    {
+        name: "eliasjenner",
+        tiers: {
+            vanilla:"LT5", sword:"LT5", axe:"LT5", pot:"LT5", smp:"LT5",
+            smace:"LT5", rmace:"LT5", emace:"LT5",
+            bcart:"LT5", xbow:"LT5",
+            uhc:"LT5"
+        },
+        skinPalette: {
+            ' ':[255,255,255,0],
+            'a':[229,141,63,255],'b':[235,152,63,255],'c':[222,129,46,255],'d':[243,168,88,255],
+            'e':[223,196,162,255],'f':[212,183,143,255],'g':[235,208,176,255],'h':[239,218,191,255],
+            'i':[255,255,255,255],'j':[35,98,36,255],'k':[239,187,177,255],'l':[113,171,110,255],
+            'm':[54,54,54,255],'n':[40,40,40,255],'o':[140,190,138,255],'p':[134,185,132,255],
+            'q':[92,59,39,255],'r':[128,130,90,255],'s':[123,178,120,255],'t':[100,65,44,255],
+            'u':[114,78,54,255],'v':[124,87,62,255],'w':[108,70,46,255],'x':[148,150,107,255],
+            'y':[148,200,146,255],'z':[88,88,88,255],'A':[101,101,101,255],'B':[111,111,111,255],
+            'C':[63,63,63,255],'D':[79,79,79,255],'E':[24,56,22,255],'F':[43,84,40,255],
+            'G':[117,80,56,255]
+        },
+        skinBitmap: [
+'        abacacaaabcabcbb',
+'        bbbbcccbbbcabcbb',
+'        bbddbbcaabacacba',
+'        accabcbbcabacabc',
+'        bddddbddccabcbac',
+'        acabbaabefcccaac',
+'        bbbdabaaeeefffcc',
+'        adbdbddbeeggggee',
+'abbadabaadbdabdaaabdbaababbbabba',
+'addbdababdabaabdabbddbaddbbbabda',
+'bddababbbabaeeabbdbbbdaadbdbadda',
+'ddbabaabbbaghggabbdbabbabddaadbc',
+'aaabaeeagijhhjigadbdbabaadbcbdac',
+'bbbaegghhhhhhhhheadbdababdacdbac',
+'abcagghhhhhkkhhggedadcbcdbcbdbca',
+'bacffeggghhhhhgeeabcbcacbbcbbaca',
+'    llllmmnn        opaaabballllllll        ooohhg',
+'    llllnnmm        oppccabbllqqqqll        ooohgf',
+'    llqqmmnn        oprfccablqqqqqql        ooohhg',
+'    lqqqnnmm        oreffaaalqqqqqql        ooohgf',
+'poostuvtttllppppooooprgeefrlllllllllllspoooooooopooooo',
+'tsstwvvwttttqqttossopxhgghrllllsllllspooppoopoppopppop',
+'uwwuvvwvutttwuvvossspsxhhrllsllssspooyoyyooyyyooyyooyo',
+'vvuttwvuvwwwuvvvolssopsxrllspslspyoyoyoyrrrrrrrrrrrrrr',
+'wttwvvvuuwwwqwwwslsoyoyoslsppslooyyoyyyyggggggeeeeeegg',
+'zzztwuuwtzzzzAAzsssoyyysypoposlsyyysyoyyhhhhhhggeegghh',
+'AAAzzAzzzAAAAAAAosloyyosyoyposssyoysysyohhhhhhhgegghhh',
+'zAAAABAAAAAzCDDCossoysolysyoolsoosysosyohhhhhhhgegghhh',
+'CDDCzAAzCDDCDzzDEEEFllslolosFEEElsososolhhhhhhhgggehhh',
+'zzzDCDDCDzzzDzzzlsslFFEEEEFFlsslEEFFFFFEhhhhhhggggeghh',
+'DDzzzBAzzzDDCDDDopssppopopopspooooosopoohhhhhgeegggegh',
+'mCCDAAAzDCCmmCCmoopsptGGGGtppoopsooooooohhhhhhgegegghh',
+'','','','',
+'                         abdbaabbbbbaa',
+'                          daba  aaaa',
+'                         bda',
+'                         db             xxxxxrrrrrrrrx',
+'                         b',
+'','','','','','','',
+'                    lllqnnmm        booghh',
+'                    llllmmnn        baofgh',
+'                    qqqqnnmm        daoghh',
+'                    qqqqmmnn        doofgh',
+'                tttttvuwttttqsoooopabooooooooa',
+'                tttttvvuuuuwwqqqppoabopoopppop',
+'                tttwuwvvvvvvvvutoyyooyyyooyoyo',
+'                wwwuvvwttuvvvvvwrrrrrrrrrrrrrr  rrrrrrxxxxxxrr',
+'                wwwuuvvvuttwwwwweeeeegggggggge',
+'                zzztwuuwtzzzzAADgeegghhhhhhhhg',
+'                AAAzDAzzzAAAAAAzggeghhhhhhhhhh',
+'                zAAAzBAAAAAzCDDCggeghhhhhhhhhh',
+'                CDDCDAAzCDDCDzzDeggghhhhhhhhhh',
+'                zzzDCDDCDzzzzzzzegggghhhhhhhhg',
+'                DDzzzBAzzzDDDDDDgggeeghhhhhhge',
+'                mCCDAAAADCCmmCCmgegeghhhhhhhhg'
+        ]
+    }
+];
+
+// News prefs: which types count as unread
+function getNewsPrefs() {
+    var defaults = { text: true, tiertest: true, promotion: true };
+    try {
+        var stored = localStorage.getItem('mct_news_prefs');
+        if (stored) return Object.assign(defaults, JSON.parse(stored));
+    } catch(e) {}
+    return defaults;
+}
+
+function saveNewsPrefs(prefs) {
+    try { localStorage.setItem('mct_news_prefs', JSON.stringify(prefs)); } catch(e) {}
+}
+
+// Read news: set of news IDs that have been read
+function getReadNews() {
+    try {
+        var stored = localStorage.getItem('mct_read_news');
+        if (stored) return JSON.parse(stored);
+    } catch(e) {}
+    return [];
+}
+
+function markNewsRead(id) {
+    var read = getReadNews();
+    if (read.indexOf(id) === -1) {
+        read.push(id);
+        try { localStorage.setItem('mct_read_news', JSON.stringify(read)); } catch(e) {}
+    }
+    updateNewsCount();
+}
+
+function getUnreadCount() {
+    var prefs = getNewsPrefs();
+    var read = getReadNews();
+    var count = 0;
+    for (var i = 0; i < news.length; i++) {
+        var item = news[i];
+        // Check if this type is enabled in prefs
+        var typeEnabled = prefs[item.type] !== false;
+        if (!typeEnabled) continue;
+        if (read.indexOf(item.id) === -1) count++;
+    }
+    return count;
+}
+
+function updateNewsCount() {
+    var badge = document.getElementById('news-tab-badge');
+    if (!badge) return;
+    var count = getUnreadCount();
+    badge.textContent = count;
+    badge.style.opacity = count === 0 ? '0.3' : '1';
+}
+
+// ============================================================
+// SKIN RENDERER
+// ============================================================
+function vec3(x,y,z){ return {x:x,y:y,z:z}; }
+function subV(a,b){ return vec3(a.x-b.x,a.y-b.y,a.z-b.z); }
+function crossV(a,b){ return vec3(a.y*b.z-a.z*b.y,a.z*b.x-a.x*b.z,a.x*b.y-a.y*b.x); }
+function dotV(a,b){ return a.x*b.x+a.y*b.y+a.z*b.z; }
+function normV(a){ var l=Math.sqrt(dotV(a,a))||1; return vec3(a.x/l,a.y/l,a.z/l); }
+function scaleV(a,s){ return vec3(a.x*s,a.y*s,a.z*s); }
+function rotX(v,a){ var c=Math.cos(a),s=Math.sin(a); return vec3(v.x,v.y*c-v.z*s,v.y*s+v.z*c); }
+function rotY(v,a){ var c=Math.cos(a),s=Math.sin(a); return vec3(v.x*c+v.z*s,v.y,-v.x*s+v.z*c); }
+
+var CAM_Z=350, CANVAS_SIZE=1600, CANVAS_HALF=CANVAS_SIZE/2;
+
+function project(v){
+    var fov=CAM_Z/(CAM_Z-v.z);
+    return {x:CANVAS_HALF+v.x*fov, y:CANVAS_HALF+v.y*fov, z:v.z};
+}
+
+function getShade(corners){
+    var ab=subV(corners[1],corners[0]), ac=subV(corners[2],corners[0]);
+    var n=normV(crossV(ab,ac));
+    var sh=[
+        {axis:vec3(0,-1,0),shade:1.0},{axis:vec3(0,1,0),shade:0.5},
+        {axis:vec3(0,0,1),shade:0.9},{axis:vec3(0,0,-1),shade:0.6},
+        {axis:vec3(-1,0,0),shade:0.75},{axis:vec3(1,0,0),shade:0.75}
+    ];
+    var best=0.7,bestDot=-99;
+    for(var i=0;i<sh.length;i++){
+        var d=dotV(n,sh[i].axis);
+        if(d>bestDot){bestDot=d;best=sh[i].shade;}
+    }
+    return best;
+}
+
+function getFaceCorners(axis,hw,hh,hd){
+    if(axis==='front') { return [vec3(-hw,-hh,hd), vec3(hw,-hh,hd), vec3(hw,hh,hd), vec3(-hw,hh,hd)]; }
+    if(axis==='back')  { return [vec3(hw,-hh,-hd), vec3(-hw,-hh,-hd), vec3(-hw,hh,-hd), vec3(hw,hh,-hd)]; }
+    if(axis==='right') { return [vec3(hw,-hh,-hd), vec3(hw,-hh,hd), vec3(hw,hh,hd), vec3(hw,hh,-hd)]; }
+    if(axis==='left')  { return [vec3(-hw,-hh,hd), vec3(-hw,-hh,-hd), vec3(-hw,hh,-hd), vec3(-hw,hh,hd)]; }
+    if(axis==='top')   { return [vec3(-hw,-hh,-hd), vec3(hw,-hh,-hd), vec3(hw,-hh,hd), vec3(-hw,-hh,hd)]; }
+    if(axis==='bottom'){ return [vec3(-hw,hh,hd), vec3(hw,hh,hd), vec3(hw,hh,-hd), vec3(-hw,hh,-hd)]; }
+}
+
+function cropFaceToCanvas(bitmap,palette,bx,by,bw,bh){
+    var c=document.createElement("canvas");
+    c.width=bw; c.height=bh;
+    var cx=c.getContext("2d");
+    var id=cx.createImageData(bw,bh);
+    for(var row=0;row<bh;row++){
+        for(var col=0;col<bw;col++){
+            var ch=(bitmap[by+row]&&(bx+col)<bitmap[by+row].length)?bitmap[by+row][bx+col]:' ';
+            var p=palette[ch];
+            var i=(row*bw+col)*4;
+            id.data[i]=p[0]; id.data[i+1]=p[1]; id.data[i+2]=p[2]; id.data[i+3]=p[3];
+        }
+    }
+    cx.putImageData(id,0,0);
+    return c;
+}
+
+function bilerp(pts,u,v){
+    var x=pts[0].x*(1-u)*(1-v)+pts[1].x*u*(1-v)+pts[2].x*u*v+pts[3].x*(1-u)*v;
+    var y=pts[0].y*(1-u)*(1-v)+pts[1].y*u*(1-v)+pts[2].y*u*v+pts[3].y*(1-u)*v;
+    return {x:x,y:y};
+}
+
+function drawTri(ctx,img,p0,p1,p2,u0,v0,u1,v1,u2,v2){
+    ctx.imageSmoothingEnabled=false;
+    ctx.globalCompositeOperation='source-over';
+    var iw=img.width,ih=img.height;
+    var sx0=u0*iw,sy0=v0*ih,sx1=u1*iw,sy1=v1*ih,sx2=u2*iw,sy2=v2*ih;
+    var denom=sx0*(sy1-sy2)+sx1*(sy2-sy0)+sx2*(sy0-sy1);
+    if(Math.abs(denom)<0.0001){return;}
+    var a=(p0.x*(sy1-sy2)+p1.x*(sy2-sy0)+p2.x*(sy0-sy1))/denom;
+    var b=(p0.x*(sx2-sx1)+p1.x*(sx0-sx2)+p2.x*(sx1-sx0))/denom;
+    var c=(p0.x*(sx1*sy2-sx2*sy1)+p1.x*(sx2*sy0-sx0*sy2)+p2.x*(sx0*sy1-sx1*sy0))/denom;
+    var d=(p0.y*(sy1-sy2)+p1.y*(sy2-sy0)+p2.y*(sy0-sy1))/denom;
+    var e=(p0.y*(sx2-sx1)+p1.y*(sx0-sx2)+p2.y*(sx1-sx0))/denom;
+    var f=(p0.y*(sx1*sy2-sx2*sy1)+p1.y*(sx2*sy0-sx0*sy2)+p2.y*(sx0*sy1-sx1*sy0))/denom;
+    ctx.save();
+    ctx.beginPath();
+    ctx.moveTo(p0.x,p0.y); ctx.lineTo(p1.x,p1.y); ctx.lineTo(p2.x,p2.y);
+    ctx.closePath(); ctx.clip();
+    ctx.transform(a,d,b,e,c,f);
+    ctx.drawImage(img,0,0);
+    ctx.restore();
+}
+
+function drawImageQuad(ctx,img,pts,shade){
+    var divs=8;
+    ctx.save();
+    ctx.beginPath();
+    ctx.moveTo(pts[0].x,pts[0].y);
+    ctx.lineTo(pts[1].x,pts[1].y);
+    ctx.lineTo(pts[2].x,pts[2].y);
+    ctx.lineTo(pts[3].x,pts[3].y);
+    ctx.closePath();
+    ctx.clip();
+    for(var row=0;row<divs;row++){
+        for(var col=0;col<divs;col++){
+            var u0=col/divs,     v0=row/divs;
+            var u1=(col+1)/divs, v1=(row+1)/divs;
+            var p00=bilerp(pts,u0,v0);
+            var p10=bilerp(pts,u1,v0);
+            var p11=bilerp(pts,u1,v1);
+            var p01=bilerp(pts,u0,v1);
+            var cx=(p00.x+p10.x+p11.x+p01.x)/4;
+            var cy=(p00.y+p10.y+p11.y+p01.y)/4;
+            var ex=0.75;
+            p00={x:cx+(p00.x-cx)*(1+ex/8),y:cy+(p00.y-cy)*(1+ex/8)};
+            p10={x:cx+(p10.x-cx)*(1+ex/8),y:cy+(p10.y-cy)*(1+ex/8)};
+            p11={x:cx+(p11.x-cx)*(1+ex/8),y:cy+(p11.y-cy)*(1+ex/8)};
+            p01={x:cx+(p01.x-cx)*(1+ex/8),y:cy+(p01.y-cy)*(1+ex/8)};
+            drawTri(ctx,img,p00,p10,p11,u0,v0,u1,v0,u1,v1);
+            drawTri(ctx,img,p00,p11,p01,u0,v0,u1,v1,u0,v1);
+            drawTri(ctx,img,p00,p10,p01,u0,v0,u1,v0,u0,v1);
+            drawTri(ctx,img,p10,p11,p01,u1,v0,u1,v1,u0,v1);
+        }
+    }
+    if(shade<1.0){
+        ctx.save();
+        ctx.globalCompositeOperation='source-atop';
+        ctx.beginPath();
+        ctx.moveTo(pts[0].x,pts[0].y);
+        ctx.lineTo(pts[1].x,pts[1].y);
+        ctx.lineTo(pts[2].x,pts[2].y);
+        ctx.lineTo(pts[3].x,pts[3].y);
+        ctx.closePath();
+        ctx.fillStyle='rgba(0,0,0,'+(1-shade)+')';
+        ctx.fill();
+        ctx.restore();
+    }
+    ctx.restore();
+}
+
+var faceMap=[
+    [8,0,8,8,'head','top'],[16,0,8,8,'head','bottom'],
+    [0,8,8,8,'head','left'],[8,8,8,8,'head','back'],
+    [16,8,8,8,'head','right'],[24,8,8,8,'head','front'],
+    [20,16,8,4,'body','top'],[28,16,8,4,'body','bottom'],
+    [16,20,4,12,'body','left'],[20,20,8,12,'body','back'],
+    [28,20,4,12,'body','right'],[32,20,8,12,'body','front'],
+    [44,16,4,4,'leftArm','top'],[48,16,4,4,'leftArm','bottom'],
+    [40,20,4,12,'leftArm','left'],[44,20,4,12,'leftArm','back'],
+    [48,20,4,12,'leftArm','right'],[52,20,4,12,'leftArm','front'],
+    [36,48,4,4,'rightArm','top'],[40,48,4,4,'rightArm','bottom'],
+    [32,52,4,12,'rightArm','left'],[36,52,4,12,'rightArm','back'],
+    [40,52,4,12,'rightArm','right'],[44,52,4,12,'rightArm','front'],
+    [4,16,4,4,'leftLeg','top'],[8,16,4,4,'leftLeg','bottom'],
+    [0,20,4,12,'leftLeg','left'],[4,20,4,12,'leftLeg','back'],
+    [8,20,4,12,'leftLeg','right'],[12,20,4,12,'leftLeg','front'],
+    [20,48,4,4,'rightLeg','top'],[24,48,4,4,'rightLeg','bottom'],
+    [16,52,4,12,'rightLeg','left'],[20,52,4,12,'rightLeg','back'],
+    [24,52,4,12,'rightLeg','right'],[28,52,4,12,'rightLeg','front'],
+    [40,0,8,8,'head2','top'],[48,0,8,8,'head2','bottom'],
+    [48,8,8,8,'head2','right'],[40,8,8,8,'head2','back'],
+    [32,8,8,8,'head2','left'],[56,8,8,8,'head2','front'],
+    [20,32,8,4,'body2','top'],[28,32,8,4,'body2','bottom'],
+    [16,36,4,12,'body2','left'],[20,36,8,12,'body2','back'],
+    [28,36,4,12,'body2','right'],[32,36,8,12,'body2','front'],
+    [44,32,4,4,'rightArm2','top'],[48,32,4,4,'rightArm2','bottom'],
+    [40,36,4,12,'rightArm2','left'],[44,36,4,12,'rightArm2','back'],
+    [48,36,4,12,'rightArm2','right'],[52,36,4,12,'rightArm2','front'],
+    [52,48,4,4,'leftArm2','top'],[56,48,4,4,'leftArm2','bottom'],
+    [48,52,4,12,'leftArm2','left'],[52,52,4,12,'leftArm2','back'],
+    [56,52,4,12,'leftArm2','right'],[60,52,4,12,'leftArm2','front'],
+    [8,32,4,4,'leftLeg2','top'],[4,32,4,4,'leftLeg2','bottom'],
+    [0,36,4,12,'leftLeg2','left'],[4,36,4,12,'rightLeg2','back'],
+    [8,36,4,12,'leftLeg2','right'],[12,36,4,12,'leftLeg2','front'],
+    [4,48,4,4,'rightLeg2','top'],[8,48,4,4,'rightLeg2','bottom'],
+    [0,52,4,12,'rightLeg2','left'],[4,52,4,12,'leftLeg2','back'],
+    [8,52,4,12,'rightLeg2','right'],[12,52,4,12,'rightLeg2','front']
+];
+
+var partDefs=[
+    {key:'rightLeg',  hw:12,hh:36,hd:12, tx:12,  ty:70, tz:0, pivot:{y:-36}, swingAngle:-0.42},
+    {key:'leftLeg',   hw:12,hh:36,hd:12, tx:-12, ty:70, tz:0, pivot:{y:-36}, swingAngle:0.42 },
+    {key:'rightArm',  hw:12,hh:36,hd:12, tx:-36, ty:0,  tz:0, pivot:{y:-36}, swingAngle:0.42 },
+    {key:'leftArm',   hw:12,hh:36,hd:12, tx:36,  ty:0,  tz:0, pivot:{y:-36}, swingAngle:-0.42},
+    {key:'body',      hw:24,hh:36,hd:12, tx:0,   ty:0,  tz:0, pivot:null,    swingAngle:0    },
+    {key:'head',      hw:24,hh:24,hd:24, tx:0,   ty:-60,tz:0, pivot:null,    swingAngle:0    }
+];
+
+function renderSkin(canvas,player){
+    var ctx=canvas.getContext('2d');
+    ctx.clearRect(0,0,CANVAS_SIZE,CANVAS_SIZE);
+    ctx.globalCompositeOperation='source-over';
+    var RX=0.05, RY=-2.41, SCALE=1.59;
+    var faceCanvases={};
+    for(var i=0;i<faceMap.length;i++){
+        var fm=faceMap[i];
+        faceCanvases[fm[4]+'-'+fm[5]]=cropFaceToCanvas(player.skinBitmap,player.skinPalette,fm[0],fm[1],fm[2],fm[3]);
+    }
+    var allFaces=[];
+    var axes=['front','back','left','right','top','bottom'];
+    for(var di=0;di<partDefs.length;di++){
+        var def=partDefs[di];
+        for(var ai=0;ai<axes.length;ai++){
+            var axis=axes[ai];
+            var fc1=faceCanvases[def.key+'-'+axis];
+            if(fc1){ allFaces.push({fc:fc1,def:def,axis:axis,expand:0}); }
+            var fc2=faceCanvases[def.key+'2-'+axis];
+            if(fc2){ allFaces.push({fc:fc2,def:def,axis:axis,expand:2}); }
+        }
+    }
+    for(var i=0;i<allFaces.length;i++){
+        var f=allFaces[i];
+        var def=f.def;
+        var hw=def.hw+f.expand, hh=def.hh+f.expand, hd=def.hd+f.expand;
+        var corners=getFaceCorners(f.axis,hw,hh,hd);
+        var transformed=[];
+        for(var j=0;j<corners.length;j++){
+            var v=corners[j];
+            if(def.swingAngle!==0&&def.pivot){
+                var py=def.pivot.y;
+                v=vec3(v.x,v.y-py,v.z);
+                v=rotX(v,def.swingAngle);
+                v=vec3(v.x,v.y+py,v.z);
+            }
+            v=vec3(v.x+def.tx, v.y+def.ty-36, v.z+def.tz);
+            v=rotX(v,RX); v=rotY(v,RY);
+            v=scaleV(v,SCALE);
+            transformed.push(v);
+        }
+        var pts2d=[];
+        for(var j=0;j<transformed.length;j++){ pts2d.push(project(transformed[j])); }
+        f.pts2d=pts2d;
+        f.depth=(transformed[0].z+transformed[1].z+transformed[2].z+transformed[3].z)/4;
+        if(def.key==='leftLeg'||def.key==='rightLeg'||
+           def.key==='leftLeg2'||def.key==='rightLeg2'){
+            f.depth -= 50;
+        }
+        f.shade=getShade(transformed);
+    }
+    allFaces.sort(function(a,b){ return (a.depth||0)-(b.depth||0); });
+    for(var i=0;i<allFaces.length;i++){
+        var f=allFaces[i];
+        if(!f.pts2d){continue;}
+        drawImageQuad(ctx,f.fc,f.pts2d,f.shade);
+    }
+}
+// ============================================================
+// PRELOAD SKINS
+// ============================================================
+var skinCanvas = document.getElementById('skin-canvas');
+
+function preloadSkins(onDone) {
+    var i = 0;
+    var bar = document.getElementById('loading-bar');
+    var skinImg = document.getElementById('loading-skin');
+
+    function next() {
+        if (i >= players.length) { onDone(); return; }
+        var p = players[i];
+
+        bar.style.width = Math.round((i / players.length) * 100) + '%';
+
+        setTimeout(function() {
+            if (p.skinBitmap && p.skinPalette) {
+                renderSkin(skinCanvas, p);
+                p.avatarUrl = skinCanvas.toDataURL();
+
+                // Show skin image, update to latest loaded
+                skinImg.style.display = 'block';
+                skinImg.src = p.avatarUrl;
+            }
+
+            i++; next();
+        }, 10);
+    }
+
+    next();
+}
+
+// ============================================================
+// SCORING + SORTING
+// ============================================================
+var scorePlayer = function(p) {
+    var main = -getPoints(p);
+    // tiebreaker: sum of ALL sub-tier points precisely
+    var sub = 0;
+    for (var i = 0; i < styles.length; i++) {
+        var style = styles[i];
+        if (style.subs) {
+            for (var s = 0; s < style.subs.length; s++) {
+                sub += tierPoints[normTier(p.tiers[style.subs[s].key] || "LT5")] || 1;
+            }
+        }
+    }
+    return main - (sub / 10000); // sub-tier breaks ties without affecting main score
+};
+
+var sortedPlayers = players.slice().sort(function(a, b) {
+    return scorePlayer(a) - scorePlayer(b);
+});
+
+// Assign ranks allowing ties
+for (var i = 0; i < sortedPlayers.length; i++) {
+    if (i === 0) {
+        sortedPlayers[i]._rank = 0;
+    } else {
+        var prevPoints = getPoints(sortedPlayers[i-1]);
+        var currPoints = getPoints(sortedPlayers[i]);
+        if (Math.abs(prevPoints - currPoints) < 0.01) {
+            sortedPlayers[i]._rank = sortedPlayers[i-1]._rank; // tied
+        } else {
+            sortedPlayers[i]._rank = i;
+        }
+    }
+}
+
+// ============================================================
+// ROW SVG
+// ============================================================
+var makeRowSVG = function(rank, uid) {
+    uid = uid !== undefined ? uid : rank;
+    var rc = rowColors[Math.min(rank, 3)];
+    return {
+        bg:
+            '<svg width="100%" height="100%" viewBox="0 0 1000 68" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">' +
+            '<rect width="1000" height="68" rx="6" ry="6" fill="' + rc.bg + '" opacity="1"/></svg>',
+        poly:
+            '<svg width="100%" height="100%" viewBox="0 0 1000 68" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">' +
+            '<defs><clipPath id="shineClip' + uid + '">' +
+            '<polygon points="0,68 50,68 213,0 155,0 100,0 0,52"/>' +
+            '</clipPath></defs>' +
+            '<polygon points="0,0 175,0 220,68 0,68" fill="' + rc.quad + '" opacity="1"/>' +
+            '<polygon points="0,0 175,0 220,68 0,68" fill="' + rc.quadLight + '" opacity="1" clip-path="url(#shineClip' + uid + ')"/>' +
+            '</svg>'
+    };
+};
+
+// ============================================================
+// ICON HTML
+// ============================================================
+var makeIconHTML = function(style, size) {
+    if (style.iconUrl) {
+        return '<img src="' + style.iconUrl + '" width="' + size + '" height="' + size +
+               '" style="object-fit:contain;image-rendering:auto;" alt="' + style.label + '">';
+    }
+    return '<span style="font-size:' + size + 'px;line-height:1;">' + style.emoji + '</span>';
+};
+
+// ============================================================
+// TIER CIRCLE  (supports R-Tier: glow + opaque outline)
+// ============================================================
+var makeTierCircle = function(tier, style, circleSize) {
+    circleSize = circleSize || 44;
+
+    var isR = isRTier(tier);
+    var baseTier = normTier(tier);
+    var tc = tierColors[baseTier] || { bg:"#0d0d0d", stroke:"#282828", text:"#4e4e4e", ring:"grey", glow:null };
+
+    var ringUrl = RING_URLS[tc.ring];
+    var cx = circleSize / 2, cy = circleSize / 2;
+    var rectY = cy + (circleSize / 2 - 2) * 0.50;
+    var rectH = circleSize * 0.30;
+    var totalH = rectY + rectH + 3;
+    var lblSz = circleSize * 0.20;
+    var iconSz = circleSize * 0.5;
+
+    // R-Tier always glows (like HT) but with fully opaque outline
+    var glowColor = isR ? tc.stroke : tc.glow;
+    var glowEl = '';
+    if (glowColor) {
+        var rw = circleSize * 0.55, rh = circleSize * 0.26;
+        var rx = cx - rw / 2, ry = rectY + rectH * 0.05;
+        // R-Tier: opaque outline rect around label area
+        var outlineEl = isR
+            ? '<rect x="' + rx + '" y="' + ry + '" width="' + rw + '" height="' + rh + '" rx="4" ry="4" ' +
+              'fill="none" stroke="' + tc.stroke + '" stroke-width="0.4" opacity="1"/>'
+            : '';
+        glowEl =
+            '<rect x="' + rx + '" y="' + ry + '" width="' + rw + '" height="' + rh + '" rx="4" ry="4" ' +
+            'fill="' + glowColor + '" opacity="0.18" filter="url(#glowF)"/>' +
+            outlineEl;
+    }
+
+    // Display label: show full tier string (including R prefix)
+    var displayLabel = tier;
+
+    return (
+        '<svg width="' + circleSize + '" height="' + totalH + '" viewBox="0 0 ' + circleSize + ' ' + totalH + '" xmlns="http://www.w3.org/2000/svg">' +
+        '<defs>' +
+        '<filter id="glowF" x="-50%" y="-50%" width="200%" height="200%">' +
+        '<feGaussianBlur stdDeviation="2.5" result="blur"/>' +
+        '<feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>' +
+        '</filter>' +
+        '</defs>' +
+        '<image href="' + ringUrl + '" x="0" y="0" width="' + circleSize + '" height="' + circleSize + '"/>' +
+        '<image href="' + style.iconUrl + '" x="' + (cx - iconSz/2) + '" y="' + (cy - iconSz/2) + '" width="' + iconSz + '" height="' + iconSz + '"/>' +
+        glowEl +
+        '<text x="' + cx + '" y="' + (rectY + rectH * 0.67) + '" text-anchor="middle" fill="white" stroke="black" stroke-width="0.5" paint-order="stroke" font-size="' + lblSz + '" font-weight="700" font-family="Jersey 15,Segoe UI,sans-serif">' + displayLabel + '</text>' +
+        '</svg>'
+    );
+};
+
+// ============================================================
+// ADD TAB  (supports sub-mode dropdown)
+// ============================================================
+var addTab = function(label, style, key) {
+    var tab = document.createElement("div");
+    tab.className = "tab" + (key === "all" ? " active" : "");
+    if (style && style.subs) tab.className += " has-sub";
+
+    var iconPart = style ? '<span class="tab-icon">' + makeIconHTML(style, 14) + '</span>' : '';
+    tab.innerHTML = iconPart + label;
+
+if (key === 'news') {
+    var badge = document.createElement('div');
+    badge.id = 'news-tab-badge';
+    badge.textContent = '0';
+badge.style.cssText =
+    'width:16px;height:16px;border-radius:50%;' +
+    'border:1.5px solid #fff;' +
+    'font-size:10px;line-height:13px;text-align:center;' +
+    'color:#fff;text-shadow:none;flex-shrink:0;opacity:0.3;';
+    tab.appendChild(badge);
+}
+
+    // Sub-mode dropdown arrow + menu
+    if (style && style.subs) {
+        var arrow = document.createElement("span");
+        arrow.className = "material-icons tab-arrow";
+        arrow.textContent = "arrow_drop_down_circle";
+        tab.appendChild(arrow);
+
+        var submenu = document.createElement("div");
+        submenu.className = "tab-submenu";
+
+        for (var si = 0; si < style.subs.length; si++) {
+            (function(sub) {
+                var item = document.createElement("div");
+                item.className = "tab-subitem";
+                item.innerHTML = '<img src="' + sub.iconUrl + '">' + sub.label;
+                item.addEventListener("click", function(e) {
+                    e.stopPropagation();
+                    submenu.classList.remove("open");
+                    switchTab(key, sub.key);
+                });
+                submenu.appendChild(item);
+            })(style.subs[si]);
+        }
+
+        tab.appendChild(submenu);
+
+        // Arrow click opens/closes submenu
+        arrow.addEventListener("click", function(e) {
+            e.stopPropagation();
+            // Close all other submenus
+            document.querySelectorAll(".tab-submenu").forEach(function(m) {
+                if (m !== submenu) m.classList.remove("open");
+            });
+            submenu.classList.toggle("open");
+        });
+    }
+
+    // Main tab click switches to overall view
+    tab.addEventListener("click", function(e) {
+        // Don't re-fire if arrow was clicked
+        if (e.target.classList && e.target.classList.contains("tab-arrow")) return;
+        if (e.target.classList && e.target.classList.contains("material-icons")) return;
+        switchTab(key);
+    });
+
+    var utilWrapper = tabsEl.querySelector(".panorama-btn").parentElement;
+    tabsEl.insertBefore(tab, utilWrapper);
+};
+
+// ============================================================
+// BUILD ALL PAGE
+// ============================================================
+function buildAllPage() {
+    var listAll = document.getElementById("list-all");
+    for (var i = 0; i < sortedPlayers.length; i++) {
+        (function(p, rank) {
+            var row = document.createElement("div");
+            row.className = "player-row";
+
+            var rc = makeRowSVG(rank);
+
+            var bgDiv = document.createElement("div");
+            bgDiv.className = "row-bg";
+            bgDiv.innerHTML = rc.bg;
+            row.appendChild(bgDiv);
+
+            if (p.bannerUrl) {
+                var banner = document.createElement("img");
+                banner.src = p.bannerUrl;
+                banner.style.cssText =
+                    'position:absolute;inset:0;width:100%;height:100%;' +
+                    'object-fit:cover;object-position:center;' +
+                    'border-radius:6px;opacity:0.4;pointer-events:none;z-index:1;';
+                row.appendChild(banner);
+            }
+
+            var polyDiv = document.createElement("div");
+            polyDiv.className = "row-bg";
+            polyDiv.innerHTML = rc.poly;
+            polyDiv.style.zIndex = "2";
+            row.appendChild(polyDiv);
+
+            var content = document.createElement("div");
+            content.className = "row-content";
+
+            var posEl = document.createElement("div");
+            posEl.className = "row-pos";
+            posEl.textContent = p._rank + 1;
+            content.appendChild(posEl);
+
+            var nameEl = document.createElement("div");
+            nameEl.className = "row-name";
+            nameEl.textContent = p.name;
+            nameEl.style.position = 'absolute';
+            nameEl.style.left = '120px';
+            content.appendChild(nameEl);
+
+            var points = getPoints(p);
+            var title = getTitle(getDisplayPoints(p));
+
+            var titleEl = document.createElement("div");
+            titleEl.className = "row-title";
+            var titleIcon = document.createElement("img");
+            titleIcon.src = title.iconUrl;
+            titleIcon.className = "row-title-icon";
+            var titleLabel = document.createElement("div");
+            titleLabel.className = "row-title-label";
+            titleLabel.textContent = title.label + " • " + getDisplayPoints(p) + " pts";
+            titleEl.appendChild(titleIcon);
+            titleEl.appendChild(titleLabel);
+            content.appendChild(titleEl);
+
+            var tiersEl = document.createElement("div");
+            tiersEl.className = "row-tiers";
+            for (var j = 0; j < styles.length; j++) {
+                var t = getEffectiveTier(p, styles[j].key);
+                var wrap = document.createElement("div");
+                wrap.className = "tier-circle-wrap";
+                wrap.innerHTML = makeTierCircle(t, styles[j], 42);
+                tiersEl.appendChild(wrap);
+            }
+            content.appendChild(tiersEl);
+            row.appendChild(content);
+
+            if (p.avatarUrl) {
+                var img = document.createElement("img");
+                img.src = p.avatarUrl;
+                img.style.cssText =
+                    'position:absolute;left:-120px;top:-155px;' +
+                    'width:400px;height:400px;z-index:4;pointer-events:none;';
+                row.appendChild(img);
+            }
+
+            row.addEventListener("click", function() { openDetail(p, rank); });
+            listAll.appendChild(row);
+        })(sortedPlayers[i], i);
+    }
+}
+
+function buildSettingsChecks() {
+    var prefs = getNewsPrefs();
+    var container = document.getElementById('settings-checks');
+    container.innerHTML = '';
+
+    var options = [
+        { key: 'text',      label: 'Updates / News' },
+        { key: 'tiertest',  label: 'Tier Tests'      },
+        { key: 'promotion', label: 'Promotions / Demotions'      }
+    ];
+
+    for (var i = 0; i < options.length; i++) {
+        (function(opt) {
+            var row = document.createElement('div');
+            row.style.cssText = 'display:flex;align-items:center;gap:10px;';
+
+            var cb = document.createElement('input');
+            cb.type = 'checkbox';
+            cb.checked = prefs[opt.key] !== false;
+            cb.style.cssText = 'width:16px;height:16px;accent-color:#7c3aed;cursor:pointer;';
+
+            var lbl = document.createElement('label');
+            lbl.textContent = opt.label;
+            lbl.style.cssText = 'font-size:13px;cursor:pointer;';
+            lbl.onclick = function() { cb.checked = !cb.checked; cb.dispatchEvent(new Event('change')); };
+
+            cb.addEventListener('change', function() {
+                var p = getNewsPrefs();
+                p[opt.key] = cb.checked;
+                saveNewsPrefs(p);
+                updateNewsCount();
+                // Rebuild news page so dots update
+                document.getElementById('list-news').innerHTML = '';
+                buildNewsPage();
+            });
+
+            row.appendChild(cb);
+            row.appendChild(lbl);
+            container.appendChild(row);
+        })(options[i]);
+    }
+}
+
+function openSettings() {
+    buildSettingsChecks();
+    document.getElementById('scene-settings').classList.add('open');
+}
+
+function closeSettings() {
+    document.getElementById('scene-settings').classList.remove('open');
+}
+
+document.getElementById('scene-settings').addEventListener('click', function(e) {
+    if (e.target === this) closeSettings();
+});
+
+function buildNewsPage() {
+    var listNews = document.getElementById("list-news");
+    var sorted = news.slice().sort(function(a, b) {
+        return new Date(b.date) - new Date(a.date);
+    });
+
+    var readNews = getReadNews();
+    var newsPrefs = getNewsPrefs();
+
+    for (var i = 0; i < sorted.length; i++) {
+        var item = sorted[i];
+        var box = document.createElement("div");
+        box.className = "news-box";
+
+        if (item.type === "text") {
+            box.innerHTML =
+                '<div class="news-date">' + item.date + '</div>' +
+                '<div class="news-title">' + item.title + '</div>' +
+                '<div class="news-body">' + item.body + '</div>';
+
+        } else if (item.type === "tiertest") {
+            var pA = null, pB = null;
+            for (var j = 0; j < players.length; j++) {
+                if (players[j].name === item.playerA.name) pA = players[j];
+                if (players[j].name === item.playerB.name) pB = players[j];
+            }
+
+            var stylesHTML = '';
+            for (var s = 0; s < item.styles.length; s++) {
+                var styleKey = item.styles[s];
+                var styleObj = null;
+                for (var k = 0; k < styles.length; k++) {
+                    if (styles[k].key === styleKey) { styleObj = styles[k]; break; }
+                    if (styles[k].subs) {
+                        for (var sb = 0; sb < styles[k].subs.length; sb++) {
+                            if (styles[k].subs[sb].key === styleKey) {
+                                styleObj = styles[k].subs[sb]; break;
+                            }
+                        }
+                    }
+                    if (styleObj) break;
+                }
+                if (!styleObj) continue;
+                stylesHTML +=
+                    '<div class="tiertest-style-row" style="display:flex;flex-direction:column;align-items:center;justify-content:space-between;height:100%;gap:0;">' +
+                        '<div class="tiertest-result ' + item.playerA.results[s] + '" style="position:static;flex:1;display:flex;align-items:center;justify-content:center;">' + item.playerA.results[s] + '</div>' +
+                        '<img src="' + styleObj.iconUrl + '" width="28" height="28" style="object-fit:contain;">' +
+                        '<div class="tiertest-result ' + item.playerB.results[s] + '" style="position:static;flex:1;display:flex;align-items:center;justify-content:center;">' + item.playerB.results[s] + '</div>' +
+                    '</div>';
+            }
+
+            var imgA = pA && pA.avatarUrl ? '<img src="' + pA.avatarUrl + '">' : '';
+            var imgB = pB && pB.avatarUrl ? '<img src="' + pB.avatarUrl + '">' : '';
+
+            box.innerHTML =
+                '<div class="news-date">' + item.date + '</div>' +
+                '<div class="news-title" style="margin-bottom:12px;">' + item.title + '</div>' +
+                '<div class="tiertest-main">' +
+                    '<div class="tiertest-players">' +
+                        '<div class="tiertest-player">' +
+                            '<div class="tiertest-player-name">' + item.playerA.name + '</div>' +
+                            '<div class="tiertest-player-img">' + imgA + '</div>' +
+                        '</div>' +
+                        '<div class="tiertest-player">' +
+                            '<div class="tiertest-player-name">' + item.playerB.name + '</div>' +
+                            '<div class="tiertest-player-img">' + imgB + '</div>' +
+                        '</div>' +
+                    '</div>' +
+                    '<div class="tiertest-styles" style="flex-direction:row;display:flex;gap:16px;align-items:center;">' +
+                        stylesHTML +
+                    '</div>' +
+                '</div>' +
+                '<div class="tiertest-writeup">' + item.writeup + '</div>';
+
+        } else if (item.type === "promotion") {
+            var pP = null;
+            for (var j = 0; j < players.length; j++) {
+                if (players[j].name === item.player) { pP = players[j]; break; }
+            }
+            var imgP = pP && pP.avatarUrl ? '<img src="' + pP.avatarUrl + '">' : '';
+
+            var fromIdx = tierOrder.indexOf(normTier(item.fromTier));
+            var toIdx = tierOrder.indexOf(normTier(item.toTier));
+            var diff = toIdx - fromIdx;
+            var isPromotion = diff < 0;
+            var isDouble = Math.abs(diff) > 1;
+            var arrowColor = isPromotion ? '#4caf50' : '#f44336';
+            var arrowIcon = isPromotion
+                ? (isDouble ? 'keyboard_double_arrow_up' : 'keyboard_arrow_up')
+                : (isDouble ? 'keyboard_double_arrow_down' : 'keyboard_arrow_down');
+
+            var styleObj = null;
+            for (var k = 0; k < styles.length; k++) {
+                if (styles[k].key === item.style) { styleObj = styles[k]; break; }
+                if (styles[k].subs) {
+                    for (var sb = 0; sb < styles[k].subs.length; sb++) {
+                        if (styles[k].subs[sb].key === item.style) {
+                            styleObj = styles[k].subs[sb]; break;
+                        }
+                    }
+                }
+                if (styleObj) break;
+            }
+
+box.innerHTML =
+    '<div class="news-date">' + item.date + '</div>' +
+    '<div class="news-title" style="margin-bottom:12px;">Tier Change</div>' +
+    '<div style="display:flex;flex-direction:row;align-items:center;gap:16px;width:100%;">' +
+        '<div style="display:flex;flex-direction:column;align-items:center;gap:4px;">' +
+            '<div class="tiertest-player-name">' + item.player + '</div>' +
+            '<div class="tiertest-player-img" style="position:relative;width:96px;height:96px;overflow:visible;">' + imgP + '</div>' +
+        '</div>' +
+        '<div style="display:flex;flex-direction:row;align-items:center;gap:10px;">' +
+            (styleObj ? makeTierCircle(item.fromTier, styleObj, 52) : '') +
+            '<span class="material-icons" style="color:' + arrowColor + ';font-size:28px;text-shadow:none;">' + arrowIcon + '</span>' +
+            (styleObj ? makeTierCircle(item.toTier, styleObj, 52) : '') +
+        '</div>' +
+    '</div>' +
+    (item.text ? '<div class="tiertest-writeup">' + item.text + '</div>' : '');
+        }
+
+        var itemId = item.id;
+        var typeEnabled = newsPrefs[item.type] !== false;
+        var isUnread = typeEnabled && readNews.indexOf(itemId) === -1;
+
+        if (isUnread) {
+            var dot = document.createElement('div');
+            dot.className = 'news-unread-dot';
+            dot.style.cssText =
+                'position:absolute;top:10px;right:12px;' +
+                'width:8px;height:8px;border-radius:50%;' +
+                'background:#7c3aed;';
+            box.appendChild(dot);
+            box.classList.add('news-unread');
+        }
+
+        listNews.appendChild(box);
+
+        if (isUnread) {
+            (function(id, el) {
+                var observer = new IntersectionObserver(function(entries) {
+                    if (entries[0].isIntersecting) {
+                        markNewsRead(id);
+                        var d = el.querySelector('.news-unread-dot');
+                        if (d) d.remove();
+                        el.classList.remove('news-unread');
+                        observer.disconnect();
+                    }
+                }, { threshold: 1.0 });
+                observer.observe(el);
+            })(itemId, box);
+        }
+    }
+}
+
+// ============================================================
+// BUILD STYLE PAGES  (sub-mode sorting + R-Tier arrow color)
+// ============================================================
+function buildStylePages() {
+    var pagesStylesEl = document.getElementById("pages-styles");
+
+    var colTiers = [
+        { label:"T1", tiers:["HT1","LT1"], stroke:"#FFD700", bg:"#130f00", fill:"#FFD700" },
+        { label:"T2", tiers:["HT2","LT2"], stroke:"#C0C0C0", bg:"#111",    fill:"#C0C0C0" },
+        { label:"T3", tiers:["HT3","LT3"], stroke:"#CD7F32", bg:"#100800", fill:"#CD7F32" },
+        { label:"T4", tiers:["HT4","LT4"], stroke:"#383838", bg:"#0d0d0d", fill:"#555"    },
+        { label:"T5", tiers:["HT5","LT5"], stroke:"#282828", bg:"#0d0d0d", fill:"#444"    }
+    ];
+
+    for (var si = 0; si < styles.length; si++) {
+        (function(style) {
+            var page = document.createElement("div");
+            page.className = "style-page";
+            page.id = "page-" + style.key;
+
+            var inner = document.createElement("div");
+            inner.className = "col-page-inner";
+            inner.style.cssText =
+                'display:flex;gap:10px;padding:16px 40px;flex:1;' +
+                'align-items:stretch;overflow-y:auto;overflow-x:hidden;';
+
+            rebuildStyleColumns(inner, style, colTiers, null);
+
+            page.appendChild(inner);
+            pagesStylesEl.appendChild(page);
+        })(styles[si]);
+    }
+}
+
+// Rebuild the tier columns for a style page, optionally filtered by subKey
+function rebuildStyleColumns(inner, style, colTiers, subKey) {
+    inner.innerHTML = "";
+
+    for (var ci = 0; ci < colTiers.length; ci++) {
+        (function(colDef) {
+            var entries = [];
+            for (var pi = 0; pi < sortedPlayers.length; pi++) {
+                var p = sortedPlayers[pi];
+                var t;
+                if (subKey && style.subs) {
+                    // Filter by sub-mode tier
+                    t = p.tiers[subKey] || "LT5";
+                } else {
+                    t = getEffectiveTier(p, style.key);
+                }
+                var baseT = normTier(t);
+                var tNum = parseInt(baseT.replace("HT","").replace("LT",""));
+                var colNum = parseInt(colDef.label.replace("T",""));
+                if (tNum === colNum) {
+                    entries.push({ player: p, rank: pi, tier: t });
+                }
+            }
+
+            entries.sort(function(a, b) {
+                var aIdx = tierOrder.indexOf(normTier(a.tier));
+                var bIdx = tierOrder.indexOf(normTier(b.tier));
+                if (aIdx !== bIdx) return aIdx - bIdx;
+                return a.rank - b.rank;
+            });
+
+            var col = document.createElement("div");
+            col.style.cssText = 'flex:1;min-width:0;display:flex;flex-direction:column;min-height:100%;';
+
+            var titleBox = document.createElement("div");
+            titleBox.style.cssText =
+                'background:' + colDef.fill + ';' +
+                'border:1.5px solid ' + colDef.stroke + ';' +
+                'border-radius:12px 12px 0 0;' +
+                'padding:10px 0;text-align:center;' +
+                'font-size:15px;font-weight:900;color:#fff;letter-spacing:1px;';
+            titleBox.textContent = colDef.label;
+            col.appendChild(titleBox);
+
+            var colBody = document.createElement("div");
+            colBody.style.cssText =
+                'flex:1;border:1.5px solid ' + colDef.stroke + ';' +
+                'border-top:none;border-radius:0 0 12px 12px;' +
+                'background:' + colDef.bg + ';' +
+                'display:flex;flex-direction:column;' +
+                'gap:4px;padding:5px;' +
+                'min-height:calc(100vh - 120px);';
+
+            for (var ei = 0; ei < entries.length; ei++) {
+                (function(entry) {
+                    var card = document.createElement("div");
+                    card.className = "col-player-card";
+                    card.style.overflow = "visible";
+
+                    var rc = makeRowSVG(entry.rank);
+
+                    var cbg = document.createElement("div");
+                    cbg.className = "col-card-bg";
+                    cbg.innerHTML = rc.bg;
+                    card.appendChild(cbg);
+
+                    var polyDiv = document.createElement("div");
+                    polyDiv.className = "col-card-bg";
+                    polyDiv.innerHTML = rc.poly;
+                    polyDiv.style.zIndex = "2";
+                    card.appendChild(polyDiv);
+
+                    var cc = document.createElement("div");
+                    cc.className = "col-card-content";
+
+                    var rankEl = document.createElement("div");
+                    rankEl.className = "col-rank";
+                    rankEl.textContent = "#" + (entry.player._rank + 1);
+                    cc.appendChild(rankEl);
+
+                    // Arrow icon — colored if R-Tier
+                    var arrowEl = document.createElement("div");
+                    arrowEl.style.cssText =
+                        'position:absolute;right:6px;top:50%;transform:translateY(-50%);' +
+                        'display:flex;align-items:center;z-index:3;';
+                    var arrowIcon = document.createElement("span");
+                    arrowIcon.className = "material-icons";
+                    var isR = isRTier(entry.tier);
+                    var baseTier = normTier(entry.tier);
+                    var arrowColor = isR
+                        ? (tierColors[baseTier] ? tierColors[baseTier].stroke : '#fff')
+                        : '#fff';
+                    arrowIcon.style.cssText = 'font-size:16px;text-shadow:none;color:' + arrowColor + ';';
+                    arrowIcon.textContent = baseTier.indexOf("HT") === 0
+                        ? "keyboard_double_arrow_up"
+                        : "keyboard_arrow_up";
+                    arrowEl.appendChild(arrowIcon);
+                    card.appendChild(arrowEl);
+
+                    var nameEl = document.createElement("div");
+                    nameEl.className = "col-name";
+                    nameEl.textContent = entry.player.name;
+                    nameEl.style.position = 'absolute';
+                    nameEl.style.left = '55px';
+                    cc.appendChild(nameEl);
+
+                    card.appendChild(cc);
+
+                    if (entry.player.avatarUrl) {
+                        var img = document.createElement("img");
+                        img.src = entry.player.avatarUrl;
+                        img.style.cssText =
+                            'position:absolute;left:-40px;top:-52px;' +
+                            'width:160px;height:160px;z-index:4;pointer-events:none;';
+                        card.appendChild(img);
+                    }
+
+                    card.addEventListener("click", function() {
+                        openDetail(entry.player, entry.rank);
+                    });
+                    colBody.appendChild(card);
+                })(entries[ei]);
+            }
+
+            col.appendChild(colBody);
+            inner.appendChild(col);
+        })(colTiers[ci]);
+    }
+}
+
+// ============================================================
+// SWITCH TAB  (resets sub-mode to overall on tab change)
+// ============================================================
+// Track current active sub-mode per style key
+var activeSubModes = {};
+
+var switchTab = function(key, subKey) {
+    // Hide all pages
+    document.getElementById("page-all").style.display = key === "all" ? "flex" : "none";
+    document.getElementById("page-news").style.display = key === "news" ? "flex" : "none";
+
+    var sPages = document.querySelectorAll(".style-page");
+    for (var i = 0; i < sPages.length; i++) { sPages[i].classList.remove("open"); }
+
+    if (key !== "all" && key !== "news") {
+        var pg = document.getElementById("page-" + key);
+        if (pg) {
+            pg.classList.add("open");
+
+            // Find the style object
+            var style = null;
+            for (var s = 0; s < styles.length; s++) {
+                if (styles[s].key === key) { style = styles[s]; break; }
+            }
+
+            if (style && style.subs) {
+                var inner = pg.querySelector(".col-page-inner");
+                var subBar = pg.querySelector("[data-subkey]") &&
+                             pg.querySelector("[data-subkey]").parentElement;
+
+                if (subKey) {
+                    // Switching to a sub-mode
+                    activeSubModes[key] = subKey;
+                } else {
+                    // Coming back to this tab without a subKey — reset to overall
+                    activeSubModes[key] = null;
+                }
+
+                // Highlight correct sub-bar button
+                if (subBar) {
+                    var allBtns = subBar.querySelectorAll ? subBar.querySelectorAll("[data-subkey]") : [];
+                    for (var b = 0; b < allBtns.length; b++) {
+                        allBtns[b].style.background = "transparent";
+                    }
+                    var activeKey = activeSubModes[key] || "";
+                    for (var b = 0; b < allBtns.length; b++) {
+                        if (allBtns[b].dataset.subkey === activeKey) {
+                            allBtns[b].style.background = "rgba(124,58,237,0.18)";
+                        }
+                    }
+                }
+
+                // Rebuild columns for the correct sub-mode
+                if (inner) {
+                    rebuildStyleColumns(inner, style, [
+                        { label:"T1", tiers:["HT1","LT1"], stroke:"#FFD700", bg:"#130f00", fill:"#FFD700" },
+                        { label:"T2", tiers:["HT2","LT2"], stroke:"#C0C0C0", bg:"#111",    fill:"#C0C0C0" },
+                        { label:"T3", tiers:["HT3","LT3"], stroke:"#CD7F32", bg:"#100800", fill:"#CD7F32" },
+                        { label:"T4", tiers:["HT4","LT4"], stroke:"#383838", bg:"#0d0d0d", fill:"#555"    },
+                        { label:"T5", tiers:["HT5","LT5"], stroke:"#282828", bg:"#0d0d0d", fill:"#444"    }
+                    ], activeSubModes[key] || null);
+                }
+            }
+        }
+    }
+
+    // Update active tab highlight
+    var tabs = document.querySelectorAll(".tab");
+    var allKeys = ["all", "news"].concat(styles.map(function(s) { return s.key; }));
+    for (var i = 0; i < tabs.length; i++) {
+        tabs[i].classList.remove("active");
+        if (allKeys[i] === key) { tabs[i].classList.add("active"); }
+    }
+
+    // Close any open sub-menus
+    document.querySelectorAll(".tab-submenu").forEach(function(m) {
+        m.classList.remove("open");
+    });
+};
+
+// ============================================================
+// DETAIL POPUP  (with sub-tier hover panels)
+// ============================================================
+var openDetail = function(player, rank) {
+    document.getElementById("detail-name").textContent = player.name;
+
+    var points = getPoints(player);
+    var title = getTitle(getDisplayPoints(player));
+    document.getElementById("detail-pos").textContent = "Global Rank #" + (player._rank + 1);
+    document.getElementById("detail-title-label").textContent = title.label + " • " + getDisplayPoints(player) + " pts";
+
+    var rc = rowColors[Math.min(rank, 3)];
+    var dq = document.getElementById("detail-quad");
+    dq.setAttribute("fill", rc.quad);
+    dq.setAttribute("opacity", "0.9");
+
+    // Shine polygon
+    var existingShine = document.getElementById("detail-shine");
+    if (existingShine) existingShine.parentNode.removeChild(existingShine);
+    var shinePoly = document.createElementNS("http://www.w3.org/2000/svg", "polygon");
+    shinePoly.setAttribute("id", "detail-shine");
+    shinePoly.setAttribute("points", "0,360 50,360 213,90 170,0 110,0 0,260");
+    shinePoly.setAttribute("fill", rc.quadLight);
+    dq.parentNode.appendChild(shinePoly);
+
+    // Avatar
+    var detailLeft = document.getElementById("detail-left");
+    var oldImg = detailLeft.querySelector("img");
+    if (oldImg) detailLeft.removeChild(oldImg);
+    if (player.avatarUrl) {
+        var img = document.createElement("img");
+        img.src = player.avatarUrl;
+        img.style.cssText =
+            'position:absolute;left:-360px;top:-240px;' +
+            'width:900px;height:900px;z-index:3;pointer-events:none;';
+        detailLeft.appendChild(img);
+    }
+
+    // Tier circles with sub-tier hover panels
+    var tiersEl = document.getElementById("detail-tiers");
+    tiersEl.innerHTML = "";
+
+    for (var i = 0; i < styles.length; i++) {
+        (function(style) {
+            var t = getEffectiveTier(player, style.key);
+            var item = document.createElement("div");
+            item.className = "detail-tier-item";
+
+            item.innerHTML =
+                makeTierCircle(t, style, 52) +
+                '<div class="detail-style-lbl">' + style.label + '</div>';
+
+            // Sub-tier hover panel for styles with subs
+            if (style.subs) {
+                var subPanel = document.createElement("div");
+                subPanel.className = "detail-sub-tiers";
+
+                for (var si = 0; si < style.subs.length; si++) {
+                    (function(sub) {
+                        var subT = player.tiers[sub.key] || "LT5";
+                        var subWrap = document.createElement("div");
+                        subWrap.style.cssText =
+                            'display:flex;flex-direction:column;align-items:center;gap:3px;';
+                        subWrap.innerHTML =
+                            makeTierCircle(subT, sub, 36) +
+                            '<div style="font-size:9px;opacity:0.5;">' + sub.label + '</div>';
+                        subPanel.appendChild(subWrap);
+                    })(style.subs[si]);
+                }
+
+                item.appendChild(subPanel);
+            }
+
+            tiersEl.appendChild(item);
+        })(styles[i]);
+    }
+
+    // Title background image
+    var oldTitleBg = document.getElementById("detail-title-bg");
+    if (oldTitleBg) oldTitleBg.parentNode.removeChild(oldTitleBg);
+    var titleBgImg = document.createElement("img");
+    titleBgImg.id = "detail-title-bg";
+    titleBgImg.src = title.iconUrl;
+    titleBgImg.style.cssText =
+        'position:absolute;right:-23%;top:50%;transform:translateY(-50%);' +
+        'height:115%;width:auto;opacity:0.3;pointer-events:none;' +
+        'z-index:1;object-fit:contain;';
+    document.querySelector(".detail-box").appendChild(titleBgImg);
+
+    document.getElementById("scene-player").classList.add("open");
+};
+
+var closeDetail = function() {
+    document.getElementById("scene-player").classList.remove("open");
+};
+
+document.getElementById("scene-player").addEventListener("click", function(e) {
+    if (e.target === this) { closeDetail(); }
+});
+
+// ============================================================
+// BANNER TEST STATE
+// ============================================================
+var btState = {
+    name: "TestPlayer",
+    bannerUrl: null,
+    rank: 0,
+    tiers: {
+        vanilla:"LT5", sword:"LT5", axe:"LT5", pot:"LT5", smp:"LT5",
+        smace:"LT5", rmace:"LT5", emace:"LT5",
+        bcart:"LT5", xbow:"LT5",
+        uhc:"LT5"
+    },
+    avatarUrl: null
+};
+
+var tierOptionColors = {
+    "HT1":"#FFD700","HT2":"#C0C0C0","HT3":"#CD7F32","HT4":"#555","HT5":"#444",
+    "LT1":"#FFD700","LT2":"#C0C0C0","LT3":"#CD7F32","LT4":"#555","LT5":"#444"
+};
+
+// ============================================================
+// BANNER TEST TIERS GRID
+// ============================================================
+function buildBtTiersGrid() {
+    var grid = document.getElementById("bt-tiers-grid");
+    grid.innerHTML = "";
+
+    // Show all sub-mode keys individually
+    var btStyleKeys = [];
+    for (var si = 0; si < styles.length; si++) {
+        var s = styles[si];
+        if (s.subs) {
+            for (var sbi = 0; sbi < s.subs.length; sbi++) {
+                btStyleKeys.push({ key: s.subs[sbi].key, label: s.subs[sbi].label });
+            }
+        } else {
+            btStyleKeys.push({ key: s.key, label: s.label });
+        }
+    }
+
+    for (var ki = 0; ki < btStyleKeys.length; ki++) {
+        (function(entry) {
+            var wrap = document.createElement("div");
+            wrap.style.cssText = 'display:flex;flex-direction:column;align-items:center;gap:3px;';
+
+            var lbl = document.createElement("div");
+            lbl.style.cssText = 'font-size:9px;opacity:0.5;text-align:center;';
+            lbl.textContent = entry.label;
+            wrap.appendChild(lbl);
+
+            var dropdown = document.createElement("div");
+            dropdown.className = "bt-tier-dropdown";
+
+            var btn = document.createElement("div");
+            btn.className = "bt-tier-btn";
+            btn.textContent = btState.tiers[entry.key] || "LT5";
+            var btnColor = tierOptionColors[btState.tiers[entry.key]] || "#555";
+            btn.style.borderColor = btnColor;
+            btn.style.color = btnColor;
+
+            var popup = document.createElement("div");
+            popup.className = "bt-tier-popup";
+
+            var allTiers = ["HT1","LT1","HT2","LT2","HT3","LT3","HT4","LT4","HT5","LT5"];
+            for (var ti = 0; ti < allTiers.length; ti++) {
+                (function(tier) {
+                    var opt = document.createElement("div");
+                    opt.className = "bt-tier-option " + (tier.indexOf("HT") === 0 ? "ht" : "lt");
+                    opt.textContent = tier;
+                    var col = tierOptionColors[tier] || "#555";
+                    opt.style.borderColor = col;
+                    opt.style.color = col;
+                    opt.addEventListener("click", function(e) {
+                        e.stopPropagation();
+                        btState.tiers[entry.key] = tier;
+                        popup.classList.remove("open");
+                        buildBtTiersGrid();
+                        btUpdate();
+                    });
+                    popup.appendChild(opt);
+                })(allTiers[ti]);
+            }
+
+            btn.addEventListener("click", function(e) {
+                e.stopPropagation();
+                document.querySelectorAll(".bt-tier-popup").forEach(function(p) {
+                    p.classList.remove("open");
+                });
+                popup.classList.toggle("open");
+            });
+
+            dropdown.appendChild(btn);
+            dropdown.appendChild(popup);
+            wrap.appendChild(dropdown);
+            grid.appendChild(wrap);
+        })(btStyleKeys[ki]);
+    }
+}
+
+// ============================================================
+// BANNER TEST UPDATE + DRAW PREVIEW
+// ============================================================
+function btUpdate() {
+    btState.name = document.getElementById("bt-name").value || "TestPlayer";
+    var rankVal = parseInt(document.getElementById("bt-rank").value) || 1;
+    btState.rank = Math.max(0, Math.min(rankVal - 1, sortedPlayers.length - 1));
+
+    var skinSel = document.getElementById("bt-skin").value;
+    if (skinSel !== "") {
+        var sp = sortedPlayers[parseInt(skinSel)];
+        btState.avatarUrl = sp ? sp.avatarUrl : null;
+    } else {
+        btState.avatarUrl = null;
+    }
+    btDrawPreview();
+}
+
+function btDrawPreview() {
+    var preview = document.getElementById("bt-preview");
+    preview.innerHTML = "";
+
+    var p = {
+        name: btState.name,
+        tiers: btState.tiers,
+        bannerUrl: btState.bannerUrl,
+        avatarUrl: btState.avatarUrl
+    };
+    var rank = btState.rank;
+
+    var row = document.createElement("div");
+    row.className = "player-row";
+    row.style.cssText = 'width:100%;height:68px;cursor:default;';
+
+    var rc = makeRowSVG(rank, 'preview');
+
+    var bgDiv = document.createElement("div");
+    bgDiv.className = "row-bg";
+    bgDiv.innerHTML = rc.bg;
+    row.appendChild(bgDiv);
+
+    if (p.bannerUrl) {
+        var banner = document.createElement("img");
+        banner.src = p.bannerUrl;
+        banner.style.cssText =
+            'position:absolute;inset:0;width:100%;height:100%;' +
+            'object-fit:cover;border-radius:6px;opacity:0.4;pointer-events:none;z-index:1;';
+        row.appendChild(banner);
+    }
+
+    // Quad shine on left polygon (same as makeRowSVG poly)
+    var polyDiv = document.createElement("div");
+    polyDiv.className = "row-bg";
+    polyDiv.innerHTML = rc.poly;
+    polyDiv.style.zIndex = "2";
+    row.appendChild(polyDiv);
+
+    var content = document.createElement("div");
+    content.className = "row-content";
+
+    var posEl = document.createElement("div");
+    posEl.className = "row-pos";
+    posEl.textContent = rank + 1;
+    content.appendChild(posEl);
+
+    var nameEl = document.createElement("div");
+    nameEl.className = "row-name";
+    nameEl.textContent = p.name;
+    content.appendChild(nameEl);
+
+    var points = getPoints(p);
+    var title = getTitle(getDisplayPoints(p));
+    var titleEl = document.createElement("div");
+    titleEl.className = "row-title";
+    var titleIcon = document.createElement("img");
+    titleIcon.src = title.iconUrl;
+    titleIcon.className = "row-title-icon";
+    var titleLabel = document.createElement("div");
+    titleLabel.className = "row-title-label";
+    titleLabel.textContent = title.label + " • " + getDisplayPoints(p) + " pts";
+    titleEl.appendChild(titleIcon);
+    titleEl.appendChild(titleLabel);
+    content.appendChild(titleEl);
+
+    var tiersEl = document.createElement("div");
+    tiersEl.className = "row-tiers";
+    for (var j = 0; j < styles.length; j++) {
+        var t = getEffectiveTier(p, styles[j].key);
+        var wrap = document.createElement("div");
+        wrap.className = "tier-circle-wrap";
+        wrap.innerHTML = makeTierCircle(t, styles[j], 42);
+        tiersEl.appendChild(wrap);
+    }
+    content.appendChild(tiersEl);
+    row.appendChild(content);
+
+    if (p.avatarUrl) {
+        var img = document.createElement("img");
+        img.src = p.avatarUrl;
+        img.style.cssText =
+            'position:absolute;left:-120px;top:-155px;' +
+            'width:400px;height:400px;z-index:4;pointer-events:none;';
+        row.appendChild(img);
+    }
+
+    preview.appendChild(row);
+}
+
+// ============================================================
+// OPEN / CLOSE BANNER TEST
+// ============================================================
+function openBannerTest() {
+    var sel = document.getElementById("bt-skin");
+    sel.innerHTML = '<option value="">— none —</option>';
+    for (var i = 0; i < sortedPlayers.length; i++) {
+        if (sortedPlayers[i].avatarUrl) {
+            var opt = document.createElement("option");
+            opt.value = i;
+            opt.textContent = sortedPlayers[i].name;
+            sel.appendChild(opt);
+        }
+    }
+
+    var fileEl = document.getElementById("bt-file");
+    if (!fileEl._listenerAttached) {
+        fileEl._listenerAttached = true;
+        fileEl.addEventListener("change", function() {
+            var file = this.files[0];
+            if (!file) return;
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                btState.bannerUrl = e.target.result;
+                btUpdate();
+            };
+            reader.readAsDataURL(file);
+        });
+    }
+
+    buildBtTiersGrid();
+    btDrawPreview();
+    document.getElementById("scene-banner-test").classList.add("open");
+}
+
+function closeBannerTest() {
+    document.getElementById("scene-banner-test").classList.remove("open");
+}
+
+// ============================================================
+// OPEN / CLOSE INFO POPUP
+// ============================================================
+function openInfo() {
+    document.getElementById("scene-info").classList.add("open");
+}
+
+function closeInfo() {
+    document.getElementById("scene-info").classList.remove("open");
+}
+
+document.getElementById("scene-info").addEventListener("click", function(e) {
+    if (e.target === this) { closeInfo(); }
+});
+
+// ============================================================
+// DOCUMENT CLICK HANDLERS
+// ============================================================
+document.addEventListener("click", function() {
+    // Close all bt tier popups
+    document.querySelectorAll(".bt-tier-popup").forEach(function(p) {
+        p.classList.remove("open");
+    });
+    // Close all tab sub-menus
+    document.querySelectorAll(".tab-submenu").forEach(function(m) {
+        m.classList.remove("open");
+    });
+});
+
+// ============================================================
+// INIT
+// ============================================================
+preloadSkins(function() {
+    document.getElementById("loading-screen").classList.add("hidden");
+
+    addTab("All",  null, "all");
+    addTab("News", null, "news");
+    for (var si = 0; si < styles.length; si++) {
+        addTab(styles[si].label, styles[si], styles[si].key);
+    }
+
+    buildAllPage();
+    buildStylePages();
+    buildNewsPage();
+    switchTab("all");
+
+    // Button listeners
+    document.querySelector(".panorama-btn").addEventListener("click", openBannerTest);
+    document.getElementById("info-btn").addEventListener("click", function(e) {
+        e.stopPropagation();
+        openInfo();
+    });
+document.getElementById('settings-btn').addEventListener('click', function(e) {
+    e.stopPropagation();
+    openSettings();
+});
+updateNewsCount();
+});
+</script>
+</body>
+</html>
