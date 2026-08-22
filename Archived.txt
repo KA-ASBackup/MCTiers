@@ -1,0 +1,6 @@
+Only copy links, not prior text.
+
+V1: https://cdn.jsdelivr.net/gh/KA-ASBackup/MCTiers@main/Archived/v1.htm
+V2: https://cdn.jsdelivr.net/gh/KA-ASBackup/MCTiers@main/Archived/v2.htm
+V0.3.1: https://cdn.jsdelivr.net/gh/KA-ASBackup/MCTiers@main/Archived/v3%20snapshot%201.htm
+V3: https://cdn.jsdelivr.net/gh/KA-ASBackup/MCTiers@main/Archived/v3.htm
