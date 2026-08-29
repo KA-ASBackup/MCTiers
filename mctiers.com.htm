@@ -604,27 +604,174 @@ var tabsEl = document.getElementById("tabs");
 // ============================================================
 var news = [
     {
-        type: "text",
-        date: "2026-0x-0x",
-        title: "v3 changed tier system",
-        body: "Some additional info, Mace and Cart PVP rankings are an average of sub-modes. Clicking on their respective tiles will show you total averages and clicking on the pop-down menu's sub-mode buttons will show you the sub-mode rankings, though unnecessary. Hover over mace/cart tiers in player pop-up UI (accessible by clicking on any player bar) to see specific rankings. Also, points per tier and points per rank have changed:<br><br>Tier: LT5, HT5, LT4, HT4, LT3, HT3, LT2, HT2, LT1, HT1<br>Points: 1      2     4     6     10    15    25    30   40   60<br><br>Rank/Title: Rookie, Combat Novice, Combat Cadet, Combat Specialist, Combat Ace, Combat Master, Combat Grandmaster<br>Required Points: 0                      15                     30                            80                 180                     250                                400"
+        id: "28",
+        type: "promotion",
+        date: "2026-08-27",
+        player: "GrimmReaper__",
+        style: "uhc",
+        fromTier: "LT3",
+        toTier: "HT2"
     },
     {
+        id: "27",
+        type: "promotion",
+        date: "2026-08-27",
+        player: "GrimmReaper__",
+        style: "bcart",
+        fromTier: "HT4",
+        toTier: "LT3"
+    },
+    {
+        id: "26",
+        type: "promotion",
+        date: "2026-08-27",
+        player: "GrimmReaper__",
+        style: "rmace",
+        fromTier: "LT1",
+        toTier: "HT1"
+    },
+    {
+        id: "25",
+        type: "promotion",
+        date: "2026-08-27",
+        player: "GrimmReaper__",
+        style: "smace",
+        fromTier: "HT3",
+        toTier: "LT1"
+    },
+    {
+        id: "24",
+        type: "promotion",
+        date: "2026-08-27",
+        player: "GrimmReaper__",
+        style: "smp",
+        fromTier: "HT4",
+        toTier: "HT2"
+    },
+    {
+        id: "23",
+        type: "promotion",
+        date: "2026-08-27",
+        player: "GrimmReaper__",
+        style: "pot",
+        fromTier: "HT4",
+        toTier: "HT2"
+    },
+    {
+        id: "22",
+        type: "promotion",
+        date: "2026-08-27",
+        player: "GrimmReaper__",
+        style: "axe",
+        fromTier: "LT3",
+        toTier: "LT2"
+    },
+    {
+        id: "21",
+        type: "promotion",
+        date: "2026-08-27",
+        player: "GrimmReaper__",
+        style: "sword",
+        fromTier: "HT3",
+        toTier: "HT2"
+    },
+    {
+        id: "20",
+        type: "promotion",
+        date: "2026-08-27",
+        player: "GrimmReaper__",
+        style: "vanilla",
+        fromTier: "LT4",
+        toTier: "LT3",
+        text: "Formerly 'Dudadude111'"
+    },
+    {
+        id: "19",
+        type: "promotion",
+        date: "2026-08-27",
+        player: "ASBackup",
+        style: "xbow",
+        fromTier: "LT2",
+        toTier: "LT1"
+    },
+    {
+        id: "18",
+        type: "promotion",
+        date: "2026-08-27",
+        player: "ASBackup",
+        style: "emace",
+        fromTier: "LT1",
+        toTier: "HT1"
+    },
+    {
+        id: "17",
+        type: "promotion",
+        date: "2026-08-27",
+        player: "ASBackup",
+        style: "smp",
+        fromTier: "HT2",
+        toTier: "LT1"
+    },
+    {
+        id: "16",
+        type: "promotion",
+        date: "2026-08-27",
+        player: "ASBackup",
+        style: "pot",
+        fromTier: "LT1",
+        toTier: "HT2"
+    },
+    {
+        id: "15",
+        type: "promotion",
+        date: "2026-08-27",
+        player: "ASBackup",
+        style: "axe",
+        fromTier: "HT2",
+        toTier: "LT1"
+    },
+    {
+        id: "14",
+        type: "promotion",
+        date: "2026-08-27",
+        player: "ASBackup",
+        style: "sword",
+        fromTier: "HT2",
+        toTier: "HT1"
+    },
+    {
+        id: "13",
+        type: "tiertest",
+        date: "2026-08-26",
+        title: "Tier Test",
+        styles: ["vanilla","sword","sword","sword","axe","axe","axe","pot","smp","emace","bcart","xbow","uhc","smace","rmace"],
+        playerA: { name:"ASBackup",      results:["W","W","W","W","W","L","W","L","W","W","W","W","W","W","W"] },
+        playerB: { name:"GrimmReaper__", results:["L","L","L","L","L","W","L","W","L","L","L","L","L","L","L"] },
+        writeup: "<strong>It's not what it looks like.</strong> GrimmReaper__ dominated in mace gamemodes, while all other gamemodes, spare SMP, vanilla, and cart, were very close. ASBackup had an extremely lucky set of games while GrimmReaper__ was not near his best."
+    },
+    {
+        id: "12",
         type: "text",
-        date: "2026-0x-0x",
+        date: "2026-08-26",
+        title: "v0.4.1 - first updates",
+        body: "Mother modes now retire if all sub-modes retired. Points system fixed so sub-modes don't add points - only the average/mother is worth points. If a player changes their name, their old account is now 'Alted' (they're sent to the bottom of the all page with the 'Alt' global rank). News messages given 'id' tags so localStorage() can tell whats unread easily - this may reset your unread messages, apologies."
+    },
+    {
+        id: "11",
+        type: "text",
+        date: "2026-08-22",
+        title: "v3 changed tier system",
+        body: "Some additional info, Mace and Cart PVP rankings are an average of sub-modes. Clicking on their respective tiles will show you total averages and clicking on the pop-down menu's sub-mode buttons will show you the sub-mode rankings, though unnecessary. Hover over mace/cart tiers in player pop-up UI (accessible by clicking on any player bar) to see specific rankings. Also, points per tier and points per rank have changed:<br><br>Tiers to points:<br>LT5 - 1<br>HT5 - 2<br>LT4 - 4<br>HT4 - 6<br>LT3 - 10<br>HT3 - 15<br>LT2 - 25<br>HT2 - 30<br>LT1 - 40<br>HT1 - 60<br><br>Titles and required points:<br>Rookie - 0<br>Combat Novice - 15<br>Combat Cadet - 30<br>Combat Specialist - 80<br>Combat Ace - 180<br>Combat Master - 250<br>Combat Grandmaster - 400"
+    },
+    {
+        id: "10",
+        type: "text",
+        date: "2026-08-22",
         title: "v3",
         body: "v3 full release!<br><br>UHC added!<br>Sub-modes Spear/Rocket/Elytra Mace and Bow/XBow Cart added!<br>Retiring gamemodes added!<br>New player pop-up UI!<br>Players can now be tied in global rankings.<br><br>Updated points/ranks.<br>'Sword' icon changed from Netherite to Diamond.<br><br>Menu redesigned.<br>Info and notification settings added.<br>Unread messages added.<br><br>Loading screen redone.<br>General color, consistency, UI, and GUI fixes."
     },
-/*{
-    type: "promotion",
-    date: "2026-08-21",
-    player: "AgentStudios",
-    style: "smace",
-    fromTier: "HT4",
-    toTier: "LT4",
-    text: "Showed improvement in spear mace." // optional
-},*/
     {
+        id: "9",
         type: "tiertest",
         date: "2026-08-20",
         title: "Tier Test",
@@ -634,6 +781,7 @@ var news = [
         writeup: "AgentStudios showcased actually impressive XBow tallent, and cart intellegence."
     },
     {
+        id: "8",
         type: "tiertest",
         date: "2026-08-18",
         title: "Tier Test",
@@ -643,12 +791,14 @@ var news = [
         writeup: "AgentStudios showcased growth, namely in axe and sword."
     },
     {
+        id: "7",
         type: "text",
         date: "2026-06-03",
         title: "v0.3.1",
         body: "v3 snapshot 1 complete. Player titles/points added to player pop-ups."
     },
     {
+        id: "6",
         type: "tiertest",
         date: "2026-08-08",
         title: "Tier Test",
@@ -658,6 +808,7 @@ var news = [
         writeup: "ASBackup cooked in cart, with an insta-bow pop and insta-bow kill, showing at least HT2 skill, but only promoted once to LT2 due to the calibre of the opposition."
     },
     {
+        id: "5",
         type: "tiertest",
         date: "2026-06-09",
         title: "Tier Test",
@@ -667,18 +818,21 @@ var news = [
         writeup: "ASBackup dominated cart before pearl-dying. ASBackup then dominated the Crystal match, but SpittFire showed insane improvement and was promoted. ASBackup then dominated both SMP matches, in which SpittFire, miraculously, came back from both. The second SMP match, SpittFire was completely drained in two minutes, but due to his excellence in swordsmanship, he came back. SpittFire won a very close axe match, before dominating in Pot, then winning a sword match by one heart (HT1 btw)."
     },
     {
+        id: "4",
         type: "text",
         date: "2026-06-03",
         title: "v2",
         body: "v2 complete. Preview row added, score system modernized, titles and pts added, and tier system fixed. New skins added."
     },
     {
+        id: "3",
         type: "text",
         date: "2026-05-26",
         title: "Updates",
         body: "Banner system added! You can have a custom tile on the 'All' page now! Minor tech issues also resolved. Contact me for how to add ur own banner."
     },
     {
+        id: "2",
         type: "tiertest",
         date: "2026-05-25",
         title: "Tier Test",
@@ -688,6 +842,7 @@ var news = [
         writeup: "This was a masterclass in ragebaiting by SpittFire. ASBackup won the mace match after killing an AFK SpittFire who left MID-MATCH, SpittFire, naturally, won the sword matches, then SpittFire, for 25 MINUTES, ran in a crystal match forcing a draw on time."
     },
     {
+        id: "1",
         type: "tiertest",
         date: "2026-05-07",
         title: "Tier Test",
@@ -697,6 +852,7 @@ var news = [
         writeup: "Yeah, it wasn't even close."
     },
     {
+        id: "0",
         type: "text",
         date: "2026-05-05",
         title: "New Style!",
@@ -706,9 +862,8 @@ var news = [
 
 // After your news array is defined, auto-assign IDs
 for (var i = 0; i < news.length; i++) {
-    if (!news[i].id) news[i].id = news[i].date + '_' + i;
+    if (!news[i].id) news[i].id = String(i);
 }
-
 
 // ============================================================
 // ASSET URLS
@@ -799,12 +954,19 @@ var titles = [
 // Average sub-tiers to produce overall tier for mace / cart
 // Returns a tier string like "HT2"
 function avgSubTiers(tierArr) {
+    var allR = true;
+    for (var i = 0; i < tierArr.length; i++) {
+        if (!isRTier(tierArr[i])) { allR = false; break; }
+    }
+
     var total = 0;
     for (var i = 0; i < tierArr.length; i++) {
         total += tierOrder.indexOf(normTier(tierArr[i]));
     }
     var avg = Math.round(total / tierArr.length);
-    return tierOrder[Math.max(0, Math.min(avg, tierOrder.length - 1))];
+    var result = tierOrder[Math.max(0, Math.min(avg, tierOrder.length - 1))];
+
+    return allR ? 'R' + result : result;
 }
 
 // Get the effective display tier for a style key from a player's tiers object
@@ -827,19 +989,10 @@ function getEffectiveTier(p, styleKey) {
 function getPoints(p) {
     var total = 0;
     for (var i = 0; i < styles.length; i++) {
-        var style = styles[i];
-        if (style.subs) {
-            var subPoints = 0;
-            for (var s = 0; s < style.subs.length; s++) {
-                subPoints += tierPoints[normTier(p.tiers[style.subs[s].key] || "LT5")] || 1;
-            }
-            total += subPoints / style.subs.length;
-        } else {
-            var t = normTier(getEffectiveTier(p, style.key));
-            total += tierPoints[t] || 1;
-        }
+        var t = normTier(getEffectiveTier(p, styles[i].key));
+        total += tierPoints[t] || 1;
     }
-    return total; // precise decimal for sorting
+    return total;
 }
 
 function getDisplayPoints(p) {
@@ -880,9 +1033,9 @@ var players = [
     {
         name: "ASBackup",
         tiers: {
-            vanilla:"RHT1", sword:"HT2", axe:"HT2", pot:"LT1", smp:"HT2",
-            smace:"HT2", rmace:"RHT1", emace:"LT1",
-            bcart:"LT1", xbow:"LT2",
+            vanilla:"RHT1", sword:"RHT1", axe:"LT1", pot:"HT2", smp:"LT1",
+            smace:"HT2", rmace:"RHT1", emace:"RHT1",
+            bcart:"LT1", xbow:"LT1",
             uhc:"HT2"
         },
         bannerUrl: "https://www.khanacademy.org/computer-programming/pic2pix/4972175662891008/5785892222779392.png",
@@ -964,7 +1117,7 @@ var players = [
         name: "SpittFire",
         tiers: {
             vanilla:"LT2", sword:"HT1", axe:"LT1", pot:"LT1", smp:"HT2",
-            smace:"LT1", rmace:"LT2", emace:"LT1",
+            smace:"LT1", rmace:"LT2", emace:"HT1",
             bcart:"LT3", xbow:"HT3",
             uhc:"HT2"
         },
@@ -1090,12 +1243,82 @@ var players = [
         ]
     },
     {
+        alt:true,
         name: "Dudadude111",
         tiers: {
-            vanilla:"LT4", sword:"HT3", axe:"LT3", pot:"HT4", smp:"HT4",
-            smace:"HT3", rmace:"LT1", emace:"LT1",
-            bcart:"LT4", xbow:"LT4",
-            uhc:"LT3"
+            vanilla:"RLT4", sword:"RHT3", axe:"RLT3", pot:"RHT4", smp:"RHT4",
+            smace:"RHT3", rmace:"RLT1", emace:"RLT1",
+            bcart:"RLT4", xbow:"RLT4",
+            uhc:"RLT3"
+        },
+        skinPalette: {
+            ' ':[255,255,255,0],
+            'a':[49,49,49,255],'b':[81,81,81,255],'c':[90,90,90,255],'d':[23,23,23,255],
+            'e':[99,99,99,255],'f':[28,28,28,255],'g':[33,33,33,255],'h':[70,70,70,255],
+            'i':[60,60,60,255],'j':[193,193,193,255],'k':[177,177,177,255],'l':[157,157,157,255],
+            'm':[0,0,0,255],'n':[209,209,209,255],'o':[40,40,40,255],'p':[135,135,135,255],
+            'q':[145,145,145,255],'r':[16,16,16,255],'s':[19,19,19,255],'t':[39,39,39,255],
+            'u':[206,206,206,255],'v':[55,55,55,255],'w':[31,31,31,255]
+        },
+        skinBitmap: [
+'        aaaaaaaaaaaaaaaa                 bccccb dddddddd',
+'        aaaaaaaaaaaaaaaa                bccccccbdddddddd',
+'        aaaaaaaaaaaaaaaa                cceeeeccdddddddd',
+'        aaaaaaaaaaaaaaaa                ceeeeeecf      f',
+'        aaaaaaaaaaaaaaaa                ceeeeeecf      f',
+'        aaaaaaaaaaaaaaaa                cceeeeccg      g',
+'        aaaaaaaaaaaaaaaa                bccccccbg      g',
+'        aaaaaaaaaaaaaaaa                 bccccb g      g',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa bcccbh  bbbbbb  hbcccb  hbccbh',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaihbbbbhiiihhhhiiihbbbbhiihbbbbhi',
+'aaaaaaaaajkjlklaaaaaaaaaaaaaaaaaaihbbhhaaiiiiiiaahhbbhiaahhbbhha',
+'aaaaaaaakmmnnmmkaaaaaaaaaaaaaaaaoihhhhiaaa    aaaihhhhiooihhhhio',
+'aaaaaaaajmmnpmmlaaaaaaaaaaaaaaaaoaihhiaaa      aaaihhiaooaiiiiao',
+'aaaaaaaannjjlkjkaaaaaaaaaaaaaaaagoaaiaaao      oaaaiaaoggoaaaaog',
+'aaaaaaaaaakqkjaaaaaaaaaaaaaaaaaafgooaaaog      goaaaoogfffgoogff',
+'aaaaaaaaaaqaqkaaaaaaaaaaaaaaaaaafffggoggg      gggoggfffffffffff',
+'    dfdgmmmm        gogoggoffgdogdgf        bbhiaa',
+'    rssfmmmm        daaaaaaddfsgfsfd        bcbhaa',
+'    sdfgmmmm        saaaaaasdfsgfsfd        cebhaa',
+'    dfgommmm        daaaaaadfgdogdgf        bchiaa',
+'fgoffgogfgooafgfgddffaaaaaaffddggoooaoogbbcbbbhiiaoiih',
+'gooffoommmgoagoggffggaakkaaggffggaiohiaghhbhhiiaaooaai',
+'ooagmammmmgaaoaoogfoolkjlkloofgooaaaaaagihhittaaaogaai',
+'aaiommmmmmoaiaiaaooaaaauqeaaaooaaahibhoattttttttaooaav',
+'aiiaammmmmmiihiaiaaitjunplptiaaiiaohhooawwwwwwttaogaat',
+'oaiiimmmmmmhhahoiaihtaauqeathiaiiaoaaoaiwwwwwwwwioaiiw',
+'oihimmmmmmmihaioioaitikjlkitiaoiiaohhohawwlwwlwwaooaaw',
+'gmiammmmmmmiioigagoathakkahtaogaaaohbghgwwkwwlwwogfoww',
+'moimmmmmmmmaigmgofgotioaaoitogfooooooooawlklwklggflgwl',
+'fmmommmmmmmommofgffggagiagaggffggogaigoglkkklkkfflklwk',
+'mmmmmmmmmmmgmmmfgffggofaofoggffggofoaooglmjkkjkllkjklk',
+'mmmmmmmmmmmgmmmmgffgfofaofoggffggofoaoookmmjaaakkjpjka',
+'','','','','','','','','','','','','','','','',
+'                    gdfdmmmm        ihbbaa',
+'                    fssrmmmm        hbcbaa',
+'                    gfdsmmmm        hbecaa',
+'                    ogfdmmmm        ihcbaa',
+'                oogfgogffogffgfaioaiihbbbcbbbb',
+'                ogmmmooffooggogaaooaaiihhbhhhi',
+'                agmmmmamgaoooaoaagoaaattihhivv',
+'                aommmmmmoiaaaiaiaooatttttttttt',
+'                immmmmmaaiiaaihiagoattwwwwwwwt',
+'                hmmmmmmiiiaoohahiaoiwwwwwwwwww',
+'                immmmmmmihiooiahaooawwlwwkwwwl',
+'                immmmmmmaimggioiofgowwlwwkwwwl',
+'                ammmmmmmmiomgmgiglfgwlkwlklwwk',
+'                ommmmmmmommffommlklfwkklkkkllk',
+'                gmmmmmmmmmmmfmmmkjkllkjkkjalkj',
+'                gmmmmmmmmmmmmmmmjpjkkaaajaakaa'
+        ]
+    },
+    {
+        name: "GrimmReaper__",
+        tiers: {
+            vanilla:"LT3", sword:"HT2", axe:"LT2", pot:"HT2", smp:"HT2",
+            smace:"LT1", rmace:"HT1", emace:"LT1",
+            bcart:"LT3", xbow:"LT4",
+            uhc:"HT2"
         },
         skinPalette: {
             ' ':[255,255,255,0],
@@ -2075,7 +2298,6 @@ function preloadSkins(onDone) {
 // ============================================================
 var scorePlayer = function(p) {
     var main = -getPoints(p);
-    // tiebreaker: sum of ALL sub-tier points precisely
     var sub = 0;
     for (var i = 0; i < styles.length; i++) {
         var style = styles[i];
@@ -2085,26 +2307,33 @@ var scorePlayer = function(p) {
             }
         }
     }
-    return main - (sub / 10000); // sub-tier breaks ties without affecting main score
+    var score = main - (sub / 10000);
+    return p.alt ? score + 999999 : score;
 };
 
 var sortedPlayers = players.slice().sort(function(a, b) {
     return scorePlayer(a) - scorePlayer(b);
 });
 
-// Assign ranks allowing ties
+var rankCounter = 0;
 for (var i = 0; i < sortedPlayers.length; i++) {
-    if (i === 0) {
-        sortedPlayers[i]._rank = 0;
+    if (sortedPlayers[i].alt) {
+        sortedPlayers[i]._rank = -1; // flag as alt
+        continue;
+    }
+    if (i === 0 || sortedPlayers[i-1].alt) {
+        sortedPlayers[i]._rank = rankCounter;
     } else {
         var prevPoints = getPoints(sortedPlayers[i-1]);
         var currPoints = getPoints(sortedPlayers[i]);
         if (Math.abs(prevPoints - currPoints) < 0.01) {
-            sortedPlayers[i]._rank = sortedPlayers[i-1]._rank; // tied
+            sortedPlayers[i]._rank = sortedPlayers[i-1]._rank;
         } else {
+            rankCounter = i;
             sortedPlayers[i]._rank = i;
         }
     }
+    rankCounter = sortedPlayers[i]._rank;
 }
 
 // ============================================================
@@ -2303,7 +2532,7 @@ function buildAllPage() {
 
             var posEl = document.createElement("div");
             posEl.className = "row-pos";
-            posEl.textContent = p._rank + 1;
+            posEl.textContent = p.alt ? "ALT" : (p._rank + 1);
             content.appendChild(posEl);
 
             var nameEl = document.createElement("div");
@@ -2609,6 +2838,7 @@ function rebuildStyleColumns(inner, style, colTiers, subKey) {
             var entries = [];
             for (var pi = 0; pi < sortedPlayers.length; pi++) {
                 var p = sortedPlayers[pi];
+                if (p.alt) continue;
                 var t;
                 if (subKey && style.subs) {
                     // Filter by sub-mode tier
@@ -2677,7 +2907,7 @@ function rebuildStyleColumns(inner, style, colTiers, subKey) {
 
                     var rankEl = document.createElement("div");
                     rankEl.className = "col-rank";
-                    rankEl.textContent = "#" + (entry.player._rank + 1);
+                    rankEl.textContent = entry.player.alt ? "ALT" : "#" + (entry.player._rank + 1);
                     cc.appendChild(rankEl);
 
                     // Arrow icon — colored if R-Tier
@@ -2818,7 +3048,7 @@ var openDetail = function(player, rank) {
 
     var points = getPoints(player);
     var title = getTitle(getDisplayPoints(player));
-    document.getElementById("detail-pos").textContent = "Global Rank #" + (player._rank + 1);
+    document.getElementById("detail-pos").textContent = player.alt ? "ALT" : "Global Rank #" + (player._rank + 1);
     document.getElementById("detail-title-label").textContent = title.label + " • " + getDisplayPoints(player) + " pts";
 
     var rc = rowColors[Math.min(rank, 3)];
