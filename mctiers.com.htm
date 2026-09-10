@@ -1134,15 +1134,55 @@ var news = [
     {
         id: "1",
         type: "tiertest",
+        date: "2026-05-19",
+        title: "Tier Test",
+        styles: ["smp","sword","sword","sword","mace","mace","mace","mace"],
+        playerA: { name:"ASBackup",  results:["L","L","L","L","W","W","L","L"] },
+        playerB: { name:"SpittFire", results:["W","W","W","W","L","L","W","W"] },
+        writeup: "A choke from ASBackup in smp, two suprise wins for SpittFire in mace. SpittFire mace promoted to HT2."
+    },
+    {
+        id: "0",
+        type: "tiertest",
+        date: "2026-05-13",
+        title: "Tier Test",
+        styles: ["cart","vanilla","vanilla","sword","sword","sword","smp","smp","pot","mace","mace"],
+        playerA: { name:"ASBackup",  results:["W","W","W","L","L","L","L","L","W","W","L"] },
+        playerB: { name:"SpittFire", results:["L","L","L","W","W","W","W","W","L","L","W"] },
+        writeup: "Outside of two shock comebacks by SpittFire in SMP, basically to be expected results. [NTS Update this]"
+    },
+    {
+        id: "-1",
+        type: "tiertest",
         date: "2026-05-07",
         title: "Tier Test",
         styles: ["sword","vanilla"],
-        playerA: { name:"ASBackup",      results:["W","W"] },
+        playerA: { name:"ASBackup",  results:["W","W"] },
         playerB: { name:"EmersonJenner", results:["L","L"] },
         writeup: "Yeah, it wasn't even close."
     },
     {
-        id: "0",
+        id: "-2",
+        type: "tiertest",
+        date: "2026-05-07",
+        title: "Tier Test",
+        styles: ["pot","vanilla","axe","axe","axe","mace","smp","cart","vanilla","mace"],
+        playerA: { name:"ASBackup",  results:["L","L","L","L","L","W","L","W","W","W"] },
+        playerB: { name:"4Futurz", results:["W","W","W","W","W","L","W","L","L","L"] },
+        writeup: "All matches but the last three took place on one server, where every match was extremely close, but 4Futurz came out on top. There were two hack clients found on his account, and the recordings happen to have some... interesting moments from his perspective, but all's fair. On the second server, ASBackup came back winning all three games. Recordings for these three are suspiciously missing, but 4Futurz is witness to the three games. 4Futurz was promoted everywhere exept cart and mace."
+    },
+    {
+        id: "-3",
+        type: "tiertest",
+        date: "2026-05-05",
+        title: "Tier Test",
+        styles: ["vanilla","axe","mace","smp","pot"],
+        playerA: { name:"ASBackup",  results:["W","W","W","W","D"] },
+        playerB: { name:"SpittFire", results:["L","L","L","L","D"] },
+        writeup: "After some extremely long a tight matches, ASBackup's sword, pot, and SMP have been promoted and SpittFire's mace and pot have been promoted and crystal demoted."
+    },
+    {
+        id: "-4",
         type: "text",
         date: "2026-05-05",
         title: "New Style!",
@@ -3347,6 +3387,34 @@ function buildSettingsChecks() {
             container.appendChild(row);
         })(options[i]);
     }
+// Divider
+var divider = document.createElement('div');
+divider.style.cssText = 'width:100%;height:1px;background:#2a2a2a;margin-top:4px;';
+container.appendChild(divider);
+
+// Note
+var note = document.createElement('div');
+note.style.cssText = 'font-size:11px;color:#aaa;text-align:center;margin-top:4px;';
+note.textContent = 'Are your notifications bugging?';
+container.appendChild(note);
+
+// Clear button
+var clearBtn = document.createElement('button');
+clearBtn.textContent = 'Clear Notification Storage';
+clearBtn.style.cssText = 
+    'background:#1a1a1a;border:1.5px solid #333;border-radius:6px;' +
+    'color:#fff;font-family:\'Jersey 15\',\'Segoe UI\',sans-serif;' +
+    'font-size:13px;padding:6px 14px;cursor:pointer;width:100%;' +
+    'text-shadow:-1px -1px 0 #000,1px -1px 0 #000,-1px 1px 0 #000,1px 1px 0 #000;';
+clearBtn.addEventListener('mouseover', function() { this.style.borderColor = '#7c3aed'; });
+clearBtn.addEventListener('mouseout', function() { this.style.borderColor = '#333'; });
+clearBtn.addEventListener('click', function() {
+    localStorage.removeItem('mct_read_news');
+    updateNewsCount();
+    document.getElementById('list-news').innerHTML = '';
+    buildNewsPage();
+});
+container.appendChild(clearBtn);
 }
 
 function openSettings() {
@@ -4427,7 +4495,7 @@ preloadSkins(function() {
 var filterWrap = buildFilterPopup();
 var panoramaBtn = document.querySelector('.panorama-btn');
 panoramaBtn.parentElement.insertBefore(filterWrap, panoramaBtn);
-    document.querySelector(".panorama-btn").addEventListener("click", openBannerTest);a
+    document.querySelector(".panorama-btn").addEventListener("click", openBannerTest);
     document.getElementById("info-btn").addEventListener("click", function(e) {
         e.stopPropagation();
         openInfo();
