@@ -851,7 +851,7 @@ var news = [
         type: "text",
         date: "2026-09-09",
         title: "v4",
-        body: "Alt accounts, mother mode retirements and news updates were introduced in the first snapshot of this version. This is the full release.<br><br>Nationalities added<br>Filter system added to 'All'<br>Hover animations to 'All' added<br>Peak, retired, and current tier + points added to tiers in 'All'<br>More generous untested scores handed out<br>Alted player updates<br>General QOL/UI enhancements"
+        body: "Alt accounts, mother mode retirements and news updates were introduced in the first snapshot of this version. This is the full release.<br><br>Pot sub-tiers added<br>Nationalities added<br>Filter system added to 'All'<br>Hover animations to 'All' added<br>Peak, retired, and current tier + points added to tiers in 'All'<br>More generous untested scores handed out<br>Alted player updates<br>General QOL/UI enhancements<br>Bug fixes"
     },
     {
         id: "32",
@@ -1198,7 +1198,7 @@ var players = [
     {
         name: "ASBackup", loc:"CA", loc2:"GB-ENG",
         tiers: {
-            vanilla:"RHT1", sword:"RHT1", axe:"LT1", pot:"HT2", smp:"LT1",
+            vanilla:"RHT1", sword:"RHT1", axe:"LT1", dpot:"HT2", npot:"HT2", smp:"LT1",
             smace:"HT2", rmace:"RHT1", emace:"RHT1",
             bcart:"HT2", xbow:"HT2",
             uhc:"HT2", ppot:"LT1", pcart:"LT1"
@@ -1281,7 +1281,7 @@ var players = [
     {
         name: "SpittFire", loc:"CA",
         tiers: {
-            vanilla:"LT2", sword:"RHT1", axe:"LT1", pot:"LT1", smp:"HT2",
+            vanilla:"LT2", sword:"RHT1", axe:"LT1", dpot:"LT1", npot:"LT1", smp:"HT2",
             smace:"LT1", rmace:"LT2", emace:"HT1",
             bcart:"LT3", xbow:"HT3",
             uhc:"HT2"
@@ -1354,7 +1354,7 @@ var players = [
     {
         name: "GrimmReaper__", loc:"CA",
         tiers: {
-            vanilla:"LT3", sword:"HT2", axe:"LT2", pot:"HT2", smp:"HT2",
+            vanilla:"LT3", sword:"HT2", axe:"LT2", npot:"HT2", dpot:"HT2", smp:"HT2",
             smace:"LT1", rmace:"HT1", emace:"LT1",
             bcart:"LT3", xbow:"LT4",
             uhc:"HT2"
@@ -1423,7 +1423,7 @@ var players = [
     {
         name: "ChevyHopkins", loc:"CA",
         tiers: {
-            vanilla:"LT4", sword:"HT3", axe:"LT3", pot:"LT3", smp:"LT3",
+            vanilla:"LT4", sword:"HT3", axe:"LT3", npot:"LT3", dpot:"LT3", smp:"LT3",
             smace:"LT3", rmace:"LT2", emace:"HT3",
             bcart:"HT5", xbow:"HT5",
             uhc:"LT3"
@@ -1488,7 +1488,7 @@ skinBitmap: [
     {
         name: "4Futurz", loc:"CA", loc2:"GB-ENG",
         tiers: {
-            vanilla:"HT1", sword:"HT2", axe:"HT2", pot:"LT2", smp:"LT2",
+            vanilla:"HT1", sword:"HT2", axe:"HT2", npot:"LT2", dpot:"LT2", smp:"LT2",
             smace:"LT5", rmace:"LT5", emace:"HT4",
             bcart:"LT4", xbow:"HT4",
             uhc:"LT2"
@@ -1544,7 +1544,7 @@ skinBitmap: [
     {
         name: "MRChevyGuys",loc:"US",
         tiers: {
-            vanilla:"LT5", sword:"LT4", axe:"HT5", pot:"HT5", smp:"HT5",
+            vanilla:"LT5", sword:"LT4", axe:"HT5", npot:"HT5", dpot:"HT5", smp:"HT5",
             smace:"LT5", rmace:"LT5", emace:"LT5",
             bcart:"LT5", xbow:"LT5",
             uhc:"HT5"
@@ -1632,7 +1632,7 @@ skinBitmap: [
     {
         name: "Snoopy", loc:"US", loc2:"GB-ENG",
         tiers: {
-            vanilla:"LT5", sword:"LT5", axe:"LT5", pot:"LT5", smp:"LT5",
+            vanilla:"LT5", sword:"LT5", axe:"LT5", npot:"LT5", dpot:"LT5", smp:"LT5",
             smace:"LT5", rmace:"LT5", emace:"LT5",
             bcart:"LT5", xbow:"LT5",
             uhc:"LT5"
@@ -1721,7 +1721,7 @@ skinBitmap: [
     {
         name: "TemptingAnt2136", loc:"US",
         tiers: {
-            vanilla:"LT5", sword:"HT5", axe:"LT5", pot:"HT5", smp:"HT5",
+            vanilla:"LT5", sword:"HT5", axe:"LT5", npot:"HT5", dpot:"HT5", smp:"HT5",
             smace:"LT5", rmace:"LT5", emace:"LT5",
             bcart:"LT5", xbow:"LT5",
             uhc:"HT5"
@@ -1814,7 +1814,7 @@ skinBitmap: [
     {
         name: "AgentStudios", loc:"CA", loc2:"GB-ENG",
         tiers: {
-            vanilla:"LT5", sword:"HT5", axe:"LT5", pot:"LT5", smp:"LT5",
+            vanilla:"LT5", sword:"HT5", axe:"LT5", npot:"LT5", dpot:"LT5", smp:"LT5",
             smace:"LT5", rmace:"LT5", emace:"HT5",
             bcart:"LT5", xbow:"HT5",
             uhc:"HT5"
@@ -1897,7 +1897,7 @@ skinBitmap: [
     {
         name: "burgerburner453", loc:"CA", loc2:"NZ",
         tiers: {
-            vanilla:"LT5", sword:"HT5", axe:"LT5", pot:"LT5", smp:"LT5",
+            vanilla:"LT5", sword:"HT5", axe:"LT5", npot:"LT5", dpot:"LT5", smp:"LT5",
             smace:"LT5", rmace:"LT5", emace:"LT5",
             bcart:"LT5", xbow:"LT5",
             uhc:"LT5"
@@ -1962,7 +1962,7 @@ skinBitmap: [
     {
         name: "Donkeh", loc:"CA", loc2:"NZ",
         tiers: {
-            vanilla:"LT5", sword:"LT5", axe:"LT5", pot:"LT5", smp:"LT5",
+            vanilla:"LT5", sword:"LT5", axe:"LT5", npot:"LT5", dpot:"LT5", smp:"LT5",
             smace:"LT5", rmace:"LT5", emace:"LT5",
             bcart:"LT5", xbow:"LT5",
             uhc:"LT5"
@@ -2027,7 +2027,7 @@ skinBitmap: [
     {
         name: "Sebooskis", loc:"US",
         tiers: {
-            vanilla:"LT5", sword:"HT5", axe:"HT5", pot:"LT5", smp:"LT5",
+            vanilla:"LT5", sword:"HT5", axe:"HT5", npot:"LT5", dpot:"LT5", smp:"LT5",
             smace:"LT5", rmace:"LT5", emace:"LT5",
             bcart:"LT5", xbow:"LT5",
             uhc:"LT5"
@@ -2092,7 +2092,7 @@ skinBitmap: [
     {
         name: "EmersonJenner", loc:"CA", loc2:"GB-ENG",
         tiers: {
-            vanilla:"HT5", sword:"HT5", axe:"LT5", pot:"LT5", smp:"HT5",
+            vanilla:"HT5", sword:"HT5", axe:"LT5", npot:"LT5", dpot:"LT5", smp:"HT5",
             smace:"LT5", rmace:"LT5", emace:"LT5",
             bcart:"LT5", xbow:"LT5",
             uhc:"LT5"
@@ -2170,7 +2170,7 @@ skinBitmap: [
     {
         name: "eliasjenner", loc:"CA", loc2:"GB-ENG",
         tiers: {
-            vanilla:"LT5", sword:"LT5", axe:"LT5", pot:"LT5", smp:"LT5",
+            vanilla:"LT5", sword:"LT5", axe:"LT5", npot:"LT5", dpot:"LT5", smp:"LT5",
             smace:"LT5", rmace:"LT5", emace:"LT5",
             bcart:"LT5", xbow:"LT5",
             uhc:"LT5"
@@ -2249,7 +2249,7 @@ skinBitmap: [
         alt:true, rgrank:4,
         name: "Dudadude111", loc:"CA",
         tiers: {
-            vanilla:"RLT4", sword:"RHT3", axe:"RLT3", pot:"RHT4", smp:"RHT4",
+            vanilla:"RLT4", sword:"RHT3", axe:"RLT3", npot:"RHT4", dpot:"RHT4", smp:"RHT4",
             smace:"RHT3", rmace:"RLT1", emace:"RLT1",
             bcart:"RLT4", xbow:"RLT4",
             uhc:"RLT3"
@@ -2319,7 +2319,7 @@ skinBitmap: [
         alt:true, rgrank:1,
         name: "Agent29", loc:"CA",
         tiers: {
-            vanilla:"RLT5", sword:"RHT5", axe:"RLT4", pot:"RLT5", smp:"RHT5",
+            vanilla:"RLT5", sword:"RHT5", axe:"RLT4", npot:"RLT5", dpot:"RLT5", smp:"RHT5",
             smace:"RHT5", rmace:"RLT5", emace:"RLT5",
             bcart:"RLT5", xbow:"RLT5",
             uhc:"RHT5"
@@ -2409,7 +2409,7 @@ skinBitmap: [
         alt:true, rgrank:3,
         name: "sethnmindy", loc:"CA", loc2:"GB-ENG",
         tiers: {
-            vanilla:"RLT5", sword:"RLT5", axe:"RHT5", pot:"RLT5", smp:"RLT5",
+            vanilla:"RLT5", sword:"RLT5", axe:"RHT5", npot:"RLT5", dpot:"RLT5", smp:"RLT5",
             smace:"RLT5", rmace:"RLT5", emace:"RLT5",
             bcart:"RLT5", xbow:"RLT5",
             uhc:"RLT5"
@@ -2513,6 +2513,8 @@ var ICON_URLS = {
     sword:   "https://www.khanacademy.org/computer-programming/assets-wip/6435356132360192/5172802069315584.png",
     axe:     "https://www.khanacademy.org/computer-programming/assets-wip/6435356132360192/4589745837817856.png",
     pot:     "https://www.khanacademy.org/computer-programming/assets-wip/6435356132360192/6733981685235712.png",
+    npot:    "https://www.khanacademy.org/computer-programming/assets-wip/6435356132360192/5080079578546176.png",
+    dpot:    "https://www.khanacademy.org/computer-programming/assets-wip/6435356132360192/6386177925300224.png",
     smp:     "https://www.khanacademy.org/computer-programming/assets-wip/6435356132360192/5941607732199424.png",
     mace:    "https://www.khanacademy.org/computer-programming/assets-wip/6435356132360192/5155319747821568.png",
     cart:    "https://www.khanacademy.org/computer-programming/assets-wip/6435356132360192/4823883614371840.png",
@@ -2520,8 +2522,8 @@ var ICON_URLS = {
     smace:   "https://www.khanacademy.org/computer-programming/assets-wip/6435356132360192/5133717195833344.png",
     rmace:   "https://www.khanacademy.org/computer-programming/assets-wip/6435356132360192/5966012400123904.png",
     emace:   "https://www.khanacademy.org/computer-programming/assets-wip/6435356132360192/5071064830164992.png",
-    bcart:   "https://www.khanacademy.org/computer-programming/assets-wip/6435356132360192/5433011790528512.png",
-    xbow:    "https://www.khanacademy.org/computer-programming/assets-wip/6435356132360192/5301739017584640.png"
+    bcart:   "https://www.khanacademy.org/computer-programming/assets-wip/6435356132360192/6674609004199936.png",
+    xbow:    "https://www.khanacademy.org/computer-programming/assets-wip/6435356132360192/4596559810772992.png"
 };
 
 var RING_URLS = {
@@ -2538,7 +2540,12 @@ var styles = [
     { key:"vanilla", label:"Vanilla", iconUrl: ICON_URLS.vanilla },
     { key:"sword",   label:"Sword",   iconUrl: ICON_URLS.sword   },
     { key:"axe",     label:"Axe",     iconUrl: ICON_URLS.axe     },
-    { key:"pot",     label:"Pot",     iconUrl: ICON_URLS.pot     },
+    { key:"pot", label:"Pot", iconUrl: ICON_URLS.pot,
+        subs: [
+            { key:"npot", label:"Neth Pot", iconUrl: ICON_URLS.npot },
+            { key:"dpot", label:"Diamond Pot", iconUrl: ICON_URLS.dpot }
+        ]
+    },
     { key:"smp",     label:"SMP",     iconUrl: ICON_URLS.smp     },
     { key:"mace",    label:"Mace",    iconUrl: ICON_URLS.mace,
 subs: [
