@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -39,7 +40,7 @@
             flex-shrink:0;
             align-items:flex-end;
             position:relative;
-            z-index:50;
+            z-index:100;
         }
 
         .tab {
@@ -275,23 +276,104 @@
         .bt-tier-option.lt { opacity:0.45; }
 
         /* ── ALL PAGE ── */
-        #page-all { display:flex; flex-direction:column; flex:1; overflow-y:auto; overflow-x:hidden; }
-        .player-list { padding:16px 40px; display:flex; flex-direction:column; gap:30px; }
-        .player-row {
-            position:relative; height:68px; cursor:pointer;
-            border-radius:6px; overflow:visible; flex-shrink:0;
-            transition:filter 0.15s;
-        }
-        .player-row:hover { filter:brightness(1.05); }
+#page-all {
+    display:flex;
+    flex-direction:column;
+    flex:1;
+    overflow-y:auto;
+    overflow-x:hidden;
+    z-index: 60;
+    position: relative;
+    align-items: stretch;
+}
+.player-list {
+    padding: 24px 40px 0 40px;
+    display:flex;
+    flex-direction:column;
+    gap:0px;
+    padding-bottom: 0;
+}
+
+.player-row {
+    contain: layout;
+    position: relative;
+    height: 68px;
+    cursor: pointer;
+    border-radius: 6px;
+    overflow: visible;
+    flex-shrink: 0;
+    transform-origin: center;
+    transition: transform 0.3s ease, filter 0.15s, opacity 0.25s ease;
+    margin-bottom: 30px;
+}
+
+.player-row.row-hidden {
+    display: none;
+}
+.player-row:hover {
+    transform: scaleX(1.012) scaleY(1.04);
+    filter: brightness(1.05);
+}
+.player-list > .player-row:last-child {
+    margin-bottom: 0;
+}
+.row-shine {
+    position: absolute;
+    inset: 0;
+    border-radius: 6px;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 5;
+}
+.row-shine-bar {
+    position: absolute;
+    top: 0; bottom: 0;
+    width: 100px;
+    background: rgba(255,255,255,0.08);
+    transform: translateX(-300px) skewX(-15deg);
+    transition: none;
+}
+.row-shine::after {
+    content: '';
+    position: absolute;
+    top: 0; bottom: 0;
+    width: 40px;
+    background: linear-gradient(
+        105deg,
+        transparent 0%,
+        rgba(255,255,255,0.15) 50%,
+        transparent 100%
+    );
+    transform: translateX(-60px) skewX(-15deg);
+    transition: none;
+}
+
+.player-row:hover .row-shine::after {
+    transform: translateX(120vw) skewX(-15deg);
+    transition: transform 0.5s ease;
+}
+.player-row:hover .row-shine-bar {
+    transform: translateX(110vw) skewX(-15deg);
+    transition: transform 0.5s ease;
+}
+.row-poly {
+    transition: opacity 0.2s ease;
+}
         .row-bg {
             position:absolute; inset:0; width:100%; height:100%;
             z-index:0; border-radius:6px; overflow:hidden;
         }
         .row-bg svg { width:100%; height:100%; position:absolute; inset:0; }
-        .row-content {
-            position:absolute; inset:0; display:flex; align-items:center;
-            padding:0 22px; gap:12px; z-index:2; overflow:hidden;
-        }
+.row-content {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    padding: 0 22px;
+    gap: 12px;
+    z-index: 20;
+    overflow: visible;
+}
         .row-pos {
             font-size:18px; font-weight:900; color:#fff !important;
             text-shadow:-1px -1px 0 #000,1px -1px 0 #000,
@@ -314,8 +396,26 @@
                     drop-shadow(0px 0px 6px rgba(0,0,0,1));
         }
         .row-title-label { font-size:9px; opacity:1; }
-        .row-tiers { display:flex; gap:6px; margin-left:auto; align-items:center; flex-shrink:0; }
-        .tier-circle-wrap { display:flex; flex-direction:column; align-items:center; gap:0; flex-shrink:0; }
+.row-tiers {
+    display: flex;
+    gap: 6px;
+    margin-left: auto;
+    align-items: center;
+    flex-shrink: 0;
+    overflow: visible;
+    position: relative;
+    z-index: 20;
+}
+
+.tier-circle-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 20;
+}
 
         /* ── STYLE PAGES ── */
         .style-page { display:none; flex:1; flex-direction:column; overflow:hidden; }
@@ -348,23 +448,29 @@
         #scene-player.open { display:flex; }
         .detail-box {
             background:#141414; border:1px solid #222; border-radius:12px;
-            width:700px; min-height:360px; position:relative;
+            width:560px; min-height:300px; position:relative;
             overflow:hidden; display:flex;
         }
         .detail-left {
-            width:170px; flex-shrink:0; position:relative;
+            width:130px; flex-shrink:0; position:relative;
             display:flex; align-items:center; justify-content:center;
-            overflow:visible; min-height:360px; z-index:2;
+            overflow:visible; min-height:300px; z-index:2;
         }
         .detail-left svg { position:absolute; inset:0; width:100%; height:100%; }
         .detail-right {
-            flex:1; padding:28px 28px 24px;
+            flex:1; padding: 20px 20px 18px;
             display:flex; flex-direction:column; gap:12px;
             overflow-y:auto; position:relative; z-index:2;
         }
         .detail-name { font-size:24px; font-weight:900; }
         .detail-pos  { font-size:12px; margin-top:10px; opacity:0.5; }
-        .detail-tiers { display:flex; flex-wrap:wrap; gap:10px; margin-top:4px; }
+.detail-tiers {
+    display: grid;
+    grid-template-columns: repeat(4, auto);
+    gap: 10px;
+    margin-top: 4px;
+    justify-content: start;
+}
         .detail-tier-item {
             display:flex; flex-direction:column; align-items:center; gap:4px;
             position:relative;
@@ -379,7 +485,7 @@
             left:50%;
             transform:translateX(-50%);
             background:#1a1a1a;
-            border:1px solid #333;
+            border:2px solid #333;
             border-radius:8px;
             padding:6px 8px;
             flex-direction:row;
@@ -448,7 +554,61 @@
 
 #loading-screen.hidden { display: none; }
         #loading-label { font-size:13px; }
+.tier-tooltip {
+    display: none;
+    position: absolute;
+    bottom: calc(100% + 10px);
+    left: 50%;
+    transform: translateX(-50%);
+    background: #1a1a1a;
+    border: 1px solid #333;
+    border-radius: 8px;
+    padding: 6px 10px;
+    text-align: center;
+    white-space: nowrap;
+    z-index: 999;
+    pointer-events: none;
+    min-width: 80px;
+}
 
+.tier-tooltip::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 6px solid transparent;
+    border-top-color: #333;
+}
+
+.tier-tooltip::before {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 5px solid transparent;
+    border-top-color: #1a1a1a;
+    z-index: 1;
+}
+
+.tier-circle-wrap { position: relative; }
+
+.tooltip-tier { font-size: 13px; font-weight: 700; }
+.tooltip-pts  { font-size: 10px; color: #aaa; margin-top: 2px; }
+.tooltip-below::after {
+    top: auto;
+    bottom: 100%;
+    border-top-color: transparent;
+    border-bottom-color: #333;
+}
+
+.tooltip-below::before {
+    top: auto;
+    bottom: 100%;
+    border-top-color: transparent;
+    border-bottom-color: #1a1a1a;
+}
         /* ── NEWS ── */
         .news-list { padding:16px 40px; display:flex; flex-direction:column; gap:10px; }
         .news-box {
@@ -490,6 +650,88 @@ pacing:1px; }
             font-size:13px; color:#aaa; line-height:1.6;white-space: pre-wrap;
             border-top:1px solid #1e1e1e; padding-top:12px; margin-top:4px;
         }
+.filter-popup {
+    z-index: 300;
+    display: none;
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 50%;
+    transform: translateX(-50%);
+    right: auto;
+    max-width: calc(100vw - 20px);
+    background: #141414;
+    border: 2px solid #2a2a2a;
+    border-radius: 10px;
+    padding: 10px;
+    width: max-content;
+    min-width: 180px;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.filter-popup.open { display: flex; }
+
+.filter-section-label {
+    font-size: 10px;
+    opacity: 0.4;
+    letter-spacing: 1px;
+    margin-bottom: 2px;
+}
+
+.filter-flag-grid {
+    display: grid;
+    grid-template-columns: repeat(3, auto);
+    gap: 5px;
+    justify-content: start;
+}
+
+.filter-flag-btn {
+    border: 1.5px solid #2a2a2a;
+    border-radius: 6px;
+    padding: 2px;
+    cursor: pointer;
+    background: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: border-color 0.15s, background 0.15s;
+    width: fit-content;
+}
+
+.filter-flag-btn:hover { border-color: #555; }
+.filter-flag-btn.active { border-color: #7c3aed; background: rgba(124,58,237,0.15); }
+
+.filter-flag-btn img {
+    width: 30px;
+    height: 19px;
+    object-fit: cover;
+    border-radius: 2px;
+    display: block;
+}
+
+.filter-style-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 5px;
+}
+
+.filter-style-btn {
+    border: 1.5px solid #2a2a2a;
+    border-radius: 6px;
+    padding: 5px 7px;
+    cursor: pointer;
+    background: transparent;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: border-color 0.15s, background 0.15s;
+    font-size: 11px;
+    font-family: 'Jersey 15', sans-serif;
+}
+
+.filter-style-btn:hover { border-color: #555; }
+.filter-style-btn.active { border-color: #7c3aed; background: rgba(124,58,237,0.15); }
+.filter-style-btn img { width: 16px; height: 16px; object-fit: contain; }
     </style>
 </head>
 <body>
@@ -550,7 +792,7 @@ pacing:1px; }
         <button class="info-close" onclick="closeInfo()">✕</button>
         <img class="info-logo" src="https://www.khanacademy.org/computer-programming/assets-wip/6435356132360192/4945022646861824.png" alt="MCTiers">
         <div class="info-email">silas.boram@outlook.com</div>
-        <div class="info-body"><br>Want to get tested? Wrong skin or name?<br>Change or add a banner? Retire in a gamemode?<br>Ask a question? Report an issue?<br><br>Contact me.</div>
+        <div class="info-body"><br>Want to get tested? Wrong skin or name?<br>Change or add a banner? Retire in a gamemode?<br>Ask a question? Report an issue? Add<br>second nationality?<br><br>Contact me.</div>
     </div>
 </div>
 
@@ -588,9 +830,9 @@ pacing:1px; }
         </div>
         <div class="bt-row">
             <span class="bt-label">Skin</span>
-            <select class="bt-select" id="bt-skin" onchange="btUpdate()">
-                <option value="">— none —</option>
-            </select>
+<select class="bt-select" id="bt-skin" onchange="btUpdate()" size="5" style="height:auto;overflow-y:auto;">
+    <option value="">— none —</option>
+</select>
         </div>
     </div>
     <div class="bt-preview-wrap" id="bt-preview"></div>
@@ -602,7 +844,55 @@ var tabsEl = document.getElementById("tabs");
 // ============================================================
 // NEWS
 // ============================================================
+
 var news = [
+    {
+        id: "33",
+        type: "text",
+        date: "2026-09-09",
+        title: "v4",
+        body: "Alt accounts, mother mode retirements and news updates were introduced in the first snapshot of this version. This is the full release.<br><br>Nationalities added<br>Filter system added to 'All'<br>Hover animations to 'All' added<br>Peak, retired, and current tier + points added to tiers in 'All'<br>More generous untested scores handed out<br>Alted player updates<br>General QOL/UI enhancements"
+    },
+    {
+        id: "32",
+        type: "tiertest",
+        date: "2026-09-08",
+        title: "Tier Test",
+        styles: ["uhc"],
+        playerA: { name:"ASBackup",  results:["W"] },
+        playerB: { name:"SpittFire", results:["L"] },
+        writeup: "SpittFire is genkirkuinely LT7 UHC. ASBackup leaning on LT1 UHC. No promotion."
+    },
+    {
+        id: "31",
+        type: "tiertest",
+        date: "2026-09-08",
+        title: "Tier Test",
+        styles: ["pot","axe","axe","axe","vanilla","vanilla","vanilla","axe","axe","bcart"],
+        playerA: { name:"ASBackup",      results:["W","L","W","W","W","W","W","L","L","W"] },
+        playerB: { name:"GrimmReaper__", results:["L","W","L","L","L","L","L","W","W","L"] },
+        writeup: "No tier changes. ASBackup closer to LT1 bow cart and pot, GrimmReaper__ closer to LT1 axe."
+    },
+    {
+        id: "30",
+        type: "promotion",
+        date: "2026-09-01",
+        player: "ASBackup",
+        style: "xbow",
+        fromTier: "LT1",
+        toTier: "HT2",
+        text: "Overestimated"
+    },
+    {
+        id: "29",
+        type: "promotion",
+        date: "2026-09-01",
+        player: "ASBackup",
+        style: "bcart",
+        fromTier: "LT1",
+        toTier: "HT2",
+        text: "Overestimated"
+    },
     {
         id: "28",
         type: "promotion",
@@ -860,6 +1150,1316 @@ var news = [
     }
 ];
 
+// ============================================================
+// PLAYERS
+// ============================================================
+
+var players = [
+    {
+        name: "ASBackup", loc:"CA", loc2:"GB-ENG",
+        tiers: {
+            vanilla:"RHT1", sword:"RHT1", axe:"LT1", pot:"HT2", smp:"LT1",
+            smace:"HT2", rmace:"RHT1", emace:"RHT1",
+            bcart:"HT2", xbow:"HT2",
+            uhc:"HT2", ppot:"LT1", pcart:"LT1"
+        },
+        bannerUrl: "https://www.khanacademy.org/computer-programming/pic2pix/4972175662891008/5785892222779392.png",
+        skinPalette: {
+            ' ':[255,255,255,0],
+            'a':[140,140,140,255],'b':[153,153,153,255],'c':[230,230,230,255],'d':[166,166,166,255],
+            'e':[128,128,128,255],'f':[179,179,179,255],'g':[89,89,89,255],'h':[64,64,64,255],
+            'i':[115,115,115,255],'j':[255,255,255,255],'k':[110,110,110,255],'l':[77,77,77,255],
+            'm':[102,102,102,255]
+        },
+        skinBitmap: [
+'        aaaaaaabcccccccc                ddddddd',
+'        aabbbbaacccccccc                dddddddd',
+'        abbbbbbacccccccc                 d ddddd',
+'        abbbbbbacccccccc                     ddd',
+'        aabbbbaacccccccc                 d   ddd',
+'        aabbbbbacccccccc                ddd dddd',
+'        aaaaabbbcccccccc                ddddddd',
+'        aaaaaaabcccccccc                 dddddd',
+'baaaaaaaaaaaaaabbbaaaabbbaaaaabbddd  dd   dddd   ddddd   ddddddd',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaadddddddddddddddddddddddddddddd d',
+'eeeeeeeeeeeeaaaeeeeeeeeeeeeeeeeeddddddddddd   dd dddddddddddd dd',
+'eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee   dd               dd     dd',
+'ccceeeeeeeeeeeeeeeeeeccccccccccc',
+'cccccccccccccffccccccccccccccccc',
+'cccccccccccccfcccccccccccccccccc',
+'cccccccccccccccccccccccccccccccc',
+'    gggghhhh        iiiiiiiiiiiiiiii        iiiijjjj',
+'    gggghhhh        iiiiiiiiiiiiiiii        iiiijjjj',
+'    gggghhhh        iiiiiiiiiiiiiiii        iiiijjjj',
+'    gggghhhh        iiiiiiiiiiiiiiii        iiiijjjj',
+'giigggggggggggggiiiiiiihhiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii',
+'ggggggggggggggggiiiiiiikhiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii',
+'ggggggggggggggggiiiiiiihhiiiiiiiiiiiiiiijjjjjjjjjjjjjjjj',
+'ggggggggggggggggiiiiiiihhiiiiiiiiiiiiiiijjjjjjjjjjjjjjjj',
+'ggggggggggggggggiiiiiiihhiiiiiiiiiiiiiiijjjjjjjjjjjjjjjj',
+'ggggggggggggggggiiiiiiihhiiiiiiiiiiiiiiijjjjjjjjjjjjjjjj',
+'ggggggggggggggggiiiiiiihhiiiiiiiiiiiiiiijjjjjjjjjjjjjjjj',
+'ggggggggggggggggiiiiiiihhiiiiiiiiiiiiiiijjjjjjjjjjjjjjjj',
+'ggggggggggggggggiiiiiiihhiiiiiiiiiiiiiiijjjjjjjjjjjjjjjj',
+'ggggggggggggggggiiiiiiihhiiiiiiiiiiiiiiijjjjjjjjjjjjjjjj',
+'ggggggggggggggggiiiiiiikhiiiiiiiiiiiiiiijjjjjjjjjjjjjjjj',
+'hhhhhhhhhhhhhhhhliiiillmmliiiiillllllllljjjjjjjjjjjjjjjj',
+'                    dd    dd                dddd',
+'                    d      d                dddd',
+'                    d      d                dddd',
+'                    dd    dd                dddd',
+'                dddddd    dddddddddddddddddddddddddddddd',
+'                dddddd    dddddddddddddddddddddddddddddd',
+' ll          ll dddddd    dddddddddddddddddddddddddddddd',
+' ll          ll ddddddd  ddddddddddddddddddddddddddddddd',
+' ll          ll ddddddd  ddddddddddddddddddddddddddddddd',
+' ll          ll dddddaaddddddddddddddddddddddddddddddddd',
+'                ddddddddbddddddddddddddddddddddddddddddd',
+'                dddddddddddddddddddddddddddddddddddddddd',
+'                ddddddddbddddddddddddddddddddddddddddddd',
+'                dddddddddddddddddddddddddddddddddddddddd',
+'                ddddddddbddddddddddddddddddddddddddddddd',
+'                dddddddddddddddddddddddd',
+'                    gggghhhh        iiiijjjj        dddd',
+'                    gggghhhh        iiiijjjj        dddd',
+'                    gggghhhh        iiiijjjj        dddd',
+'                    gggghhhh        iiiijjjj        dddd',
+'                gggggggiiiggggggiiiiiiiiiiiiiiiidddddddddddddddd',
+'                ggggggggggggggggiiiiiiiiiiiiiiiidddddddddddddddd',
+'         ll  ll ggggggggggggggggjjjjjjjjjjjjjjjjdddddddddddddddd',
+'         ll  ll ggggggggggggggggjjjjjjjjjjjjjjjjdddddddddddddddd',
+'         ll  ll ggggggggggggggggjjjjjjjjjjjjjjjjdddddddddddddddd',
+'         ll  ll ggggggggggggggggjjjjjjjjjjjjjjjjdddddddddddddddd',
+'                ggggggggggggggggjjjjjjjjjjjjjjjjdddddddddddddddd',
+'                ggggggggggggggggjjjjjjjjjjjjjjjjdddddddddddddddd',
+'                ggggggggggggggggjjjjjjjjjjjjjjjjdddddddddddddddd',
+'                ggggggggggggggggjjjjjjjjjjjjjjjjdddddddddddddddd',
+'                ggggggggggggggggjjjjjjjjjjjjjjjjdddddddddddddddd',
+'                hhhhhhhhhhhhhhhhjjjjjjjjjjjjjjjj'
+        ]
+    },
+    {
+        name: "SpittFire", loc:"CA",
+        tiers: {
+            vanilla:"LT2", sword:"RHT1", axe:"LT1", pot:"LT1", smp:"HT2",
+            smace:"LT1", rmace:"LT2", emace:"HT1",
+            bcart:"LT3", xbow:"HT3",
+            uhc:"HT2"
+        },
+        bannerUrl: "https://www.khanacademy.org/computer-programming/pic2pix/4972175662891008/5886425243697152.png",
+        skinPalette: {
+            ' ':[255,255,255,0],
+            'a':[45,81,111,255],'b':[37,69,96,255],'c':[13,43,69,255],'d':[188,163,131,255],
+            'e':[211,190,163,255],'f':[254,236,214,255],'g':[78,68,54,255],'h':[174,149,117,255],
+            'i':[22,38,51,255],'j':[20,31,40,255],'k':[32,55,74,255],'l':[66,51,32,255],
+            'm':[231,175,87,255],'n':[39,36,32,255],'o':[255,209,137,255]
+        },
+        skinBitmap: [
+'        abccccbadeeeeeed                   bb',
+'        bbccccbbeeeeeeee                   bb',
+'        cccccccceeddddee                cccbbccc',
+'        ccccccccfeddddef                bbbccbbb',
+'        ccccccccfeddddef                bbbccbbb',
+'        cccccccceeddddee                cccbbccc',
+'        bbccccbbeeeeeeee                  cbbc',
+'        abccccbadeeeeeed                  cbbc',
+'abccccbaabccccbaabccccbaabccccba  cbbc    cbbc    cbbc     bb',
+'bbccccbbbbeeeebbbbccccbbbbccccbb  cbbc            cbbc     cc',
+'cccccccccccbbcccccccccccccccccccc cbbc            cbbc ccccccccc',
+'deeeeeeddeeeeeeddeeeeeeddeeeeded',
+'fffefffffggffggfffffefffffeffeff',
+'ffffhefffffhhfffffehffffffffefff',
+'efeffffffggggggffffffffeeffffefe',
+'deeffeeddeeeeeeddeeffeeddeeeeeed',
+'    iiijiiij        kbbbbbbkkkkkkkkk        bbkedf',
+'    iiijiiij        kbbllbbkkkkkkkkk        bbkfff',
+'    iiijiiij        kblfflbkkkkkkkkk        bbkedf',
+'    iiijiiij        kblfflbkkkkkkkkk        bbkfff',
+'iiiiiiijjjjjjiiikkkkkblfflbkkkkkkbbbbbbkbbbbbbkkkkkkbb',
+'iiiiiijjjjjjjjiikkkkkblbblbkkkkkkbbbbbbkbaabbbkkkkkkbb',
+'iiiiiiijjjjjjiiikkkkkblblbbkkkkkkbaaaabkbaabbbkkkkkkbb',
+'iiiiiiijjjjjjiiikkkkkbblbbbkkkkkkbbbbbbkbbbbbkkkkkkkkb',
+'iiiiiiijjjjjjiiikkkkkbbmbbbkkkkkkbbaabbkbbbbbbkkkkkkbb',
+'iiiiiijjjjjjjjiikkkkkbbbbbbkkkkkkbbbbbbkbbbbbbkkkkkkbb',
+'iiiiiiijjjjjjiiikkkkkbaaaabkkkkkkbbbbbbkeheheehhhhhhee',
+'iiiiiiijjjjjjiiikkkkkbbkkbbkkkkkkbbkkbbkfeheffeeeeeeff',
+'bbbbbffkkkkkkbbbkkkkkbbbbbbkkkkkkbbbbbbkehfeffffffffff',
+'fffffnneeeeeefffkkkkkbkkkkbkkkkkkbkkkkbkffffffffffffff',
+'fffffnneeeeeefffkkkkkbbbbbbkkkkkkbbbbbbkefefedffffffde',
+'fffffffeeeeeefffkkkkkkkkkkkkkkkkkkkkkkkkefeffdffffffdf',
+'        fffe','        fffe','        fffe','        fffe','','',
+'iiiiiii      iii','iiiiiii      iii',
+'iiiiiii      iii       o                baabaa      ab',
+'                                        bbbbbb      bb',
+'iiiiiii      iii','iiiiiii      iii',
+'     ff','fffff  eeeeeefff','     ff','fffffffeeeeeefff',
+'        efff        jiiijiii        kbbfde',
+'        efff        jiiijiii        kbbfff',
+'        efff        jiiijiii        kbbfde',
+'        efff        jiiijiii        kbbfff',
+'                jjjjjiiiiiiiiiijkkkkkbbbbbbbbk',
+'                jjjjjjiiiiiiiijjkkkkkbbbaabbbk',
+'     iiiiiiiiii jjjjjiiiiiiiiiijkkkkkbbbaabbbk',
+'     iiiiiiiiii jjjjjiiiiiiiiiijkkkkkkbbbbbbkk',
+'     iiiiiiiiii jjjjjiiiiiiiiiijkkkkkbbbbbbbbk       aabaabba',
+'                jjjjjjiiiiiiiijjkkkkkbbbbbbbbk       bbbbbbbb',
+'     iiiiiiiiii jjjjjiiiiiiiiiijhhhhheeheheeeh',
+'     iiiiiiiiii jjjjjiiiiiiiiiijeeeeeffehefffe',
+'     ff         kkkkkffbbbbbbbbkfffffffefhefff',
+'eeeee  ffffffffeeeeeennffffffffeffffffffffffff',
+'     ff         eeeeennffffffffefffffdefefeedf',
+'eeeeeffffffffffeeeeeeffffffffffefffffdffefefdf'
+        ]
+    },
+    {
+        name: "GrimmReaper__", loc:"CA",
+        tiers: {
+            vanilla:"LT3", sword:"HT2", axe:"LT2", pot:"HT2", smp:"HT2",
+            smace:"LT1", rmace:"HT1", emace:"LT1",
+            bcart:"LT3", xbow:"LT4",
+            uhc:"HT2"
+        },
+        skinPalette: {
+            ' ':[255,255,255,0],
+            'a':[49,49,49,255],'b':[81,81,81,255],'c':[90,90,90,255],'d':[23,23,23,255],
+            'e':[99,99,99,255],'f':[28,28,28,255],'g':[33,33,33,255],'h':[70,70,70,255],
+            'i':[60,60,60,255],'j':[193,193,193,255],'k':[177,177,177,255],'l':[157,157,157,255],
+            'm':[0,0,0,255],'n':[209,209,209,255],'o':[40,40,40,255],'p':[135,135,135,255],
+            'q':[145,145,145,255],'r':[16,16,16,255],'s':[19,19,19,255],'t':[39,39,39,255],
+            'u':[206,206,206,255],'v':[55,55,55,255],'w':[31,31,31,255]
+        },
+        skinBitmap: [
+'        aaaaaaaaaaaaaaaa                 bccccb dddddddd',
+'        aaaaaaaaaaaaaaaa                bccccccbdddddddd',
+'        aaaaaaaaaaaaaaaa                cceeeeccdddddddd',
+'        aaaaaaaaaaaaaaaa                ceeeeeecf      f',
+'        aaaaaaaaaaaaaaaa                ceeeeeecf      f',
+'        aaaaaaaaaaaaaaaa                cceeeeccg      g',
+'        aaaaaaaaaaaaaaaa                bccccccbg      g',
+'        aaaaaaaaaaaaaaaa                 bccccb g      g',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa bcccbh  bbbbbb  hbcccb  hbccbh',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaihbbbbhiiihhhhiiihbbbbhiihbbbbhi',
+'aaaaaaaaajkjlklaaaaaaaaaaaaaaaaaaihbbhhaaiiiiiiaahhbbhiaahhbbhha',
+'aaaaaaaakmmnnmmkaaaaaaaaaaaaaaaaoihhhhiaaa    aaaihhhhiooihhhhio',
+'aaaaaaaajmmnpmmlaaaaaaaaaaaaaaaaoaihhiaaa      aaaihhiaooaiiiiao',
+'aaaaaaaannjjlkjkaaaaaaaaaaaaaaaagoaaiaaao      oaaaiaaoggoaaaaog',
+'aaaaaaaaaakqkjaaaaaaaaaaaaaaaaaafgooaaaog      goaaaoogfffgoogff',
+'aaaaaaaaaaqaqkaaaaaaaaaaaaaaaaaafffggoggg      gggoggfffffffffff',
+'    dfdgmmmm        gogoggoffgdogdgf        bbhiaa',
+'    rssfmmmm        daaaaaaddfsgfsfd        bcbhaa',
+'    sdfgmmmm        saaaaaasdfsgfsfd        cebhaa',
+'    dfgommmm        daaaaaadfgdogdgf        bchiaa',
+'fgoffgogfgooafgfgddffaaaaaaffddggoooaoogbbcbbbhiiaoiih',
+'gooffoommmgoagoggffggaakkaaggffggaiohiaghhbhhiiaaooaai',
+'ooagmammmmgaaoaoogfoolkjlkloofgooaaaaaagihhittaaaogaai',
+'aaiommmmmmoaiaiaaooaaaauqeaaaooaaahibhoattttttttaooaav',
+'aiiaammmmmmiihiaiaaitjunplptiaaiiaohhooawwwwwwttaogaat',
+'oaiiimmmmmmhhahoiaihtaauqeathiaiiaoaaoaiwwwwwwwwioaiiw',
+'oihimmmmmmmihaioioaitikjlkitiaoiiaohhohawwlwwlwwaooaaw',
+'gmiammmmmmmiioigagoathakkahtaogaaaohbghgwwkwwlwwogfoww',
+'moimmmmmmmmaigmgofgotioaaoitogfooooooooawlklwklggflgwl',
+'fmmommmmmmmommofgffggagiagaggffggogaigoglkkklkkfflklwk',
+'mmmmmmmmmmmgmmmfgffggofaofoggffggofoaooglmjkkjkllkjklk',
+'mmmmmmmmmmmgmmmmgffgfofaofoggffggofoaoookmmjaaakkjpjka',
+'','','','','','','','','','','','','','','','',
+'                    gdfdmmmm        ihbbaa',
+'                    fssrmmmm        hbcbaa',
+'                    gfdsmmmm        hbecaa',
+'                    ogfdmmmm        ihcbaa',
+'                oogfgogffogffgfaioaiihbbbcbbbb',
+'                ogmmmooffooggogaaooaaiihhbhhhi',
+'                agmmmmamgaoooaoaagoaaattihhivv',
+'                aommmmmmoiaaaiaiaooatttttttttt',
+'                immmmmmaaiiaaihiagoattwwwwwwwt',
+'                hmmmmmmiiiaoohahiaoiwwwwwwwwww',
+'                immmmmmmihiooiahaooawwlwwkwwwl',
+'                immmmmmmaimggioiofgowwlwwkwwwl',
+'                ammmmmmmmiomgmgiglfgwlkwlklwwk',
+'                ommmmmmmommffommlklfwkklkkkllk',
+'                gmmmmmmmmmmmfmmmkjkllkjkkjalkj',
+'                gmmmmmmmmmmmmmmmjpjkkaaajaakaa'
+        ]
+    },
+    {
+        name: "ChevyHopkins", loc:"CA",
+        tiers: {
+            vanilla:"LT4", sword:"HT3", axe:"LT3", pot:"LT3", smp:"LT3",
+            smace:"LT3", rmace:"LT2", emace:"HT3",
+            bcart:"HT5", xbow:"HT5",
+            uhc:"LT3"
+        },
+skinPalette: {
+    ' ':[255,255,255,0],
+    'a':[30,30,30,255],
+    'b':[255,255,255,255]
+},
+skinBitmap: [
+'        aaaaaaaaaaaaaaaa',
+'        aaaaaaaaaaaaaaaa',
+'        aaaaaaaaaaaaaaaa',
+'        aaaaaaaaaaaaaaaa',
+'        aaaaaaaaaaaaaaaa',
+'        aaaaaaaaaaaaaaaa',
+'        aaaaaaaaaaaaaaaa',
+'        aaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'    aaaaaaaa        aaaaaaaaaaaaaaaa        aaaaaaaa',
+'    aaaaaaaa        aaaaaaaaaaaaaaaa        aaaaaaaa',
+'    aaaaaaaa        aaaaaaaaaaaaaaaa        aaaaaaaa',
+'    aaaaaaaa        aaaaaaaaaaaaaaaa        aaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaabbbaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaabbbbbaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaabbaabaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaabbbaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaabbbaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaabbaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaabbaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaabbaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'','','','','','','','','','','','','','','','',
+'                    aaaaaaaa        aaaaaaaa',
+'                    aaaaaaaa        aaaaaaaa',
+'                    aaaaaaaa        aaaaaaaa',
+'                    aaaaaaaa        aaaaaaaa',
+'                aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'                aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'                aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'                aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'                aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'                aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'                aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'                aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'                aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'                aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'                aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'                aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+]
+    },
+    {
+        name: "4Futurz", loc:"CA", loc2:"GB-ENG",
+        tiers: {
+            vanilla:"HT1", sword:"HT2", axe:"HT2", pot:"LT2", smp:"LT2",
+            smace:"LT5", rmace:"LT5", emace:"HT4",
+            bcart:"LT4", xbow:"HT4",
+            uhc:"LT2"
+        },
+        bannerUrl: "https://www.khanacademy.org/computer-programming/pic2pix/4972175662891008/5763368306982912.png",
+        skinPalette: {
+            ' ':[255,255,255,0],
+            'a':[30,30,30,255],'b':[255,255,255,255]
+        },
+        skinBitmap: [
+'        aaaaaaaaaaaaaaaa','        aaaaaaaaaaaaaaaa','        aaaaaaaaaaaaaaaa',
+'        aaaaaaaaaaaaaaaa','        aaaaaaaaaaaaaaaa','        aaaaaaaaaaaaaaaa',
+'        aaaaaaaaaaaaaaaa','        aaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa','aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa','aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaabbaabbaaaaaaaaaaaaaaaaa','aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa','aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'    aaaaaaaa        aaaaaaaaaaaaaaaa        aaaaaaaa',
+'    aaaaaaaa        aaaaaaaaaaaaaaaa        aaaaaaaa',
+'    aaaaaaaa        aaaaaaaaaaaaaaaa        aaaaaaaa',
+'    aaaaaaaa        aaaaaaaaaaaaaaaa        aaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'','','','','','','','','','','','','','','','',
+'                    aaaaaaaa        aaaaaaaa',
+'                    aaaaaaaa        aaaaaaaa',
+'                    aaaaaaaa        aaaaaaaa',
+'                    aaaaaaaa        aaaaaaaa',
+'                aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'                aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'                aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'                aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'                aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'                aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'                aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'                aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'                aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'                aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'                aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'                aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+        ]
+    },
+    {
+        name: "MRChevyGuys",loc:"US",
+        tiers: {
+            vanilla:"LT5", sword:"LT4", axe:"HT5", pot:"HT5", smp:"HT5",
+            smace:"LT5", rmace:"LT5", emace:"LT5",
+            bcart:"LT5", xbow:"LT5",
+            uhc:"HT5"
+        },
+        skinPalette: {
+            ' ':[255,255,255,0],
+            'a':[0,143,255,255],'b':[54,161,255,255],'c':[23,122,212,255],'d':[25,125,216,255],
+            'e':[0,144,255,255],'f':[24,133,227,255],'g':[24,132,227,255],'h':[33,138,233,255],
+            'i':[10,142,255,255],'j':[18,145,255,255],'k':[28,147,255,255],'l':[28,148,255,255],
+            'm':[28,149,255,255],'n':[25,124,216,255],'o':[28,122,207,255],'p':[18,144,255,255],
+            'q':[20,125,220,255],'r':[17,134,239,255],'s':[202,201,201,255],'t':[25,114,195,255],
+            'u':[25,109,185,255],'v':[24,127,221,255],'w':[24,134,232,255],'x':[67,165,250,255],
+            'y':[76,171,255,255],'z':[26,125,214,255],'A':[25,115,195,255],'B':[26,131,225,255],
+            'C':[25,123,216,255],'D':[26,124,214,255],'E':[26,123,214,255],'F':[26,115,200,255],
+            'G':[20,124,220,255],'H':[26,122,214,255],'I':[25,123,211,255],'J':[25,122,211,255],
+            'K':[26,114,200,255]
+        },
+        skinBitmap: [
+'        aaaaaaaabbbbbbbb                        ccddddcc',
+'        aaeeeeaabbbbbbbb                        cfdggdfc',
+'        aeeaaaeabbbbbbbb                        ffg  gff',
+'        aaaaaaaabbbbbbbb                        fh    hf',
+'        aaaaaaaabbbbbbbb                        h      h',
+'        aaaaaaaabbbbbbbb',
+'        aaaaaaaabbbbbbbb',
+'        aaaaaaaabbbbbbbb',
+'iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii',
+'aiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii',
+'jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj',
+'jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj',
+'klllllllklkkklklkkkklllmlllllllm                        dnnnnnnd',
+'klllllllkkllllklllllmmmmllllllllgdd                  ddgddnnnnnn',
+'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbghhdd              ddhhgcdnnnnnc',
+'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbggghgd            dghgggccdnndcc',
+'    oooopppp        qqrrrrqqoooooooo        srrdsjjj',
+'    oooopppp        rrrttrrroooooooo        srrdsjjj',
+'    oooopppp        rrtkktrroooooooo        srrdsjjj',
+'    oooopppp        rrujjurroooooooo        srrdsjjj',
+'oooooooooooooooovwrrrrujjurrrrwvqqvrrvqqrrrrsrrddddddrrs',
+'xxxxxxxxyyyyxxxxvwrrrrruurrrrrwvqqrrrrqqzzzzszzAAttAAzzs',
+'bbbbbbbbbbbbbbbbvwrrrrrrrrrrrrwvqvrrBrvqrrrrsrrddnnddrrs',
+'bbbbbbbbbbbbbbbbvwrrrrrrrrrrrrwvqvrvBrvqzzzzszzAAttAAzzs',
+'llllllllmmmmllllvwrrrrrrrrrrrrwvqrrrBrrqrrrrsrrnCCCddrrs',
+'mmmmmmmlmmmmmmmmvwrrrrrrrrrrrrwvvrrrBrrvrrrrsrrCCCCCdrrs',
+'ppppppppppppppppvwrrrrrrrrrrrrwvvrrrrrrvzzzzsDEttttAAzzs',
+'ppppppppppppppppvwrrrrrrrrrrrrwvvrrrqrrvrrrrsrrnCnnddrrs',
+'aaaaaaaaaaaaaaaavwrrrrrrrrrrrrwvvrrvvvrvrrrrsrrddnnndrrs',
+'aaaaaaaaaaaaaaaaqwrrrrrrrrrrrrwvqrrrrrrqrrrrsrrddnnddrrs',
+'ppppppppppppppppqwwwwwwwwrrrrrwqqvrvqrvqDDDDsDDFFFFFFDDs',
+'ppppppppppppppppqqqqqqqqqGGGqqqqqvvvqqvqjjjjsjjjjjjjjjjs',
+'                                            s   s',
+'                                            s   s',
+'                                            s   s',
+'                                            s   s',
+'                                            s          s',
+'                                        zzzzszzAttttAzzs',
+'                                            s          s',
+'                                        zzzzszzAttttAzzs',
+'                                            s          s',
+'                                            s          s',
+'                                        zzzzsEEE  tttzzs',
+'                                            s          s',
+'                                        rrrrsrrEDDDDDrrs',
+'                                        rrrrsrrEDDDDDrrs',
+'                           H            EEEEsEEFFFFFFEEs',
+'                                            s          s',
+'                    oooopppp        drrsjjjs           s   s',
+'                    oooopppp        drrsjjjs           s   s',
+'                    oooopppp        drrsjjjs           s   s',
+'                    oooopppp        drrsjjjs           s   s',
+'                oooooooooooooooodddddrrsrrrrsrrd       s    s',
+'                yyyyxxxxxxxxxxxxAttAAzzszzzzszzAtttttzzszzzzszzA',
+'                bbbbbbbbbbbbbbbbdnndIrrsrrrrsrrd       s    s',
+'                bbbbbbbbbbbbbbbbAtttAzzszzzzszzAtttttzzszzzzszzA',
+'                mmmmlllllllllllldnndJrrsrrrrsrrd       s    s',
+'                mmmmmmmmllllmmmmdnnCJrrsrrrrsrrd       s    s',
+'                ppppppppjpppppppAttttDzszzzzszzAtt    zszzzzszzt',
+'                ppppppppppppppppdCCCJrrsrrrrsrrd       s    s',
+'                aaaaaaaaaaaaaaaadCCCJrrsrrrrsrrdDD    rsrrrrsrrD',
+'                aaaaaaaaaaaaaaaadCCCJrrsrrrrsrrdDD    rsrrrrsrrD',
+'                ppppppppppppppppFFKKKEEsEEEEsEEFFFFHHEEsEEEEsEEF',
+'                ppppppppapppppppjjjjjjjsjjjjsjjj       s    s'
+        ]
+    },
+    {
+        name: "Snoopy", loc:"US", loc2:"GB-ENG",
+        tiers: {
+            vanilla:"LT5", sword:"LT5", axe:"LT5", pot:"LT5", smp:"LT5",
+            smace:"LT5", rmace:"LT5", emace:"LT5",
+            bcart:"LT5", xbow:"LT5",
+            uhc:"LT5"
+        },
+        skinPalette: {
+            ' ':[255,255,255,0],
+            'a':[251,226,138,255],'b':[251,237,145,255],'c':[247,213,118,255],'d':[206,136,78,255],
+            'e':[170,103,48,255],'f':[232,186,109,255],'g':[246,211,141,255],'h':[252,244,170,255],
+            'i':[223,150,88,255],'j':[108,21,46,255],'k':[242,207,136,255],'l':[238,165,102,255],
+            'm':[180,114,60,255],'n':[255,255,255,255],'o':[67,103,83,255],'p':[119,67,32,255],
+            'q':[11,8,21,255],'r':[17,9,29,255],'s':[7,5,15,255],'t':[79,45,45,255],
+            'u':[8,5,15,255],'v':[9,6,18,255],'w':[12,7,23,255],'x':[72,35,35,255],
+            'y':[66,28,28,255],'z':[103,45,67,255],'A':[72,28,41,255],'B':[165,114,128,255],
+            'C':[135,66,96,255],'D':[242,206,218,255],'E':[142,55,55,255],'F':[235,191,206,255],
+            'G':[129,46,46,255],'H':[40,19,43,255],'I':[35,16,38,255],'J':[76,45,72,255],
+            'K':[110,68,107,255],'L':[145,96,144,255],'M':[31,12,34,255],'N':[37,19,43,255],
+            'O':[178,155,174,255],'P':[75,41,41,255]
+        },
+        skinBitmap: [
+'        abbcbacadddddddd',
+'        bbbacbcbdeeeeeed',
+'        aabcabaadeeeeeed',
+'        bcbacbabdeeeeeed',
+'        acbcabaadeeeeeed',
+'        babacaabdeeeeeed',
+'        babcbabbdeeeeeed',
+'        bbabbbbbdddddddd',
+'bbbbabbbbbabbbbbbbbabbbbbcbbbbcb',
+'abababbbbabbbffbbbbabababbabbabb',
+'ggggghhbbbbbdiihbhhggggggbbjjbbg',
+'gkkllhhhbdiiiiihhhhllkkgggjhhjgg',
+'kkkimbhhhnoiionhhhbmikkkkghbbhgk',
+'kkmdiahbhiiiiiibhbaidmkkkkbbbbkk',
+'memmddabbiippiibbaddmmemmkabbakm',
+'eeeeeeecbbiiiibbceeeeeeeediiiide',
+'qrsqrssstttt        uuuuuuuuuvwuuuuvuwvw    vwvviidd',
+'rrsqrqsqxyyx        udmeemduuvwuuuuvuwvu    vwvvidee',
+'srsqsqrqxyyx        udmeemduvvuuuvuwuwvu    vvwviidd',
+'sqqqsszAtttt        uddmmdduuuuwuwuwuvwu    vvwvidee',
+'sqrqsrzArsssqsqruuvwuummmmuuuwvwuwuwuvwuwvuuuvuuuwuuvwuu',
+'qrrqrrzAssrssqqquwvwvvuvvwuvuwvwvwwuuuvvwvwvuvuvwwuvvwuw',
+'qrqqrqzssqrssrsquwuvvuvvwwuvwwwvvvwvwvvwuvwvvwvvwwvwuvuw',
+'sssrsqsqsqrrsrqrvvwvuuwuwuuvwuwvvuwvwwvwuvwwuwwvuvvwuuvw',
+'sqsrssqqrqrrqqsrvuwuwuwuvuuvvwvwvuvvwwvvuuuwuuwwuuuvuuwu',
+'rqqqqsrqrqrsqsrqvuvuwuvwvwuvuwvwwuvvwvvudddddddddmmddddd',
+'rsqsrqrssqssqsrsuwvwvuvwuwuuuvuvwuvuwvwudddddddddmmddddd',
+'dddddddddddddddduuuuuuuuuuuuuuuvuuuuuuuuddddddddddmddddd',
+'iiiiiiiiiiiiiiiiAAzzzzBCzzzzAAzzzzAAAAzzdddddddddddddddd',
+'DDEEEEEEEEDDDDDDqqqruuCzruuqruuquuqrquqqiiiiiiiddddddiii',
+'FEFDDDGDDFEFFDDFqruruqCArquwwwwqruqurqqriiiiiidmmdmdmdii',
+'tttttttttttttttturuqurzAuqwuuqvurqrurquriiiiiiidmdmddiii',
+'                HHIHJKLLKKJJ                MIHH',
+'                HHIMJ      J                MIMH',
+'                MHHMJ      J                IIMM',
+'                MIHMNJ    JI                IHIM',
+'                MMMINJH  HJIHIMHHHHIHHIIIIHMHMIHHHIHIHIH',
+'                HHMINKH  HKIHIMHIHIIHHIHIMIMIMIHIIIHMHII',
+'                HHMMNKH  HKMHIIHIIKKLOIHHMMMIIIHMIMIMMII',
+'                HHIMHLH  HLMHIIMIIKHHLIHHIMIMIHMMHMIHMIM',
+'                IHIIHOH  HOMIHIMIHJHHKIIIHIHMHHMIHIHHIHM',
+'                IHMHHOH  HOMIMIMMHJJKKIMLKKLLKKJJJJKKLOO',
+'                IIMHILH  HLMIMMMMHHHHHHMKKLLKKJJJJKKLOOL',
+'                IIHMIKH  HKHIMMIMIIIMIIMIIIIMMIIIMMIIHHH',
+'                HIIMHJH  IJIIIMHHHIMMIII',
+'                KKKJJKH  IKJJKKJJJKKLOOL',
+'                KKJJKKH  IKKKKJJJKKLOOLK',
+'                IIMIHHH  IIIIIMMIIMMMMII',
+'                qssqssqsttttsqsruwvvvvvvddiiuuwu    HHMH',
+'                qqrqqsqsxyyxqqrruwuvvvwveedivuwv    HIMM',
+'                qqqqqqrqxyyxqsrsvvwvvvvvddiivvwv    HIMH',
+'                qrqqsqrqttttrsqsvvwvvvvveediuwuw    HMIH',
+'                srssrqrqssrsqqqsuvuwuvwuvuuuwwuwHMIMHMIHIHMIIHMH',
+'                sqsqrssqsqrssrssuvuwvvwwvwuvwvvwMMIMHMIMIHMIHMMI',
+'                rqsqsqsrsqsrqrsquwuvuwvwvwvwuvvwMMIIIIMMMIMMHMII',
+'                rssrqrsrqqqrrssqvwvvuwvuvvvwuuvuMIHIMIMMMIIMIMIM',
+'                rqsrqrqqqrqrqsqruuwuuvuuuvwuuuwuIHHIMIMHIHHMMIIM',
+'                qqqrqsqsrrsqrqqrdmmdddddddddddddLLKJJKKLLLLKKLLO',
+'                sqssqsrsrssqrsqqdmmdddddddddddddLKJJKKLLLLKKLLOO',
+'                ddddddddddddddddddmdddddddddddddIMMMIIIIIMMIIIII',
+'                iiiiiiiiiiiiiiiidddddddddddddddd',
+'                DDEEEEEEEEDDDDDDdddddiiiiiiiiiid',
+'                FEFDDGFDDFEFFDDFmdmdmdiiiiiiiidm',
+'                ttttttttPPttttPPddmddiiiiiiiiiid'
+        ]
+    },
+    {
+        name: "TemptingAnt2136", loc:"US",
+        tiers: {
+            vanilla:"LT5", sword:"HT5", axe:"LT5", pot:"HT5", smp:"HT5",
+            smace:"LT5", rmace:"LT5", emace:"LT5",
+            bcart:"LT5", xbow:"LT5",
+            uhc:"HT5"
+        },
+skinPalette: {
+    ' ' : [255, 255, 255, 0],
+    'a' : [0, 0, 0, 255], 'b' : [42, 35, 28, 255], 'c' : [49, 40, 32, 255], 'd' : [55, 45, 36, 255],
+    'e' : [68, 56, 45, 255], 'f' : [165, 23, 4, 255], 'g' : [81, 67, 54, 255], 'h' : [95, 78, 62, 255],
+    'i' : [79, 79, 79, 255], 'j' : [92, 92, 92, 255], 'k' : [106, 106, 106, 255], 'l' : [70, 70, 70, 255],
+    'm' : [105, 86, 70, 255], 'n' : [233, 162, 91, 255], 'o' : [255, 255, 255, 255], 'p' : [245, 176, 109, 255],
+    'q' : [184, 154, 127, 255], 'r' : [170, 143, 118, 255], 's' : [160, 130, 101, 255], 't' : [109, 89, 69, 255],
+    'u' : [118, 92, 70, 255], 'v' : [110, 90, 70, 255], 'w' : [213, 178, 147, 255], 'x' : [198, 166, 137, 255],
+    'y' : [159, 132, 103, 255], 'z' : [143, 120, 93, 255], 'A' : [120, 99, 78, 255], 'B' : [111, 90, 70, 255],
+    'C' : [127, 103, 80, 255], 'D' : [166, 137, 111, 255], 'E' : [145, 116, 90, 255], 'F' : [129, 103, 80, 255],
+    'G' : [106, 86, 68, 255], 'H' : [112, 90, 70, 255], 'I' : [134, 112, 88, 255], 'J' : [150, 125, 98, 255],
+    'K' : [162, 138, 112, 255], 'L' : [95, 76, 59, 255], 'M' : [231, 231, 231, 255], 'N' : [20, 112, 205, 255],
+    'O' : [160, 130, 100, 255], 'P' : [96, 77, 60, 255], 'Q' : [104, 86, 68, 255], 'R' : [79, 64, 50, 255],
+    'S' : [92, 146, 200, 255], 'T' : [80, 64, 50, 255], 'U' : [96, 77, 59, 255], 'V' : [89, 73, 58, 255],
+    'W' : [80, 64, 49, 255], 'X' : [64, 51, 40, 255], 'Y' : [73, 73, 73, 255], 'Z' : [164, 0, 0, 255],
+    '0' : [8, 8, 8, 255], '1' : [43, 43, 43, 255], '2' : [25, 25, 25, 255], '3' : [81, 81, 82, 255]
+},
+
+skinBitmap: [
+'        aaaaaaaabcdeedcb                 aaaaaa ffffffff',
+'        aaaaaaaacdeggedc                aaaaaaaaffffffff',
+'        aaaaaaaadeghhged                aaaaaaaaijkiljij',
+'        aaaaaaaaeghmmhge                aaaaaaaaklilkijl',
+'        aaaaaaaaennnnnne                aaaaaaaaoooooooo',
+'        aaaaaaaannnnnnnn                aaaaaaaa',
+'        aaaaaaaapppppppp                aaaaaaaa',
+'        aaaaaaaapppppppp                 aaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa aaaaaa  qrsaaa  aaaaaa  aaaaaa',
+'aaaaaaaaaatuvtaaaaaaaaaaaaaaaaaaaaaaaaaawxqrs aaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaffffaaaaaaaaaaaaaaaaaaaaaaaaaaawffffaaaaaaaaaaaaaaaaaa',
+'fffffyzABCpDEFBGHzyffffffffffffffffff              fffffffffffff',
+'AIJKKJIALMNpONMPHFEDDEFHBFEssEFB',
+'QAIJJIAQRoSppSoTPHFEEFHPUBFEEFBU',
+'VQAIIAQppppppppppPHFFHPTWUBFFBUWaaaa                aaaaaaaaaaaa',
+'XVQAAQppppppppppppPHHPTXXWUBBUWXfffaa              aafffffffffff',
+'    ffffYYYY        ZZZZZZZZffffffff        ffffpppp',
+'    ffffYYYY        ZZZZZZZZffffffff        ffffpppp',
+'    ffffYYYY        ZZZZZZZZffffffff        0000pppp',
+'    ffffYYYY        ZZZnnZZZffffffff        ffffpppp',
+'ffffffffffffffffffffffffffffffffffffffffff0fffffffffffff',
+'aaa00ffffffffffaffffffffffffffffffffffffff0fffffffffffff',
+'00000aaaaaaaaaa0ffffffffffffffffffffffffff0fffffffffffff',
+'000a0aaaaaaa0000fffffffffffffffffffffffaff0fffffffffffff',
+'000001Yaaaaa0000ffffffffffffffffffffffafff0fffffffffffff',
+'00002YpYaaaa0000fffffffffffffffffaffaaffff0fffffffffffff',
+'0000YppYaaaa0000fffffffffffffffffaaaafffff0fffffffffffff',
+'00000YY1aaaa0000ffffffffffffffffffaaffffff0fffffffffffff',
+'aaaa2aaaaaaaaaaaffffffffffffffffffffffffff0fffffffffffff',
+'aaaaaYYaaaaaaaaaffffffffffffffffffffffffff0fffffffffffff',
+'YYYYY11YYYYYYYYYffffffffffffffffffffffffff0fffffffffffff',
+'YYYYYYYYYYYYYYYYffffffffffffffffffffffffpppppppppppppppp',
+'',
+'',
+'                                            aaaa',
+'',
+'                      a  a                a',
+'                      a  a                a',
+'                      a  a                a',
+'      a               a  3             a  a',
+'     1                a               a   a',
+'     Y                3          a  aa    a',
+'    Y  Y                         aaaa     a',
+'     YY                           aa      a',
+'                                          a',
+'                                          a',
+'     Y                                    a',
+'',
+'                    ffffYYYY        ffffpppp',
+'                    ffffYYYY        ffffpppp',
+'                    ffffYYYY        0000pppp         aaa',
+'                    ffffYYYY        ffffpppp',
+'                fffffffffffffffffffffffff0ffffff         a',
+'                fffffff00aaaaffffffffffff0ffffff         a',
+'                aaaa0aa000000aaafffffffff0ffffff         a',
+'     Y a        aaaaaYY100000000fffffffff0ffffff         a',
+'    Y  Y        aaaaYppY00000000fffffffff0ffffff         a',
+'      Y         aaaa2YY000000000fffffffff0ffffff         a',
+'      a         aaaaa00000000000fffffffff0ffffff         a',
+'                aaaaaa0aaaaaaaaafffffffff0ffffff         a',
+'                aaaaaaaaaaaaaaaafffffffff0ffffff         a',
+'                aaaaaYYaaaaaaaaafffffffff0ffffff         a',
+'                YYYYY11YYYYYYYYYfffffffff0ffffff         a',
+'                YYYYYYYYYYYYYYYYpppppppppppppppp'
+]
+},
+    {
+        name: "AgentStudios", loc:"CA", loc2:"GB-ENG",
+        tiers: {
+            vanilla:"LT5", sword:"HT5", axe:"LT5", pot:"LT5", smp:"LT5",
+            smace:"LT5", rmace:"LT5", emace:"HT5",
+            bcart:"LT5", xbow:"HT5",
+            uhc:"HT5"
+        },
+        bannerUrl: "https://www.khanacademy.org/computer-programming/pic2pix/4972175662891008/4619759981543424.png",
+        skinPalette: {
+            ' ':[255,255,255,0],
+            'a':[220,203,125,255],'b':[210,33,23,255],'c':[12,1,0,255],'d':[147,124,56,255],
+            'e':[121,102,46,255],'f':[154,131,59,255],'g':[150,127,57,255],'h':[127,109,49,255],
+            'i':[254,253,253,255],'j':[211,186,68,255],'k':[25,21,1,255],'l':[94,223,63,255],
+            'm':[4,74,144,255],'n':[135,132,131,255],'o':[75,195,46,255]
+        },
+        skinBitmap: [
+'        aaaaaaaaaaaaaaaa',
+'        aaaaaaaaaaaaaaaa',
+'        aaaaaaaaaaaaaaaa',
+'        aaaaaaaaaaaaaaaa',
+'        aaaaaaaaaaaaaaaa',
+'        aaaaaaaaaaaaaaaa',
+'        aaaaaaaaaaaaaaaa                         bccccb',
+'        aaaaaaaaaaaaaaaa                         bccccb',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa        defaadgh',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa        iiijaiii',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa       aikijjiki',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa        iiijjiii',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa           jj',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa         bbbbbb',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa         bccccb',
+'    aaaaaaaa        aaaaaaaallllllll        aaaaaaaa',
+'    aaaaaaaa        aaaaaaaallllllll        aaaaaaaa',
+'    aaaaaaaa        aaaaaaaallllllll        aaaaaaaa',
+'    aaaaaaaa        aaaaaaaallllllll        aaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'    mmmmnnnn                            llllllll',
+'    mmmmnnnn                            llllllll',
+'    mmmmnnnn                            llllllll',
+'    mmmmnnnn                            llllllll',
+'mmmmmmmmmmmmmmmmlllllbccccblllllllllllllllllllllllllllll',
+'mmmmmmmmmmmmmmmmlllllbccccblllllllllllllllllllllllllllll',
+'mmmmmmmmmmmmmmmmlllllbccccblllllllllllllllllllllllllllll',
+'mmmmmmmmmmmmmmmmllllllbccbllllllllllllllllllllllllllllll',
+'mmmmmmmmmmmmmmmmlllllllbblllllllllllllllllllllllllllllll',
+'mmmmmmmmmmmmmmmmllllllllllllllllllllllllllllllllllllllll',
+'mmmmmmmmmmmmmmmmllllllllllllllllllllllllllllllllllllllll',
+'mmmmmmmmmmmmmmmmllllllllllllllllllllllllllllllllllllllll',
+'mmmmmmmmmmmmmmmmllllllllllllllllllllllllllllllllllllllll',
+'mmmmmmmmmmmmmmmmllllllllllllllllllllllllllllllllllllllll',
+'mmmmmmmmmmmmmmmmooooolllllllooooollllllooooooooooooooooo',
+'nnnnnnnnnnnnnnnnoooooooooooooooooooooooo',
+'    mmmmnnnn        aaaaaaaa        aaaaaaaa        llll',
+'    mmmmnnnn        aaaaaaaa        aaaaaaaa        llll',
+'    mmmmnnnn        aaaaaaaa        aaaaaaaa        llll',
+'    mmmmnnnn        aaaaaaaa        aaaaaaaa        llll',
+'mmmmmmmmmmmmmmmmaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaallllllllllllllll',
+'mmmmmmmmmmmmmmmmaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaallllllllllllllll',
+'mmmmmmmmmmmmmmmmaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaallllllllllllllll',
+'mmmmmmmmmmmmmmmmaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaallllllllllllllll',
+'mmmmmmmmmmmmmmmmaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaallllllllllllllll',
+'mmmmmmmmmmmmmmmmaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaallllllllllllllll',
+'mmmmmmmmmmmmmmmmaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaallllllllllllllll',
+'mmmmmmmmmmmmmmmmaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaallllllllllllllll',
+'mmmmmmmmmmmmmmmmaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaallllllllllllllll',
+'mmmmmmmmmmmmmmmmaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaallllllllllllllll',
+'mmmmmmmmmmmmmmmmaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaoooooooooooooooo',
+'nnnnnnnnnnnnnnnnaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+        ]
+    },
+    {
+        name: "burgerburner453", loc:"CA", loc2:"NZ",
+        tiers: {
+            vanilla:"LT5", sword:"HT5", axe:"LT5", pot:"LT5", smp:"LT5",
+            smace:"LT5", rmace:"LT5", emace:"LT5",
+            bcart:"LT5", xbow:"LT5",
+            uhc:"LT5"
+        },
+skinPalette: {
+    ' ':[255,255,255,0],
+    'a':[30,30,30,255],
+    'b':[255,255,255,255]
+},
+skinBitmap: [
+'        aaaaaaaaaaaaaaaa',
+'        aaaaaaaaaaaaaaaa',
+'        aaaaaaaaaaaaaaaa',
+'        aaaaaaaaaaaaaaaa',
+'        aaaaaaaaaaaaaaaa',
+'        aaaaaaaaaaaaaaaa',
+'        aaaaaaaaaaaaaaaa',
+'        aaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'    aaaaaaaa        aaaaaaaaaaaaaaaa        aaaaaaaa',
+'    aaaaaaaa        aaaaaaaaaaaaaaaa        aaaaaaaa',
+'    aaaaaaaa        aaaaaaaaaaaaaaaa        aaaaaaaa',
+'    aaaaaaaa        aaaaaaaaaaaaaaaa        aaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaabbbaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaabbbbbaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaabbaabaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaabbbaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaabbbaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaabbaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaabbaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaabbaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'','','','','','','','','','','','','','','','',
+'                    aaaaaaaa        aaaaaaaa',
+'                    aaaaaaaa        aaaaaaaa',
+'                    aaaaaaaa        aaaaaaaa',
+'                    aaaaaaaa        aaaaaaaa',
+'                aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'                aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'                aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'                aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'                aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'                aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'                aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'                aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'                aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'                aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'                aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'                aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+]
+    },
+    {
+        name: "Donkeh", loc:"CA", loc2:"NZ",
+        tiers: {
+            vanilla:"LT5", sword:"LT5", axe:"LT5", pot:"LT5", smp:"LT5",
+            smace:"LT5", rmace:"LT5", emace:"LT5",
+            bcart:"LT5", xbow:"LT5",
+            uhc:"LT5"
+        },
+skinPalette: {
+    ' ':[255,255,255,0],
+    'a':[30,30,30,255],
+    'b':[255,255,255,255]
+},
+skinBitmap: [
+'        aaaaaaaaaaaaaaaa',
+'        aaaaaaaaaaaaaaaa',
+'        aaaaaaaaaaaaaaaa',
+'        aaaaaaaaaaaaaaaa',
+'        aaaaaaaaaaaaaaaa',
+'        aaaaaaaaaaaaaaaa',
+'        aaaaaaaaaaaaaaaa',
+'        aaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'    aaaaaaaa        aaaaaaaaaaaaaaaa        aaaaaaaa',
+'    aaaaaaaa        aaaaaaaaaaaaaaaa        aaaaaaaa',
+'    aaaaaaaa        aaaaaaaaaaaaaaaa        aaaaaaaa',
+'    aaaaaaaa        aaaaaaaaaaaaaaaa        aaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaabbbaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaabbbbbaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaabbaabaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaabbbaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaabbbaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaabbaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaabbaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaabbaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'','','','','','','','','','','','','','','','',
+'                    aaaaaaaa        aaaaaaaa',
+'                    aaaaaaaa        aaaaaaaa',
+'                    aaaaaaaa        aaaaaaaa',
+'                    aaaaaaaa        aaaaaaaa',
+'                aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'                aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'                aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'                aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'                aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'                aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'                aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'                aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'                aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'                aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'                aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'                aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+]
+    },
+    {
+        name: "Sebooskis", loc:"US",
+        tiers: {
+            vanilla:"LT5", sword:"HT5", axe:"HT5", pot:"LT5", smp:"LT5",
+            smace:"LT5", rmace:"LT5", emace:"LT5",
+            bcart:"LT5", xbow:"LT5",
+            uhc:"LT5"
+        },
+skinPalette: {
+    ' ':[255,255,255,0],
+    'a':[30,30,30,255],
+    'b':[255,255,255,255]
+},
+skinBitmap: [
+'        aaaaaaaaaaaaaaaa',
+'        aaaaaaaaaaaaaaaa',
+'        aaaaaaaaaaaaaaaa',
+'        aaaaaaaaaaaaaaaa',
+'        aaaaaaaaaaaaaaaa',
+'        aaaaaaaaaaaaaaaa',
+'        aaaaaaaaaaaaaaaa',
+'        aaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'    aaaaaaaa        aaaaaaaaaaaaaaaa        aaaaaaaa',
+'    aaaaaaaa        aaaaaaaaaaaaaaaa        aaaaaaaa',
+'    aaaaaaaa        aaaaaaaaaaaaaaaa        aaaaaaaa',
+'    aaaaaaaa        aaaaaaaaaaaaaaaa        aaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaabbbaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaabbbbbaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaabbaabaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaabbbaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaabbbaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaabbaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaabbaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaabbaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'','','','','','','','','','','','','','','','',
+'                    aaaaaaaa        aaaaaaaa',
+'                    aaaaaaaa        aaaaaaaa',
+'                    aaaaaaaa        aaaaaaaa',
+'                    aaaaaaaa        aaaaaaaa',
+'                aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'                aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'                aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'                aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'                aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'                aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'                aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'                aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'                aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'                aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'                aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+'                aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+]
+    },
+    {
+        name: "EmersonJenner", loc:"CA", loc2:"GB-ENG",
+        tiers: {
+            vanilla:"HT5", sword:"HT5", axe:"LT5", pot:"LT5", smp:"HT5",
+            smace:"LT5", rmace:"LT5", emace:"LT5",
+            bcart:"LT5", xbow:"LT5",
+            uhc:"LT5"
+        },
+        skinPalette: {
+            ' ':[255,255,255,0],
+            'a':[14,4,1,255],'b':[34,22,17,255],'c':[27,17,13,255],'d':[74,49,33,255],
+            'e':[95,62,41,255],'f':[43,29,24,255],'g':[109,72,48,255],'h':[126,83,55,255],
+            'i':[146,103,76,255],'j':[255,255,255,255],'k':[65,30,2,255],'l':[117,60,40,255],
+            'm':[184,153,117,255],'n':[34,34,34,255],'o':[127,37,52,255],'p':[185,142,150,255],
+            'q':[134,95,72,255],'r':[202,38,66,255],'s':[219,47,76,255],'t':[133,90,63,255],
+            'u':[147,109,81,255],'v':[52,52,52,255],'w':[162,40,60,255],'x':[161,124,103,255],
+            'y':[216,184,148,255],'z':[207,173,133,255],'A':[200,166,172,255],'B':[187,36,61,255],
+            'C':[108,62,39,255],'D':[129,156,181,255],'E':[60,60,60,255],'F':[81,81,81,255],
+            'G':[254,253,253,255]
+        },
+        skinBitmap: [
+'        abcacaacddeeeedd',
+'        cacbcacadddeeddd',
+'        acbcbabcdddddddd',
+'        cbacacaadddddddd',
+'        aacbbcacdddddddd',
+'        acbbbbcadddddddd',
+'        bcbfbcbaddeeeedd',
+'        cbbfbbcadeeeeeed',
+'cabcaccaaacbbcaaaaacacaacacacaaa',
+'acbacbabaeghhgeacacbcaaababcabac',
+'aaaaaaegghhhhhhggeaacbabacacaacb',
+'abaihegghhhhhhhhggehibaccacabaca',
+'ccdhegghhjkhhkjggggehdcaaabcacba',
+'ggeghgghihhhhhhiggghgeggdcaacacd',
+'edeeggghhhhllhhgggggeedeegggggge',
+'ddddddddeghhhhgeedddddddddeeeedd',
+'    mmmmnnnn        opeeeepommqqqqmm        rssrhttu',
+'    mmmmvnnv        opeddepommmmmmmm        ssrwhgdd',
+'    xxxxvnnv        opeddepoyyymmyyy        sssrhttu',
+'    xxxxvvvv        opgeegpoyyymmyyy        rssrhgdd',
+'mxmzzyyzzmxmzzzzwoossAggggpssoowwppppppwBBrsssrrwoowBrrr',
+'mmmzzzzzzmmmzzzzroowrsAAppsrBoowwssswwBBBrBBsrwwoooowrBr',
+'mmzzzyyzzzmmzmmzBwwBrssrrBBBBwwrssrrrrrsBBBrrrrwoooowBwB',
+'mzzzyyyyzzzmmmmmBwwBssssrrsrBwBBBrBBBrrroooooooooooooooo',
+'mzzyyyymyzzmmzzmrwBBBBBrrsssrBwrBBBrsrBBgggggggeeeeeeggg',
+'mmzzyzzmzzmmzzzzBwwBBrrssssrrwwrrrssrBBrgggghhhggeegghgh',
+'mmzzzzzxzzmmzzzzwwwwwwBBBBwwwwwwwwwBBBwwhgghhghhgeeghhgh',
+'xxxxxxxxxxxxxxxxmmmmmyyyyyymmmmmmmmmmmmmhghhhghhggeghhhh',
+'xxxxxxxxxxxxxxxxCCCCCCCDDCCCCCCCCCCCCCCChghhhhhtggggthhh',
+'xxxxxxxxxxxxxxxxxxxxmmmmmmmmxxxxxxxxxxxxhhhhhttggggggtth',
+'nnvvEFEEvvnnnnnnmxxmzzzzzzzmmxxmmzzmmzzmhhghhugeegegeguh',
+'EEEvvEEvvEEEEEEEmxxmmyymxyyzmxxmzzzzzzzzhhghhtugehehguth',
+'','','','','','','',
+'                                        AGGGGGGGppppAAGA',
+'','',
+'yyyyyyyyyyyyyyyy',
+'zzmzmmzzmmzmzmmz',
+'yyyyyyyyyyyyyyyy',
+'','',
+'                    mmmmnnnn        rssrutth',
+'                    mmmmvnnv        wrssddgh',
+'                    xxxxvnnv        rsssutth',
+'                    xxxxvvvv        rssrddgh',
+'                mxmzxyyzzmxmzzzzwoowrrsssrBBrrrB',
+'                mmmzxzzzzmmmzzzzoooowwrsBBrBrBrw',
+'                mmzzmyyzzzmmzmmzoooowrrrrBBBBwBw',
+'                mzzzmyyyzzzmmmmmooooooooooooooooppppGGGGGGGAAGAA',
+'                mzzyyyyyyzzmmzzmeeeeegggggggggge',
+'                mmzzyzzyzzmmzzzzgeeggghhgggghghg',
+'                mmzzzzzzzzmmzzzzgeeghghhggghhghh',
+'yyyyyyyyyyyyyyyyxxxxxxxxxxxxxxxxggeghhhhghhhhhhh',
+'zzmzzzmmmmzmzmmzxxxxxxxxxxxxxxxxggggthhhghhhhhht',
+'yyyyyyyyyyyyyyyyxxxxxxxxxxxxxxxxgggggtthhhghhttg',
+'                nnvvEFEEvvnnnnnngegeeguhhhghhuge',
+'                EEEvvEEvvEEEEEEEheheguthhhhhhtug'
+        ]
+    },
+    {
+        name: "eliasjenner", loc:"CA", loc2:"GB-ENG",
+        tiers: {
+            vanilla:"LT5", sword:"LT5", axe:"LT5", pot:"LT5", smp:"LT5",
+            smace:"LT5", rmace:"LT5", emace:"LT5",
+            bcart:"LT5", xbow:"LT5",
+            uhc:"LT5"
+        },
+        skinPalette: {
+            ' ':[255,255,255,0],
+            'a':[229,141,63,255],'b':[235,152,63,255],'c':[222,129,46,255],'d':[243,168,88,255],
+            'e':[223,196,162,255],'f':[212,183,143,255],'g':[235,208,176,255],'h':[239,218,191,255],
+            'i':[255,255,255,255],'j':[35,98,36,255],'k':[239,187,177,255],'l':[113,171,110,255],
+            'm':[54,54,54,255],'n':[40,40,40,255],'o':[140,190,138,255],'p':[134,185,132,255],
+            'q':[92,59,39,255],'r':[128,130,90,255],'s':[123,178,120,255],'t':[100,65,44,255],
+            'u':[114,78,54,255],'v':[124,87,62,255],'w':[108,70,46,255],'x':[148,150,107,255],
+            'y':[148,200,146,255],'z':[88,88,88,255],'A':[101,101,101,255],'B':[111,111,111,255],
+            'C':[63,63,63,255],'D':[79,79,79,255],'E':[24,56,22,255],'F':[43,84,40,255],
+            'G':[117,80,56,255]
+        },
+        skinBitmap: [
+'        abacacaaabcabcbb',
+'        bbbbcccbbbcabcbb',
+'        bbddbbcaabacacba',
+'        accabcbbcabacabc',
+'        bddddbddccabcbac',
+'        acabbaabefcccaac',
+'        bbbdabaaeeefffcc',
+'        adbdbddbeeggggee',
+'abbadabaadbdabdaaabdbaababbbabba',
+'addbdababdabaabdabbddbaddbbbabda',
+'bddababbbabaeeabbdbbbdaadbdbadda',
+'ddbabaabbbaghggabbdbabbabddaadbc',
+'aaabaeeagijhhjigadbdbabaadbcbdac',
+'bbbaegghhhhhhhhheadbdababdacdbac',
+'abcagghhhhhkkhhggedadcbcdbcbdbca',
+'bacffeggghhhhhgeeabcbcacbbcbbaca',
+'    llllmmnn        opaaabballllllll        ooohhg',
+'    llllnnmm        oppccabbllqqqqll        ooohgf',
+'    llqqmmnn        oprfccablqqqqqql        ooohhg',
+'    lqqqnnmm        oreffaaalqqqqqql        ooohgf',
+'poostuvtttllppppooooprgeefrlllllllllllspoooooooopooooo',
+'tsstwvvwttttqqttossopxhgghrllllsllllspooppoopoppopppop',
+'uwwuvvwvutttwuvvossspsxhhrllsllssspooyoyyooyyyooyyooyo',
+'vvuttwvuvwwwuvvvolssopsxrllspslspyoyoyoyrrrrrrrrrrrrrr',
+'wttwvvvuuwwwqwwwslsoyoyoslsppslooyyoyyyyggggggeeeeeegg',
+'zzztwuuwtzzzzAAzsssoyyysypoposlsyyysyoyyhhhhhhggeegghh',
+'AAAzzAzzzAAAAAAAosloyyosyoyposssyoysysyohhhhhhhgegghhh',
+'zAAAABAAAAAzCDDCossoysolysyoolsoosysosyohhhhhhhgegghhh',
+'CDDCzAAzCDDCDzzDEEEFllslolosFEEElsososolhhhhhhhgggehhh',
+'zzzDCDDCDzzzDzzzlsslFFEEEEFFlsslEEFFFFFEhhhhhhggggeghh',
+'DDzzzBAzzzDDCDDDopssppopopopspooooosopoohhhhhgeegggegh',
+'mCCDAAAzDCCmmCCmoopsptGGGGtppoopsooooooohhhhhhgegegghh',
+'','','','',
+'                         abdbaabbbbbaa',
+'                          daba  aaaa',
+'                         bda',
+'                         db             xxxxxrrrrrrrrx',
+'                         b',
+'','','','','','','',
+'                    lllqnnmm        booghh',
+'                    llllmmnn        baofgh',
+'                    qqqqnnmm        daoghh',
+'                    qqqqmmnn        doofgh',
+'                tttttvuwttttqsoooopabooooooooa',
+'                tttttvvuuuuwwqqqppoabopoopppop',
+'                tttwuwvvvvvvvvutoyyooyyyooyoyo',
+'                wwwuvvwttuvvvvvwrrrrrrrrrrrrrr  rrrrrrxxxxxxrr',
+'                wwwuuvvvuttwwwwweeeeegggggggge',
+'                zzztwuuwtzzzzAADgeegghhhhhhhhg',
+'                AAAzDAzzzAAAAAAzggeghhhhhhhhhh',
+'                zAAAzBAAAAAzCDDCggeghhhhhhhhhh',
+'                CDDCDAAzCDDCDzzDeggghhhhhhhhhh',
+'                zzzDCDDCDzzzzzzzegggghhhhhhhhg',
+'                DDzzzBAzzzDDDDDDgggeeghhhhhhge',
+'                mCCDAAAADCCmmCCmgegeghhhhhhhhg'
+        ]
+    },
+    {
+        alt:true, rgrank:4,
+        name: "Dudadude111", loc:"CA",
+        tiers: {
+            vanilla:"RLT4", sword:"RHT3", axe:"RLT3", pot:"RHT4", smp:"RHT4",
+            smace:"RHT3", rmace:"RLT1", emace:"RLT1",
+            bcart:"RLT4", xbow:"RLT4",
+            uhc:"RLT3"
+        },
+        skinPalette: {
+            ' ':[255,255,255,0],
+            'a':[49,49,49,255],'b':[81,81,81,255],'c':[90,90,90,255],'d':[23,23,23,255],
+            'e':[99,99,99,255],'f':[28,28,28,255],'g':[33,33,33,255],'h':[70,70,70,255],
+            'i':[60,60,60,255],'j':[193,193,193,255],'k':[177,177,177,255],'l':[157,157,157,255],
+            'm':[0,0,0,255],'n':[209,209,209,255],'o':[40,40,40,255],'p':[135,135,135,255],
+            'q':[145,145,145,255],'r':[16,16,16,255],'s':[19,19,19,255],'t':[39,39,39,255],
+            'u':[206,206,206,255],'v':[55,55,55,255],'w':[31,31,31,255]
+        },
+        skinBitmap: [
+'        aaaaaaaaaaaaaaaa                 bccccb dddddddd',
+'        aaaaaaaaaaaaaaaa                bccccccbdddddddd',
+'        aaaaaaaaaaaaaaaa                cceeeeccdddddddd',
+'        aaaaaaaaaaaaaaaa                ceeeeeecf      f',
+'        aaaaaaaaaaaaaaaa                ceeeeeecf      f',
+'        aaaaaaaaaaaaaaaa                cceeeeccg      g',
+'        aaaaaaaaaaaaaaaa                bccccccbg      g',
+'        aaaaaaaaaaaaaaaa                 bccccb g      g',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa bcccbh  bbbbbb  hbcccb  hbccbh',
+'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaihbbbbhiiihhhhiiihbbbbhiihbbbbhi',
+'aaaaaaaaajkjlklaaaaaaaaaaaaaaaaaaihbbhhaaiiiiiiaahhbbhiaahhbbhha',
+'aaaaaaaakmmnnmmkaaaaaaaaaaaaaaaaoihhhhiaaa    aaaihhhhiooihhhhio',
+'aaaaaaaajmmnpmmlaaaaaaaaaaaaaaaaoaihhiaaa      aaaihhiaooaiiiiao',
+'aaaaaaaannjjlkjkaaaaaaaaaaaaaaaagoaaiaaao      oaaaiaaoggoaaaaog',
+'aaaaaaaaaakqkjaaaaaaaaaaaaaaaaaafgooaaaog      goaaaoogfffgoogff',
+'aaaaaaaaaaqaqkaaaaaaaaaaaaaaaaaafffggoggg      gggoggfffffffffff',
+'    dfdgmmmm        gogoggoffgdogdgf        bbhiaa',
+'    rssfmmmm        daaaaaaddfsgfsfd        bcbhaa',
+'    sdfgmmmm        saaaaaasdfsgfsfd        cebhaa',
+'    dfgommmm        daaaaaadfgdogdgf        bchiaa',
+'fgoffgogfgooafgfgddffaaaaaaffddggoooaoogbbcbbbhiiaoiih',
+'gooffoommmgoagoggffggaakkaaggffggaiohiaghhbhhiiaaooaai',
+'ooagmammmmgaaoaoogfoolkjlkloofgooaaaaaagihhittaaaogaai',
+'aaiommmmmmoaiaiaaooaaaauqeaaaooaaahibhoattttttttaooaav',
+'aiiaammmmmmiihiaiaaitjunplptiaaiiaohhooawwwwwwttaogaat',
+'oaiiimmmmmmhhahoiaihtaauqeathiaiiaoaaoaiwwwwwwwwioaiiw',
+'oihimmmmmmmihaioioaitikjlkitiaoiiaohhohawwlwwlwwaooaaw',
+'gmiammmmmmmiioigagoathakkahtaogaaaohbghgwwkwwlwwogfoww',
+'moimmmmmmmmaigmgofgotioaaoitogfooooooooawlklwklggflgwl',
+'fmmommmmmmmommofgffggagiagaggffggogaigoglkkklkkfflklwk',
+'mmmmmmmmmmmgmmmfgffggofaofoggffggofoaooglmjkkjkllkjklk',
+'mmmmmmmmmmmgmmmmgffgfofaofoggffggofoaoookmmjaaakkjpjka',
+'','','','','','','','','','','','','','','','',
+'                    gdfdmmmm        ihbbaa',
+'                    fssrmmmm        hbcbaa',
+'                    gfdsmmmm        hbecaa',
+'                    ogfdmmmm        ihcbaa',
+'                oogfgogffogffgfaioaiihbbbcbbbb',
+'                ogmmmooffooggogaaooaaiihhbhhhi',
+'                agmmmmamgaoooaoaagoaaattihhivv',
+'                aommmmmmoiaaaiaiaooatttttttttt',
+'                immmmmmaaiiaaihiagoattwwwwwwwt',
+'                hmmmmmmiiiaoohahiaoiwwwwwwwwww',
+'                immmmmmmihiooiahaooawwlwwkwwwl',
+'                immmmmmmaimggioiofgowwlwwkwwwl',
+'                ammmmmmmmiomgmgiglfgwlkwlklwwk',
+'                ommmmmmmommffommlklfwkklkkkllk',
+'                gmmmmmmmmmmmfmmmkjkllkjkkjalkj',
+'                gmmmmmmmmmmmmmmmjpjkkaaajaakaa'
+        ]
+    },
+    {
+        alt:true, rgrank:1,
+        name: "Agent29", loc:"CA",
+        tiers: {
+            vanilla:"RLT5", sword:"RHT5", axe:"RLT4", pot:"RLT5", smp:"RHT5",
+            smace:"RHT5", rmace:"RLT5", emace:"RLT5",
+            bcart:"RLT5", xbow:"RLT5",
+            uhc:"RHT5"
+        },
+skinPalette: {
+    ' ' : [255, 255, 255, 0],
+    'a' : [50, 25, 30, 255], 'b' : [31, 10, 14, 255], 'c' : [38, 18, 22, 255], 'd' : [30, 14, 17, 255],
+    'e' : [26, 17, 10, 255], 'f' : [42, 30, 15, 255], 'g' : [56, 40, 27, 255], 'h' : [68, 53, 40, 255],
+    'i' : [22, 5, 9, 255], 'j' : [58, 45, 34, 255], 'k' : [32, 23, 11, 255], 'l' : [211, 203, 198, 255],
+    'm' : [46, 24, 0, 255], 'n' : [90, 69, 52, 255], 'o' : [16, 10, 6, 255], 'p' : [48, 34, 24, 255],
+    'q' : [134, 64, 62, 255], 'r' : [154, 73, 71, 255], 's' : [201, 177, 169, 255], 't' : [43, 30, 21, 255],
+    'u' : [162, 114, 24, 255], 'v' : [116, 53, 51, 255], 'w' : [231, 170, 57, 255], 'x' : [219, 149, 17, 255],
+    'y' : [190, 128, 13, 255], 'z' : [78, 60, 45, 255], 'A' : [56, 39, 27, 255], 'B' : [148, 101, 11, 255],
+    'C' : [224, 159, 39, 255], 'D' : [211, 145, 22, 255], 'E' : [174, 83, 80, 255], 'F' : [201, 136, 13, 255],
+    'G' : [180, 122, 12, 255], 'H' : [45, 40, 37, 255], 'I' : [181, 159, 152, 255], 'J' : [59, 55, 52, 255],
+    'K' : [224, 197, 188, 255], 'L' : [154, 74, 71, 255]
+},
+
+skinBitmap: [
+'        abccabaaccbccbcc',
+'        aabccabcccbccbcc',
+'        bcaadcaabcbbbbcb',
+'        caabcaacbbeeeebb',
+'        abcaacdabfeeeefb',
+'        aacddcaagffeeffg',
+'        bcaacaccggffffgg',
+'        abcaccaagggggggg',
+'dacdacadcbaadcacdacadcadaccaacad',
+'adcaccdaacabhhaaadccacdaaaccadac',
+'aadcaiaacagcbhgcaaiacdaadadadcda',
+'cacgadacghhhhhhgcadagcacaccaacad',
+'adajkacchlmhhmlhccakjadaaaddadac',
+'acajjaagnhhhhhhngaajjacacacaccaa',
+'cadkocaaghhpphhgaacokdacacdaacda',
+'adadokkffghhhhgffkkodadaaacdadad',
+'    qrrrssss        tteeeeturrrvvrrr        wxychzzn',
+'    qrrrssss        tteeeeABrrrqqrrr        CDwahgff',
+'    qrrqssss        tteeeeAurEErrEEr        xyCahzzn',
+'    qrrqssss        tteeeAABrEErrEEr        Dwxchgff',
+'qvqqqrrqqqvqEEErBBBBBttttAAuDuuFBBBBBBBBDyuFwxyaddddaxyC',
+'qvqqrEErqqvqrrrrBBBBBBtAAtwyuBByBBBBBBBBFGDyCDwddddddDwx',
+'qvqqrrrrqqvqrrrrBBBBBBBCwwyuuBBuuBBBBBBByuFGxyCdddduByCD',
+'qvqqrEEqqqvqrqqruBBBBByDyDwyGBBuyuBBBBBuGDyuDwxyuBBuuwxy',
+'qvqqEEEqvqvqqqqquuuuyBBwxyCuuuuuuCDBBuuBuFGDyCDwuBBuyCDw',
+'qvqqErrEvqvqqrrqFuyDuyuCDwyyDyuFwxyCDwxyBBBuyuyuuBBBuyuy',
+'qvqqrrrrqqvqrrrryDGByuyuyuyuBGDyCDwxyCDwuFuFDFDyFuFuFDFD',
+'qvqqrrrqvvvqrrrrBBBFuyDyDyDuFBBByuyuyuyuByByFyFyyByByFyF',
+'vvvvqqqqvvvvqqqquFuyxvvvvvvyyuFuDyDyDyDyhhhhhhhzggggzhhh',
+'HHHHHHHHHHHHHHHHByBvvqqqqqqvvByBxyxyxyxyhhhhhzzggggggzzh',
+'IIJJJJJJJJIIssssvvvvrrrqqrrrvvvvvvqqqqvvhhhhhngffgfgfgnh',
+'sssssKKsssssKKKKqvqqrEErqEErqqvqrEErrEErghghhhngfhfhgnhh',
+'                    ccddcaa                 wxyc',
+'                    dddddad                 CDwa',
+'                    dd                      xyCa',
+'                    dd                      Dwxc',
+'                ddddad           acddccaDyuFwxyaddddaxyC',
+'                dddddaa          dadcaaaFGDyCDwddddddDwx',
+'                ddddcda           daaacdyuFGxyCdddduByCD',
+'                   dda             ddcd GDyuDwxyuBBuuwxy',
+'                     da                 uFGDyCDwuBBuyCDw',
+'                                        BGFuyuyuuBBBuyuy',
+'',
+'',
+'LqLLEEEELLqLEEEE',
+'',
+'',
+'',
+'                    rrrqssss        Cyxwnzzh        Cyxw',
+'                    rrrqssss        xwDCffgh        xwDC',
+'                    qrrqssss        DCyxnzzh        DCyx',
+'                    qrrqssss        yxwDffgh        yxwD',
+'                qvqqqrrqqqvqrEEEFuyDCyxwDyuFCyxwFuyDCyxwDyuFCyxw',
+'                qvqqrEErqqvqrrrryDGFxwDCFGDyxwDCyDGFxwDCFGDyxwDC',
+'                qvqqrrrrqqvqrrrrGuuyyCyxyuFGDCyyGuuyyCyxyuFGDCyy',
+'                qvqvqEErqqvqrqqruBBGuxwDGDyuyxwuuBBGuxwDGDyuyxwu',
+'                qvqvrEEEqqvqqqqquBBuwDCyuFGDwDCyuBBuwDCyuFGDwDCy',
+'                qvqqErrEqqvqqrrquBBBuyyyBBBuuyuyuBBBuyuyBGFuuyuy',
+'                qvqqrrrrqqvqrrrrFuFuFDFDuFuFFDFD',
+'                qvvvqrrrqqvqrrrryByByFyFByByyFyF',
+'LqLLEEEELLqLEEEEvvvvqqqqvvvvqqqqggggzhhhhhhhhhhz',
+'                HHHHHHHHHHHHHHHHgggggzzhhhhhhzzg',
+'                IIJJJJJJJJIIssssgfgffgnhhhhhhngf',
+'                sssssKKsssssKKKKhfhfgnhhhghghhng'
+]
+    },
+    {
+        alt:true, rgrank:3,
+        name: "sethnmindy", loc:"CA", loc2:"GB-ENG",
+        tiers: {
+            vanilla:"RLT5", sword:"RLT5", axe:"RHT5", pot:"RLT5", smp:"RLT5",
+            smace:"RLT5", rmace:"RLT5", emace:"RLT5",
+            bcart:"RLT5", xbow:"RLT5",
+            uhc:"RLT5"
+        },
+skinPalette: {
+    ' ' : [255, 255, 255, 0],
+    'a' : [34, 34, 34, 255], 'b' : [47, 47, 47, 255], 'c' : [56, 56, 56, 255], 'd' : [73, 73, 73, 255],
+    'e' : [176, 101, 55, 255], 'f' : [193, 114, 63, 255], 'g' : [216, 132, 75, 255], 'h' : [87, 66, 50, 255],
+    'i' : [88, 69, 55, 255], 'j' : [80, 59, 45, 255], 'k' : [126, 89, 61, 255], 'l' : [242, 159, 95, 255],
+    'm' : [255, 255, 255, 255], 'n' : [0, 0, 0, 255], 'o' : [140, 91, 58, 255], 'p' : [114, 78, 53, 255],
+    'q' : [127, 81, 51, 255], 'r' : [119, 67, 32, 255], 's' : [159, 102, 63, 255], 't' : [65, 114, 187, 255],
+    'u' : [78, 124, 193, 255], 'v' : [95, 95, 95, 255], 'w' : [72, 72, 72, 255], 'x' : [122, 155, 50, 255],
+    'y' : [47, 99, 175, 255], 'z' : [91, 123, 20, 255], 'A' : [39, 88, 160, 255], 'B' : [108, 142, 35, 255],
+    'C' : [26, 75, 148, 255], 'D' : [79, 109, 15, 255], 'E' : [92, 122, 30, 255], 'F' : [76, 103, 17, 255],
+    'G' : [58, 113, 194, 255], 'H' : [106, 135, 43, 255], 'I' : [89, 135, 202, 255], 'J' : [186, 186, 186, 255],
+    'K' : [119, 135, 157, 255], 'L' : [216, 216, 216, 255], 'M' : [102, 135, 33, 255], 'N' : [133, 169, 55, 255],
+    'O' : [118, 155, 38, 255], 'P' : [100, 132, 176, 255], 'Q' : [113, 144, 188, 255], 'R' : [91, 124, 168, 255],
+    'S' : [130, 147, 171, 255], 'T' : [111, 127, 148, 255], 'U' : [133, 133, 133, 255], 'V' : [106, 106, 106, 255],
+    'W' : [87, 87, 87, 255], 'X' : [163, 163, 163, 255]
+},
+
+skinBitmap: [
+'        abccdcbaeeeeeeee',
+'        cddcbddceeeeeeee',
+'        bbcbacbbeeeeeeee',
+'        cddcbddceeeeeeee',
+'        bbcbacbbefeeeefe',
+'        cddcbddceffeeffe',
+'        bccdcccbegffffge',
+'        abcdbcbafggggggf',
+'bcdccbcabcbcdbcbacbccdcbbcbdbcba',
+'bbdbcbbabcdcdbcbabbcbdcbbcbdcbab',
+'abcbcabbbbdbccbbbbacbcbaababcbab',
+'hhhiiiababcabbbabaiiihhhhjjjjjjh',
+'kkkllgkagmnggnmgakgllkkkkkkkkkkk',
+'ooofgeoellllllllepegfoooooqqqqoo',
+'feeffggggllrrllggggffeeffssssssf',
+'eeeeeefffgllllgfffeeeeeeeeeeeeee',
+'    tuutvwwv        xyggggzxAAAAAAAA        BzBzllgg',
+'    tuutwwww        zyfeefBzACCCCCCA        xBxBlgee',
+'    tuutvwwv        ByfeefzBACCCCCCA        BzBzllgg',
+'    tuutvvvv        xygffgBxAAAAAAAA        xBxBlgee',
+'yAyyyyyyyyAytuutzDzDByxggxzBzDzDzBzBzByzEFEFBzBzEFEFzBzB',
+'yAGyyttyyGAyyttyBzBzztzxBzBzBzBzBxBxBxyBHEHExBxBHEHEBxBx',
+'yAGytuutAGAytIItzDzDBtBzxBxBzDzDzBzBzByzEFEFBzBzEFEFzBzB',
+'yAGAtuutAGAyyuutDDDDDJDDzzBzBzBzDzDzDDtDFFFFFFFFFFFFFFFF',
+'yAGAtIIyyGAyytttAAAAAyytDDzBDDDDDDDDtttyFFFFFFFFFFFFFFFF',
+'yAyyyttyyyAytyytyAyyytIItyJDDAAAyKttuuutgeeggggggeeggggg',
+'AAAAAAAAAAAAAAAAyAGytIuuutyAAyAytKyuuutylgglllllgeegllll',
+'AAAAAAAAAAAAAAAAyAGytuIItuuyyGAytAyuttutllllllllggegllll',
+'gggggllggggglgglyAGyttuuutttyGAyyAtuutttllllllllggggllll',
+'gggllllllgggggggyAGyyuuIIutyyGAyyAtttuuylllllllgggggglll',
+'wwwwwvvwwwwwwvvwAAyAAyttttyAAyAAAtuuIItAllllllgeegegegll',
+'JJJJJLLJJJJJJLLJyAGytttyytttyGAytIIttIItlllllllgegegglll',
+'',
+'',
+'',
+'',
+'',
+'',
+'',
+'                                        MMMMNNNNMMMMNNNN',
+'                                        EEEEBOOBEEEEBOOB',
+'',
+'PPPPPQQPPPPPPQQP                 K',
+'RRRRRPPRRRRRRPPR                 S',
+'                                 S',
+'                                 T',
+'',
+'',
+'                    tuutvwwv        BzBzUVUU',
+'                    tuutwwww        xBxBWWVX',
+'                    tuutvwwv        BzBzUVUU',
+'                    tuutvvvv        xBxBWWVX',
+'                yAyyyyyyyyAytuutEFEFBzBzEFEFzBzB',
+'                yAGyyttyyGAyyttyHEHExBxBHEHEBxBx',
+'                yAGytuutAGAytIItEFEFBzBzEFEFzBzB',
+'                yAGAtuutAGAytuuyFFFFFFFFFFFFFFFFMMMMNNNNMMMMNNNN',
+'                yAGAyIItyGAytttyFFFFFFFFFFFFFFFFEEEEBOOBEEEEBOOB',
+'                yAyyyttyyyAytyyteeeeeWWWWVVWWWWe',
+'PPPPPQQPPPPPPQQPAAAAAAAAAAAAAAAAVggVWVUUUUUUUUVW',
+'RRRRRPPRRRRRRPPRAAAAAAAAAAAAAAAAWVVWVUXUUUUUUXUV',
+'                gggggllggggglgglWWWWWWVWWVVWWVWW',
+'                gggllllllgggggggWWUUVUUUUUUUUUUV',
+'                wwwwwvvwwwwwwvvwVWVWWVUUUUUUUUVW',
+'                JJJJJLLJJJJJJLLJUWUWVUUXXUXUUUUV'
+]
+}
+];
+
 // After your news array is defined, auto-assign IDs
 for (var i = 0; i < news.length; i++) {
     if (!news[i].id) news[i].id = String(i);
@@ -1026,943 +2626,15 @@ var rowColors = [
     { bg:"#202020", quad:"#606060", quadLight:"rgba(200,200,200,0.1)"  }
 ];
 
-// ============================================================
-// PLAYERS
-// ============================================================
-var players = [
-    {
-        name: "ASBackup",
-        tiers: {
-            vanilla:"RHT1", sword:"RHT1", axe:"LT1", pot:"HT2", smp:"LT1",
-            smace:"HT2", rmace:"RHT1", emace:"RHT1",
-            bcart:"LT1", xbow:"LT1",
-            uhc:"HT2"
-        },
-        bannerUrl: "https://www.khanacademy.org/computer-programming/pic2pix/4972175662891008/5785892222779392.png",
-        skinPalette: {
-            ' ':[255,255,255,0],
-            'a':[140,140,140,255],'b':[153,153,153,255],'c':[230,230,230,255],'d':[166,166,166,255],
-            'e':[128,128,128,255],'f':[179,179,179,255],'g':[89,89,89,255],'h':[64,64,64,255],
-            'i':[115,115,115,255],'j':[255,255,255,255],'k':[110,110,110,255],'l':[77,77,77,255],
-            'm':[102,102,102,255]
-        },
-        skinBitmap: [
-'        aaaaaaabcccccccc                ddddddd',
-'        aabbbbaacccccccc                dddddddd',
-'        abbbbbbacccccccc                 d ddddd',
-'        abbbbbbacccccccc                     ddd',
-'        aabbbbaacccccccc                 d   ddd',
-'        aabbbbbacccccccc                ddd dddd',
-'        aaaaabbbcccccccc                ddddddd',
-'        aaaaaaabcccccccc                 dddddd',
-'baaaaaaaaaaaaaabbbaaaabbbaaaaabbddd  dd   dddd   ddddd   ddddddd',
-'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaadddddddddddddddddddddddddddddd d',
-'eeeeeeeeeeeeaaaeeeeeeeeeeeeeeeeeddddddddddd   dd dddddddddddd dd',
-'eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee   dd               dd     dd',
-'ccceeeeeeeeeeeeeeeeeeccccccccccc',
-'cccccccccccccffccccccccccccccccc',
-'cccccccccccccfcccccccccccccccccc',
-'cccccccccccccccccccccccccccccccc',
-'    gggghhhh        iiiiiiiiiiiiiiii        iiiijjjj',
-'    gggghhhh        iiiiiiiiiiiiiiii        iiiijjjj',
-'    gggghhhh        iiiiiiiiiiiiiiii        iiiijjjj',
-'    gggghhhh        iiiiiiiiiiiiiiii        iiiijjjj',
-'giigggggggggggggiiiiiiihhiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii',
-'ggggggggggggggggiiiiiiikhiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii',
-'ggggggggggggggggiiiiiiihhiiiiiiiiiiiiiiijjjjjjjjjjjjjjjj',
-'ggggggggggggggggiiiiiiihhiiiiiiiiiiiiiiijjjjjjjjjjjjjjjj',
-'ggggggggggggggggiiiiiiihhiiiiiiiiiiiiiiijjjjjjjjjjjjjjjj',
-'ggggggggggggggggiiiiiiihhiiiiiiiiiiiiiiijjjjjjjjjjjjjjjj',
-'ggggggggggggggggiiiiiiihhiiiiiiiiiiiiiiijjjjjjjjjjjjjjjj',
-'ggggggggggggggggiiiiiiihhiiiiiiiiiiiiiiijjjjjjjjjjjjjjjj',
-'ggggggggggggggggiiiiiiihhiiiiiiiiiiiiiiijjjjjjjjjjjjjjjj',
-'ggggggggggggggggiiiiiiihhiiiiiiiiiiiiiiijjjjjjjjjjjjjjjj',
-'ggggggggggggggggiiiiiiikhiiiiiiiiiiiiiiijjjjjjjjjjjjjjjj',
-'hhhhhhhhhhhhhhhhliiiillmmliiiiillllllllljjjjjjjjjjjjjjjj',
-'                    dd    dd                dddd',
-'                    d      d                dddd',
-'                    d      d                dddd',
-'                    dd    dd                dddd',
-'                dddddd    dddddddddddddddddddddddddddddd',
-'                dddddd    dddddddddddddddddddddddddddddd',
-' ll          ll dddddd    dddddddddddddddddddddddddddddd',
-' ll          ll ddddddd  ddddddddddddddddddddddddddddddd',
-' ll          ll ddddddd  ddddddddddddddddddddddddddddddd',
-' ll          ll dddddaaddddddddddddddddddddddddddddddddd',
-'                ddddddddbddddddddddddddddddddddddddddddd',
-'                dddddddddddddddddddddddddddddddddddddddd',
-'                ddddddddbddddddddddddddddddddddddddddddd',
-'                dddddddddddddddddddddddddddddddddddddddd',
-'                ddddddddbddddddddddddddddddddddddddddddd',
-'                dddddddddddddddddddddddd',
-'                    gggghhhh        iiiijjjj        dddd',
-'                    gggghhhh        iiiijjjj        dddd',
-'                    gggghhhh        iiiijjjj        dddd',
-'                    gggghhhh        iiiijjjj        dddd',
-'                gggggggiiiggggggiiiiiiiiiiiiiiiidddddddddddddddd',
-'                ggggggggggggggggiiiiiiiiiiiiiiiidddddddddddddddd',
-'         ll  ll ggggggggggggggggjjjjjjjjjjjjjjjjdddddddddddddddd',
-'         ll  ll ggggggggggggggggjjjjjjjjjjjjjjjjdddddddddddddddd',
-'         ll  ll ggggggggggggggggjjjjjjjjjjjjjjjjdddddddddddddddd',
-'         ll  ll ggggggggggggggggjjjjjjjjjjjjjjjjdddddddddddddddd',
-'                ggggggggggggggggjjjjjjjjjjjjjjjjdddddddddddddddd',
-'                ggggggggggggggggjjjjjjjjjjjjjjjjdddddddddddddddd',
-'                ggggggggggggggggjjjjjjjjjjjjjjjjdddddddddddddddd',
-'                ggggggggggggggggjjjjjjjjjjjjjjjjdddddddddddddddd',
-'                ggggggggggggggggjjjjjjjjjjjjjjjjdddddddddddddddd',
-'                hhhhhhhhhhhhhhhhjjjjjjjjjjjjjjjj'
-        ]
-    },
-    {
-        name: "SpittFire",
-        tiers: {
-            vanilla:"LT2", sword:"HT1", axe:"LT1", pot:"LT1", smp:"HT2",
-            smace:"LT1", rmace:"LT2", emace:"HT1",
-            bcart:"LT3", xbow:"HT3",
-            uhc:"HT2"
-        },
-        bannerUrl: "https://www.khanacademy.org/computer-programming/pic2pix/4972175662891008/5886425243697152.png",
-        skinPalette: {
-            ' ':[255,255,255,0],
-            'a':[45,81,111,255],'b':[37,69,96,255],'c':[13,43,69,255],'d':[188,163,131,255],
-            'e':[211,190,163,255],'f':[254,236,214,255],'g':[78,68,54,255],'h':[174,149,117,255],
-            'i':[22,38,51,255],'j':[20,31,40,255],'k':[32,55,74,255],'l':[66,51,32,255],
-            'm':[231,175,87,255],'n':[39,36,32,255],'o':[255,209,137,255]
-        },
-        skinBitmap: [
-'        abccccbadeeeeeed                   bb',
-'        bbccccbbeeeeeeee                   bb',
-'        cccccccceeddddee                cccbbccc',
-'        ccccccccfeddddef                bbbccbbb',
-'        ccccccccfeddddef                bbbccbbb',
-'        cccccccceeddddee                cccbbccc',
-'        bbccccbbeeeeeeee                  cbbc',
-'        abccccbadeeeeeed                  cbbc',
-'abccccbaabccccbaabccccbaabccccba  cbbc    cbbc    cbbc     bb',
-'bbccccbbbbeeeebbbbccccbbbbccccbb  cbbc            cbbc     cc',
-'cccccccccccbbcccccccccccccccccccc cbbc            cbbc ccccccccc',
-'deeeeeeddeeeeeeddeeeeeeddeeeeded',
-'fffefffffggffggfffffefffffeffeff',
-'ffffhefffffhhfffffehffffffffefff',
-'efeffffffggggggffffffffeeffffefe',
-'deeffeeddeeeeeeddeeffeeddeeeeeed',
-'    iiijiiij        kbbbbbbkkkkkkkkk        bbkedf',
-'    iiijiiij        kbbllbbkkkkkkkkk        bbkfff',
-'    iiijiiij        kblfflbkkkkkkkkk        bbkedf',
-'    iiijiiij        kblfflbkkkkkkkkk        bbkfff',
-'iiiiiiijjjjjjiiikkkkkblfflbkkkkkkbbbbbbkbbbbbbkkkkkkbb',
-'iiiiiijjjjjjjjiikkkkkblbblbkkkkkkbbbbbbkbaabbbkkkkkkbb',
-'iiiiiiijjjjjjiiikkkkkblblbbkkkkkkbaaaabkbaabbbkkkkkkbb',
-'iiiiiiijjjjjjiiikkkkkbblbbbkkkkkkbbbbbbkbbbbbkkkkkkkkb',
-'iiiiiiijjjjjjiiikkkkkbbmbbbkkkkkkbbaabbkbbbbbbkkkkkkbb',
-'iiiiiijjjjjjjjiikkkkkbbbbbbkkkkkkbbbbbbkbbbbbbkkkkkkbb',
-'iiiiiiijjjjjjiiikkkkkbaaaabkkkkkkbbbbbbkeheheehhhhhhee',
-'iiiiiiijjjjjjiiikkkkkbbkkbbkkkkkkbbkkbbkfeheffeeeeeeff',
-'bbbbbffkkkkkkbbbkkkkkbbbbbbkkkkkkbbbbbbkehfeffffffffff',
-'fffffnneeeeeefffkkkkkbkkkkbkkkkkkbkkkkbkffffffffffffff',
-'fffffnneeeeeefffkkkkkbbbbbbkkkkkkbbbbbbkefefedffffffde',
-'fffffffeeeeeefffkkkkkkkkkkkkkkkkkkkkkkkkefeffdffffffdf',
-'        fffe','        fffe','        fffe','        fffe','','',
-'iiiiiii      iii','iiiiiii      iii',
-'iiiiiii      iii       o                baabaa      ab',
-'                                        bbbbbb      bb',
-'iiiiiii      iii','iiiiiii      iii',
-'     ff','fffff  eeeeeefff','     ff','fffffffeeeeeefff',
-'        efff        jiiijiii        kbbfde',
-'        efff        jiiijiii        kbbfff',
-'        efff        jiiijiii        kbbfde',
-'        efff        jiiijiii        kbbfff',
-'                jjjjjiiiiiiiiiijkkkkkbbbbbbbbk',
-'                jjjjjjiiiiiiiijjkkkkkbbbaabbbk',
-'     iiiiiiiiii jjjjjiiiiiiiiiijkkkkkbbbaabbbk',
-'     iiiiiiiiii jjjjjiiiiiiiiiijkkkkkkbbbbbbkk',
-'     iiiiiiiiii jjjjjiiiiiiiiiijkkkkkbbbbbbbbk       aabaabba',
-'                jjjjjjiiiiiiiijjkkkkkbbbbbbbbk       bbbbbbbb',
-'     iiiiiiiiii jjjjjiiiiiiiiiijhhhhheeheheeeh',
-'     iiiiiiiiii jjjjjiiiiiiiiiijeeeeeffehefffe',
-'     ff         kkkkkffbbbbbbbbkfffffffefhefff',
-'eeeee  ffffffffeeeeeennffffffffeffffffffffffff',
-'     ff         eeeeennffffffffefffffdefefeedf',
-'eeeeeffffffffffeeeeeeffffffffffefffffdffefefdf'
-        ]
-    },
-    {
-        name: "4Futurz",
-        tiers: {
-            vanilla:"HT1", sword:"HT2", axe:"HT2", pot:"LT2", smp:"LT2",
-            smace:"LT5", rmace:"LT5", emace:"HT4",
-            bcart:"LT4", xbow:"HT4",
-            uhc:"LT2"
-        },
-        bannerUrl: "https://www.khanacademy.org/computer-programming/pic2pix/4972175662891008/5763368306982912.png",
-        skinPalette: {
-            ' ':[255,255,255,0],
-            'a':[30,30,30,255],'b':[255,255,255,255]
-        },
-        skinBitmap: [
-'        aaaaaaaaaaaaaaaa','        aaaaaaaaaaaaaaaa','        aaaaaaaaaaaaaaaa',
-'        aaaaaaaaaaaaaaaa','        aaaaaaaaaaaaaaaa','        aaaaaaaaaaaaaaaa',
-'        aaaaaaaaaaaaaaaa','        aaaaaaaaaaaaaaaa',
-'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa','aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
-'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa','aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
-'aaaaaaaaabbaabbaaaaaaaaaaaaaaaaa','aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
-'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa','aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
-'    aaaaaaaa        aaaaaaaaaaaaaaaa        aaaaaaaa',
-'    aaaaaaaa        aaaaaaaaaaaaaaaa        aaaaaaaa',
-'    aaaaaaaa        aaaaaaaaaaaaaaaa        aaaaaaaa',
-'    aaaaaaaa        aaaaaaaaaaaaaaaa        aaaaaaaa',
-'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
-'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
-'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
-'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
-'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
-'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
-'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
-'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
-'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
-'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
-'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
-'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
-'','','','','','','','','','','','','','','','',
-'                    aaaaaaaa        aaaaaaaa',
-'                    aaaaaaaa        aaaaaaaa',
-'                    aaaaaaaa        aaaaaaaa',
-'                    aaaaaaaa        aaaaaaaa',
-'                aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
-'                aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
-'                aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
-'                aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
-'                aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
-'                aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
-'                aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
-'                aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
-'                aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
-'                aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
-'                aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
-'                aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
-        ]
-    },
-    {
-        alt:true,
-        name: "Dudadude111",
-        tiers: {
-            vanilla:"RLT4", sword:"RHT3", axe:"RLT3", pot:"RHT4", smp:"RHT4",
-            smace:"RHT3", rmace:"RLT1", emace:"RLT1",
-            bcart:"RLT4", xbow:"RLT4",
-            uhc:"RLT3"
-        },
-        skinPalette: {
-            ' ':[255,255,255,0],
-            'a':[49,49,49,255],'b':[81,81,81,255],'c':[90,90,90,255],'d':[23,23,23,255],
-            'e':[99,99,99,255],'f':[28,28,28,255],'g':[33,33,33,255],'h':[70,70,70,255],
-            'i':[60,60,60,255],'j':[193,193,193,255],'k':[177,177,177,255],'l':[157,157,157,255],
-            'm':[0,0,0,255],'n':[209,209,209,255],'o':[40,40,40,255],'p':[135,135,135,255],
-            'q':[145,145,145,255],'r':[16,16,16,255],'s':[19,19,19,255],'t':[39,39,39,255],
-            'u':[206,206,206,255],'v':[55,55,55,255],'w':[31,31,31,255]
-        },
-        skinBitmap: [
-'        aaaaaaaaaaaaaaaa                 bccccb dddddddd',
-'        aaaaaaaaaaaaaaaa                bccccccbdddddddd',
-'        aaaaaaaaaaaaaaaa                cceeeeccdddddddd',
-'        aaaaaaaaaaaaaaaa                ceeeeeecf      f',
-'        aaaaaaaaaaaaaaaa                ceeeeeecf      f',
-'        aaaaaaaaaaaaaaaa                cceeeeccg      g',
-'        aaaaaaaaaaaaaaaa                bccccccbg      g',
-'        aaaaaaaaaaaaaaaa                 bccccb g      g',
-'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa bcccbh  bbbbbb  hbcccb  hbccbh',
-'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaihbbbbhiiihhhhiiihbbbbhiihbbbbhi',
-'aaaaaaaaajkjlklaaaaaaaaaaaaaaaaaaihbbhhaaiiiiiiaahhbbhiaahhbbhha',
-'aaaaaaaakmmnnmmkaaaaaaaaaaaaaaaaoihhhhiaaa    aaaihhhhiooihhhhio',
-'aaaaaaaajmmnpmmlaaaaaaaaaaaaaaaaoaihhiaaa      aaaihhiaooaiiiiao',
-'aaaaaaaannjjlkjkaaaaaaaaaaaaaaaagoaaiaaao      oaaaiaaoggoaaaaog',
-'aaaaaaaaaakqkjaaaaaaaaaaaaaaaaaafgooaaaog      goaaaoogfffgoogff',
-'aaaaaaaaaaqaqkaaaaaaaaaaaaaaaaaafffggoggg      gggoggfffffffffff',
-'    dfdgmmmm        gogoggoffgdogdgf        bbhiaa',
-'    rssfmmmm        daaaaaaddfsgfsfd        bcbhaa',
-'    sdfgmmmm        saaaaaasdfsgfsfd        cebhaa',
-'    dfgommmm        daaaaaadfgdogdgf        bchiaa',
-'fgoffgogfgooafgfgddffaaaaaaffddggoooaoogbbcbbbhiiaoiih',
-'gooffoommmgoagoggffggaakkaaggffggaiohiaghhbhhiiaaooaai',
-'ooagmammmmgaaoaoogfoolkjlkloofgooaaaaaagihhittaaaogaai',
-'aaiommmmmmoaiaiaaooaaaauqeaaaooaaahibhoattttttttaooaav',
-'aiiaammmmmmiihiaiaaitjunplptiaaiiaohhooawwwwwwttaogaat',
-'oaiiimmmmmmhhahoiaihtaauqeathiaiiaoaaoaiwwwwwwwwioaiiw',
-'oihimmmmmmmihaioioaitikjlkitiaoiiaohhohawwlwwlwwaooaaw',
-'gmiammmmmmmiioigagoathakkahtaogaaaohbghgwwkwwlwwogfoww',
-'moimmmmmmmmaigmgofgotioaaoitogfooooooooawlklwklggflgwl',
-'fmmommmmmmmommofgffggagiagaggffggogaigoglkkklkkfflklwk',
-'mmmmmmmmmmmgmmmfgffggofaofoggffggofoaooglmjkkjkllkjklk',
-'mmmmmmmmmmmgmmmmgffgfofaofoggffggofoaoookmmjaaakkjpjka',
-'','','','','','','','','','','','','','','','',
-'                    gdfdmmmm        ihbbaa',
-'                    fssrmmmm        hbcbaa',
-'                    gfdsmmmm        hbecaa',
-'                    ogfdmmmm        ihcbaa',
-'                oogfgogffogffgfaioaiihbbbcbbbb',
-'                ogmmmooffooggogaaooaaiihhbhhhi',
-'                agmmmmamgaoooaoaagoaaattihhivv',
-'                aommmmmmoiaaaiaiaooatttttttttt',
-'                immmmmmaaiiaaihiagoattwwwwwwwt',
-'                hmmmmmmiiiaoohahiaoiwwwwwwwwww',
-'                immmmmmmihiooiahaooawwlwwkwwwl',
-'                immmmmmmaimggioiofgowwlwwkwwwl',
-'                ammmmmmmmiomgmgiglfgwlkwlklwwk',
-'                ommmmmmmommffommlklfwkklkkkllk',
-'                gmmmmmmmmmmmfmmmkjkllkjkkjalkj',
-'                gmmmmmmmmmmmmmmmjpjkkaaajaakaa'
-        ]
-    },
-    {
-        name: "GrimmReaper__",
-        tiers: {
-            vanilla:"LT3", sword:"HT2", axe:"LT2", pot:"HT2", smp:"HT2",
-            smace:"LT1", rmace:"HT1", emace:"LT1",
-            bcart:"LT3", xbow:"LT4",
-            uhc:"HT2"
-        },
-        skinPalette: {
-            ' ':[255,255,255,0],
-            'a':[49,49,49,255],'b':[81,81,81,255],'c':[90,90,90,255],'d':[23,23,23,255],
-            'e':[99,99,99,255],'f':[28,28,28,255],'g':[33,33,33,255],'h':[70,70,70,255],
-            'i':[60,60,60,255],'j':[193,193,193,255],'k':[177,177,177,255],'l':[157,157,157,255],
-            'm':[0,0,0,255],'n':[209,209,209,255],'o':[40,40,40,255],'p':[135,135,135,255],
-            'q':[145,145,145,255],'r':[16,16,16,255],'s':[19,19,19,255],'t':[39,39,39,255],
-            'u':[206,206,206,255],'v':[55,55,55,255],'w':[31,31,31,255]
-        },
-        skinBitmap: [
-'        aaaaaaaaaaaaaaaa                 bccccb dddddddd',
-'        aaaaaaaaaaaaaaaa                bccccccbdddddddd',
-'        aaaaaaaaaaaaaaaa                cceeeeccdddddddd',
-'        aaaaaaaaaaaaaaaa                ceeeeeecf      f',
-'        aaaaaaaaaaaaaaaa                ceeeeeecf      f',
-'        aaaaaaaaaaaaaaaa                cceeeeccg      g',
-'        aaaaaaaaaaaaaaaa                bccccccbg      g',
-'        aaaaaaaaaaaaaaaa                 bccccb g      g',
-'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa bcccbh  bbbbbb  hbcccb  hbccbh',
-'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaihbbbbhiiihhhhiiihbbbbhiihbbbbhi',
-'aaaaaaaaajkjlklaaaaaaaaaaaaaaaaaaihbbhhaaiiiiiiaahhbbhiaahhbbhha',
-'aaaaaaaakmmnnmmkaaaaaaaaaaaaaaaaoihhhhiaaa    aaaihhhhiooihhhhio',
-'aaaaaaaajmmnpmmlaaaaaaaaaaaaaaaaoaihhiaaa      aaaihhiaooaiiiiao',
-'aaaaaaaannjjlkjkaaaaaaaaaaaaaaaagoaaiaaao      oaaaiaaoggoaaaaog',
-'aaaaaaaaaakqkjaaaaaaaaaaaaaaaaaafgooaaaog      goaaaoogfffgoogff',
-'aaaaaaaaaaqaqkaaaaaaaaaaaaaaaaaafffggoggg      gggoggfffffffffff',
-'    dfdgmmmm        gogoggoffgdogdgf        bbhiaa',
-'    rssfmmmm        daaaaaaddfsgfsfd        bcbhaa',
-'    sdfgmmmm        saaaaaasdfsgfsfd        cebhaa',
-'    dfgommmm        daaaaaadfgdogdgf        bchiaa',
-'fgoffgogfgooafgfgddffaaaaaaffddggoooaoogbbcbbbhiiaoiih',
-'gooffoommmgoagoggffggaakkaaggffggaiohiaghhbhhiiaaooaai',
-'ooagmammmmgaaoaoogfoolkjlkloofgooaaaaaagihhittaaaogaai',
-'aaiommmmmmoaiaiaaooaaaauqeaaaooaaahibhoattttttttaooaav',
-'aiiaammmmmmiihiaiaaitjunplptiaaiiaohhooawwwwwwttaogaat',
-'oaiiimmmmmmhhahoiaihtaauqeathiaiiaoaaoaiwwwwwwwwioaiiw',
-'oihimmmmmmmihaioioaitikjlkitiaoiiaohhohawwlwwlwwaooaaw',
-'gmiammmmmmmiioigagoathakkahtaogaaaohbghgwwkwwlwwogfoww',
-'moimmmmmmmmaigmgofgotioaaoitogfooooooooawlklwklggflgwl',
-'fmmommmmmmmommofgffggagiagaggffggogaigoglkkklkkfflklwk',
-'mmmmmmmmmmmgmmmfgffggofaofoggffggofoaooglmjkkjkllkjklk',
-'mmmmmmmmmmmgmmmmgffgfofaofoggffggofoaoookmmjaaakkjpjka',
-'','','','','','','','','','','','','','','','',
-'                    gdfdmmmm        ihbbaa',
-'                    fssrmmmm        hbcbaa',
-'                    gfdsmmmm        hbecaa',
-'                    ogfdmmmm        ihcbaa',
-'                oogfgogffogffgfaioaiihbbbcbbbb',
-'                ogmmmooffooggogaaooaaiihhbhhhi',
-'                agmmmmamgaoooaoaagoaaattihhivv',
-'                aommmmmmoiaaaiaiaooatttttttttt',
-'                immmmmmaaiiaaihiagoattwwwwwwwt',
-'                hmmmmmmiiiaoohahiaoiwwwwwwwwww',
-'                immmmmmmihiooiahaooawwlwwkwwwl',
-'                immmmmmmaimggioiofgowwlwwkwwwl',
-'                ammmmmmmmiomgmgiglfgwlkwlklwwk',
-'                ommmmmmmommffommlklfwkklkkkllk',
-'                gmmmmmmmmmmmfmmmkjkllkjkkjalkj',
-'                gmmmmmmmmmmmmmmmjpjkkaaajaakaa'
-        ]
-    },
-    {
-        name: "Snoopy",
-        tiers: {
-            vanilla:"LT5", sword:"LT5", axe:"LT5", pot:"LT5", smp:"LT5",
-            smace:"LT5", rmace:"LT5", emace:"LT5",
-            bcart:"LT5", xbow:"LT5",
-            uhc:"LT5"
-        },
-        skinPalette: {
-            ' ':[255,255,255,0],
-            'a':[251,226,138,255],'b':[251,237,145,255],'c':[247,213,118,255],'d':[206,136,78,255],
-            'e':[170,103,48,255],'f':[232,186,109,255],'g':[246,211,141,255],'h':[252,244,170,255],
-            'i':[223,150,88,255],'j':[108,21,46,255],'k':[242,207,136,255],'l':[238,165,102,255],
-            'm':[180,114,60,255],'n':[255,255,255,255],'o':[67,103,83,255],'p':[119,67,32,255],
-            'q':[11,8,21,255],'r':[17,9,29,255],'s':[7,5,15,255],'t':[79,45,45,255],
-            'u':[8,5,15,255],'v':[9,6,18,255],'w':[12,7,23,255],'x':[72,35,35,255],
-            'y':[66,28,28,255],'z':[103,45,67,255],'A':[72,28,41,255],'B':[165,114,128,255],
-            'C':[135,66,96,255],'D':[242,206,218,255],'E':[142,55,55,255],'F':[235,191,206,255],
-            'G':[129,46,46,255],'H':[40,19,43,255],'I':[35,16,38,255],'J':[76,45,72,255],
-            'K':[110,68,107,255],'L':[145,96,144,255],'M':[31,12,34,255],'N':[37,19,43,255],
-            'O':[178,155,174,255],'P':[75,41,41,255]
-        },
-        skinBitmap: [
-'        abbcbacadddddddd',
-'        bbbacbcbdeeeeeed',
-'        aabcabaadeeeeeed',
-'        bcbacbabdeeeeeed',
-'        acbcabaadeeeeeed',
-'        babacaabdeeeeeed',
-'        babcbabbdeeeeeed',
-'        bbabbbbbdddddddd',
-'bbbbabbbbbabbbbbbbbabbbbbcbbbbcb',
-'abababbbbabbbffbbbbabababbabbabb',
-'ggggghhbbbbbdiihbhhggggggbbjjbbg',
-'gkkllhhhbdiiiiihhhhllkkgggjhhjgg',
-'kkkimbhhhnoiionhhhbmikkkkghbbhgk',
-'kkmdiahbhiiiiiibhbaidmkkkkbbbbkk',
-'memmddabbiippiibbaddmmemmkabbakm',
-'eeeeeeecbbiiiibbceeeeeeeediiiide',
-'qrsqrssstttt        uuuuuuuuuvwuuuuvuwvw    vwvviidd',
-'rrsqrqsqxyyx        udmeemduuvwuuuuvuwvu    vwvvidee',
-'srsqsqrqxyyx        udmeemduvvuuuvuwuwvu    vvwviidd',
-'sqqqsszAtttt        uddmmdduuuuwuwuwuvwu    vvwvidee',
-'sqrqsrzArsssqsqruuvwuummmmuuuwvwuwuwuvwuwvuuuvuuuwuuvwuu',
-'qrrqrrzAssrssqqquwvwvvuvvwuvuwvwvwwuuuvvwvwvuvuvwwuvvwuw',
-'qrqqrqzssqrssrsquwuvvuvvwwuvwwwvvvwvwvvwuvwvvwvvwwvwuvuw',
-'sssrsqsqsqrrsrqrvvwvuuwuwuuvwuwvvuwvwwvwuvwwuwwvuvvwuuvw',
-'sqsrssqqrqrrqqsrvuwuwuwuvuuvvwvwvuvvwwvvuuuwuuwwuuuvuuwu',
-'rqqqqsrqrqrsqsrqvuvuwuvwvwuvuwvwwuvvwvvudddddddddmmddddd',
-'rsqsrqrssqssqsrsuwvwvuvwuwuuuvuvwuvuwvwudddddddddmmddddd',
-'dddddddddddddddduuuuuuuuuuuuuuuvuuuuuuuuddddddddddmddddd',
-'iiiiiiiiiiiiiiiiAAzzzzBCzzzzAAzzzzAAAAzzdddddddddddddddd',
-'DDEEEEEEEEDDDDDDqqqruuCzruuqruuquuqrquqqiiiiiiiddddddiii',
-'FEFDDDGDDFEFFDDFqruruqCArquwwwwqruqurqqriiiiiidmmdmdmdii',
-'tttttttttttttttturuqurzAuqwuuqvurqrurquriiiiiiidmdmddiii',
-'                HHIHJKLLKKJJ                MIHH',
-'                HHIMJ      J                MIMH',
-'                MHHMJ      J                IIMM',
-'                MIHMNJ    JI                IHIM',
-'                MMMINJH  HJIHIMHHHHIHHIIIIHMHMIHHHIHIHIH',
-'                HHMINKH  HKIHIMHIHIIHHIHIMIMIMIHIIIHMHII',
-'                HHMMNKH  HKMHIIHIIKKLOIHHMMMIIIHMIMIMMII',
-'                HHIMHLH  HLMHIIMIIKHHLIHHIMIMIHMMHMIHMIM',
-'                IHIIHOH  HOMIHIMIHJHHKIIIHIHMHHMIHIHHIHM',
-'                IHMHHOH  HOMIMIMMHJJKKIMLKKLLKKJJJJKKLOO',
-'                IIMHILH  HLMIMMMMHHHHHHMKKLLKKJJJJKKLOOL',
-'                IIHMIKH  HKHIMMIMIIIMIIMIIIIMMIIIMMIIHHH',
-'                HIIMHJH  IJIIIMHHHIMMIII',
-'                KKKJJKH  IKJJKKJJJKKLOOL',
-'                KKJJKKH  IKKKKJJJKKLOOLK',
-'                IIMIHHH  IIIIIMMIIMMMMII',
-'                qssqssqsttttsqsruwvvvvvvddiiuuwu    HHMH',
-'                qqrqqsqsxyyxqqrruwuvvvwveedivuwv    HIMM',
-'                qqqqqqrqxyyxqsrsvvwvvvvvddiivvwv    HIMH',
-'                qrqqsqrqttttrsqsvvwvvvvveediuwuw    HMIH',
-'                srssrqrqssrsqqqsuvuwuvwuvuuuwwuwHMIMHMIHIHMIIHMH',
-'                sqsqrssqsqrssrssuvuwvvwwvwuvwvvwMMIMHMIMIHMIHMMI',
-'                rqsqsqsrsqsrqrsquwuvuwvwvwvwuvvwMMIIIIMMMIMMHMII',
-'                rssrqrsrqqqrrssqvwvvuwvuvvvwuuvuMIHIMIMMMIIMIMIM',
-'                rqsrqrqqqrqrqsqruuwuuvuuuvwuuuwuIHHIMIMHIHHMMIIM',
-'                qqqrqsqsrrsqrqqrdmmdddddddddddddLLKJJKKLLLLKKLLO',
-'                sqssqsrsrssqrsqqdmmdddddddddddddLKJJKKLLLLKKLLOO',
-'                ddddddddddddddddddmdddddddddddddIMMMIIIIIMMIIIII',
-'                iiiiiiiiiiiiiiiidddddddddddddddd',
-'                DDEEEEEEEEDDDDDDdddddiiiiiiiiiid',
-'                FEFDDGFDDFEFFDDFmdmdmdiiiiiiiidm',
-'                ttttttttPPttttPPddmddiiiiiiiiiid'
-        ]
-    },
 
-    {
-        name: "TemptingAnt2136",
-        tiers: {
-            vanilla:"LT5", sword:"LT5", axe:"LT5", pot:"HT5", smp:"LT5",
-            smace:"LT5", rmace:"LT5", emace:"LT5",
-            bcart:"LT5", xbow:"LT5",
-            uhc:"LT5"
-        },
-skinPalette: {
-    ' ' : [255, 255, 255, 0],
-    'a' : [0, 0, 0, 255], 'b' : [42, 35, 28, 255], 'c' : [49, 40, 32, 255], 'd' : [55, 45, 36, 255],
-    'e' : [68, 56, 45, 255], 'f' : [165, 23, 4, 255], 'g' : [81, 67, 54, 255], 'h' : [95, 78, 62, 255],
-    'i' : [79, 79, 79, 255], 'j' : [92, 92, 92, 255], 'k' : [106, 106, 106, 255], 'l' : [70, 70, 70, 255],
-    'm' : [105, 86, 70, 255], 'n' : [233, 162, 91, 255], 'o' : [255, 255, 255, 255], 'p' : [245, 176, 109, 255],
-    'q' : [184, 154, 127, 255], 'r' : [170, 143, 118, 255], 's' : [160, 130, 101, 255], 't' : [109, 89, 69, 255],
-    'u' : [118, 92, 70, 255], 'v' : [110, 90, 70, 255], 'w' : [213, 178, 147, 255], 'x' : [198, 166, 137, 255],
-    'y' : [159, 132, 103, 255], 'z' : [143, 120, 93, 255], 'A' : [120, 99, 78, 255], 'B' : [111, 90, 70, 255],
-    'C' : [127, 103, 80, 255], 'D' : [166, 137, 111, 255], 'E' : [145, 116, 90, 255], 'F' : [129, 103, 80, 255],
-    'G' : [106, 86, 68, 255], 'H' : [112, 90, 70, 255], 'I' : [134, 112, 88, 255], 'J' : [150, 125, 98, 255],
-    'K' : [162, 138, 112, 255], 'L' : [95, 76, 59, 255], 'M' : [231, 231, 231, 255], 'N' : [20, 112, 205, 255],
-    'O' : [160, 130, 100, 255], 'P' : [96, 77, 60, 255], 'Q' : [104, 86, 68, 255], 'R' : [79, 64, 50, 255],
-    'S' : [92, 146, 200, 255], 'T' : [80, 64, 50, 255], 'U' : [96, 77, 59, 255], 'V' : [89, 73, 58, 255],
-    'W' : [80, 64, 49, 255], 'X' : [64, 51, 40, 255], 'Y' : [73, 73, 73, 255], 'Z' : [164, 0, 0, 255],
-    '0' : [8, 8, 8, 255], '1' : [43, 43, 43, 255], '2' : [25, 25, 25, 255], '3' : [81, 81, 82, 255]
-},
-
-skinBitmap: [
-'        aaaaaaaabcdeedcb                 aaaaaa ffffffff',
-'        aaaaaaaacdeggedc                aaaaaaaaffffffff',
-'        aaaaaaaadeghhged                aaaaaaaaijkiljij',
-'        aaaaaaaaeghmmhge                aaaaaaaaklilkijl',
-'        aaaaaaaaennnnnne                aaaaaaaaoooooooo',
-'        aaaaaaaannnnnnnn                aaaaaaaa',
-'        aaaaaaaapppppppp                aaaaaaaa',
-'        aaaaaaaapppppppp                 aaaaaa',
-'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa aaaaaa  qrsaaa  aaaaaa  aaaaaa',
-'aaaaaaaaaatuvtaaaaaaaaaaaaaaaaaaaaaaaaaawxqrs aaaaaaaaaaaaaaaaaa',
-'aaaaaaaaaaffffaaaaaaaaaaaaaaaaaaaaaaaaaaawffffaaaaaaaaaaaaaaaaaa',
-'fffffyzABCpDEFBGHzyffffffffffffffffff              fffffffffffff',
-'AIJKKJIALMNpONMPHFEDDEFHBFEssEFB',
-'QAIJJIAQRoSppSoTPHFEEFHPUBFEEFBU',
-'VQAIIAQppppppppppPHFFHPTWUBFFBUWaaaa                aaaaaaaaaaaa',
-'XVQAAQppppppppppppPHHPTXXWUBBUWXfffaa              aafffffffffff',
-'    ffffYYYY        ZZZZZZZZffffffff        ffffpppp',
-'    ffffYYYY        ZZZZZZZZffffffff        ffffpppp',
-'    ffffYYYY        ZZZZZZZZffffffff        0000pppp',
-'    ffffYYYY        ZZZnnZZZffffffff        ffffpppp',
-'ffffffffffffffffffffffffffffffffffffffffff0fffffffffffff',
-'aaa00ffffffffffaffffffffffffffffffffffffff0fffffffffffff',
-'00000aaaaaaaaaa0ffffffffffffffffffffffffff0fffffffffffff',
-'000a0aaaaaaa0000fffffffffffffffffffffffaff0fffffffffffff',
-'000001Yaaaaa0000ffffffffffffffffffffffafff0fffffffffffff',
-'00002YpYaaaa0000fffffffffffffffffaffaaffff0fffffffffffff',
-'0000YppYaaaa0000fffffffffffffffffaaaafffff0fffffffffffff',
-'00000YY1aaaa0000ffffffffffffffffffaaffffff0fffffffffffff',
-'aaaa2aaaaaaaaaaaffffffffffffffffffffffffff0fffffffffffff',
-'aaaaaYYaaaaaaaaaffffffffffffffffffffffffff0fffffffffffff',
-'YYYYY11YYYYYYYYYffffffffffffffffffffffffff0fffffffffffff',
-'YYYYYYYYYYYYYYYYffffffffffffffffffffffffpppppppppppppppp',
-'',
-'',
-'                                            aaaa',
-'',
-'                      a  a                a',
-'                      a  a                a',
-'                      a  a                a',
-'      a               a  3             a  a',
-'     1                a               a   a',
-'     Y                3          a  aa    a',
-'    Y  Y                         aaaa     a',
-'     YY                           aa      a',
-'                                          a',
-'                                          a',
-'     Y                                    a',
-'',
-'                    ffffYYYY        ffffpppp',
-'                    ffffYYYY        ffffpppp',
-'                    ffffYYYY        0000pppp         aaa',
-'                    ffffYYYY        ffffpppp',
-'                fffffffffffffffffffffffff0ffffff         a',
-'                fffffff00aaaaffffffffffff0ffffff         a',
-'                aaaa0aa000000aaafffffffff0ffffff         a',
-'     Y a        aaaaaYY100000000fffffffff0ffffff         a',
-'    Y  Y        aaaaYppY00000000fffffffff0ffffff         a',
-'      Y         aaaa2YY000000000fffffffff0ffffff         a',
-'      a         aaaaa00000000000fffffffff0ffffff         a',
-'                aaaaaa0aaaaaaaaafffffffff0ffffff         a',
-'                aaaaaaaaaaaaaaaafffffffff0ffffff         a',
-'                aaaaaYYaaaaaaaaafffffffff0ffffff         a',
-'                YYYYY11YYYYYYYYYfffffffff0ffffff         a',
-'                YYYYYYYYYYYYYYYYpppppppppppppppp'
-]
-},
-
-    {
-        name: "MRChevyGuys",
-        tiers: {
-            vanilla:"LT5", sword:"LT5", axe:"HT5", pot:"HT5", smp:"LT5",
-            smace:"LT5", rmace:"LT5", emace:"LT5",
-            bcart:"LT5", xbow:"LT5",
-            uhc:"LT5"
-        },
-        skinPalette: {
-            ' ':[255,255,255,0],
-            'a':[0,143,255,255],'b':[54,161,255,255],'c':[23,122,212,255],'d':[25,125,216,255],
-            'e':[0,144,255,255],'f':[24,133,227,255],'g':[24,132,227,255],'h':[33,138,233,255],
-            'i':[10,142,255,255],'j':[18,145,255,255],'k':[28,147,255,255],'l':[28,148,255,255],
-            'm':[28,149,255,255],'n':[25,124,216,255],'o':[28,122,207,255],'p':[18,144,255,255],
-            'q':[20,125,220,255],'r':[17,134,239,255],'s':[202,201,201,255],'t':[25,114,195,255],
-            'u':[25,109,185,255],'v':[24,127,221,255],'w':[24,134,232,255],'x':[67,165,250,255],
-            'y':[76,171,255,255],'z':[26,125,214,255],'A':[25,115,195,255],'B':[26,131,225,255],
-            'C':[25,123,216,255],'D':[26,124,214,255],'E':[26,123,214,255],'F':[26,115,200,255],
-            'G':[20,124,220,255],'H':[26,122,214,255],'I':[25,123,211,255],'J':[25,122,211,255],
-            'K':[26,114,200,255]
-        },
-        skinBitmap: [
-'        aaaaaaaabbbbbbbb                        ccddddcc',
-'        aaeeeeaabbbbbbbb                        cfdggdfc',
-'        aeeaaaeabbbbbbbb                        ffg  gff',
-'        aaaaaaaabbbbbbbb                        fh    hf',
-'        aaaaaaaabbbbbbbb                        h      h',
-'        aaaaaaaabbbbbbbb',
-'        aaaaaaaabbbbbbbb',
-'        aaaaaaaabbbbbbbb',
-'iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii',
-'aiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii',
-'jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj',
-'jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj',
-'klllllllklkkklklkkkklllmlllllllm                        dnnnnnnd',
-'klllllllkkllllklllllmmmmllllllllgdd                  ddgddnnnnnn',
-'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbghhdd              ddhhgcdnnnnnc',
-'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbggghgd            dghgggccdnndcc',
-'    oooopppp        qqrrrrqqoooooooo        srrdsjjj',
-'    oooopppp        rrrttrrroooooooo        srrdsjjj',
-'    oooopppp        rrtkktrroooooooo        srrdsjjj',
-'    oooopppp        rrujjurroooooooo        srrdsjjj',
-'oooooooooooooooovwrrrrujjurrrrwvqqvrrvqqrrrrsrrddddddrrs',
-'xxxxxxxxyyyyxxxxvwrrrrruurrrrrwvqqrrrrqqzzzzszzAAttAAzzs',
-'bbbbbbbbbbbbbbbbvwrrrrrrrrrrrrwvqvrrBrvqrrrrsrrddnnddrrs',
-'bbbbbbbbbbbbbbbbvwrrrrrrrrrrrrwvqvrvBrvqzzzzszzAAttAAzzs',
-'llllllllmmmmllllvwrrrrrrrrrrrrwvqrrrBrrqrrrrsrrnCCCddrrs',
-'mmmmmmmlmmmmmmmmvwrrrrrrrrrrrrwvvrrrBrrvrrrrsrrCCCCCdrrs',
-'ppppppppppppppppvwrrrrrrrrrrrrwvvrrrrrrvzzzzsDEttttAAzzs',
-'ppppppppppppppppvwrrrrrrrrrrrrwvvrrrqrrvrrrrsrrnCnnddrrs',
-'aaaaaaaaaaaaaaaavwrrrrrrrrrrrrwvvrrvvvrvrrrrsrrddnnndrrs',
-'aaaaaaaaaaaaaaaaqwrrrrrrrrrrrrwvqrrrrrrqrrrrsrrddnnddrrs',
-'ppppppppppppppppqwwwwwwwwrrrrrwqqvrvqrvqDDDDsDDFFFFFFDDs',
-'ppppppppppppppppqqqqqqqqqGGGqqqqqvvvqqvqjjjjsjjjjjjjjjjs',
-'                                            s   s',
-'                                            s   s',
-'                                            s   s',
-'                                            s   s',
-'                                            s          s',
-'                                        zzzzszzAttttAzzs',
-'                                            s          s',
-'                                        zzzzszzAttttAzzs',
-'                                            s          s',
-'                                            s          s',
-'                                        zzzzsEEE  tttzzs',
-'                                            s          s',
-'                                        rrrrsrrEDDDDDrrs',
-'                                        rrrrsrrEDDDDDrrs',
-'                           H            EEEEsEEFFFFFFEEs',
-'                                            s          s',
-'                    oooopppp        drrsjjjs           s   s',
-'                    oooopppp        drrsjjjs           s   s',
-'                    oooopppp        drrsjjjs           s   s',
-'                    oooopppp        drrsjjjs           s   s',
-'                oooooooooooooooodddddrrsrrrrsrrd       s    s',
-'                yyyyxxxxxxxxxxxxAttAAzzszzzzszzAtttttzzszzzzszzA',
-'                bbbbbbbbbbbbbbbbdnndIrrsrrrrsrrd       s    s',
-'                bbbbbbbbbbbbbbbbAtttAzzszzzzszzAtttttzzszzzzszzA',
-'                mmmmlllllllllllldnndJrrsrrrrsrrd       s    s',
-'                mmmmmmmmllllmmmmdnnCJrrsrrrrsrrd       s    s',
-'                ppppppppjpppppppAttttDzszzzzszzAtt    zszzzzszzt',
-'                ppppppppppppppppdCCCJrrsrrrrsrrd       s    s',
-'                aaaaaaaaaaaaaaaadCCCJrrsrrrrsrrdDD    rsrrrrsrrD',
-'                aaaaaaaaaaaaaaaadCCCJrrsrrrrsrrdDD    rsrrrrsrrD',
-'                ppppppppppppppppFFKKKEEsEEEEsEEFFFFHHEEsEEEEsEEF',
-'                ppppppppapppppppjjjjjjjsjjjjsjjj       s    s'
-        ]
-    },
-
-    {
-        name: "AgentStudios",
-        tiers: {
-            vanilla:"LT5", sword:"LT5", axe:"LT5", pot:"LT5", smp:"LT5",
-            smace:"LT5", rmace:"LT5", emace:"HT5",
-            bcart:"LT5", xbow:"HT5",
-            uhc:"LT5"
-        },
-        bannerUrl: "https://www.khanacademy.org/computer-programming/pic2pix/4972175662891008/4619759981543424.png",
-        skinPalette: {
-            ' ':[255,255,255,0],
-            'a':[220,203,125,255],'b':[210,33,23,255],'c':[12,1,0,255],'d':[147,124,56,255],
-            'e':[121,102,46,255],'f':[154,131,59,255],'g':[150,127,57,255],'h':[127,109,49,255],
-            'i':[254,253,253,255],'j':[211,186,68,255],'k':[25,21,1,255],'l':[94,223,63,255],
-            'm':[4,74,144,255],'n':[135,132,131,255],'o':[75,195,46,255]
-        },
-        skinBitmap: [
-'        aaaaaaaaaaaaaaaa',
-'        aaaaaaaaaaaaaaaa',
-'        aaaaaaaaaaaaaaaa',
-'        aaaaaaaaaaaaaaaa',
-'        aaaaaaaaaaaaaaaa',
-'        aaaaaaaaaaaaaaaa',
-'        aaaaaaaaaaaaaaaa                         bccccb',
-'        aaaaaaaaaaaaaaaa                         bccccb',
-'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa        defaadgh',
-'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa        iiijaiii',
-'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa       aikijjiki',
-'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa        iiijjiii',
-'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa           jj',
-'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
-'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa         bbbbbb',
-'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa         bccccb',
-'    aaaaaaaa        aaaaaaaallllllll        aaaaaaaa',
-'    aaaaaaaa        aaaaaaaallllllll        aaaaaaaa',
-'    aaaaaaaa        aaaaaaaallllllll        aaaaaaaa',
-'    aaaaaaaa        aaaaaaaallllllll        aaaaaaaa',
-'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
-'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
-'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
-'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
-'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
-'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
-'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
-'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
-'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
-'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
-'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
-'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
-'    mmmmnnnn                            llllllll',
-'    mmmmnnnn                            llllllll',
-'    mmmmnnnn                            llllllll',
-'    mmmmnnnn                            llllllll',
-'mmmmmmmmmmmmmmmmlllllbccccblllllllllllllllllllllllllllll',
-'mmmmmmmmmmmmmmmmlllllbccccblllllllllllllllllllllllllllll',
-'mmmmmmmmmmmmmmmmlllllbccccblllllllllllllllllllllllllllll',
-'mmmmmmmmmmmmmmmmllllllbccbllllllllllllllllllllllllllllll',
-'mmmmmmmmmmmmmmmmlllllllbblllllllllllllllllllllllllllllll',
-'mmmmmmmmmmmmmmmmllllllllllllllllllllllllllllllllllllllll',
-'mmmmmmmmmmmmmmmmllllllllllllllllllllllllllllllllllllllll',
-'mmmmmmmmmmmmmmmmllllllllllllllllllllllllllllllllllllllll',
-'mmmmmmmmmmmmmmmmllllllllllllllllllllllllllllllllllllllll',
-'mmmmmmmmmmmmmmmmllllllllllllllllllllllllllllllllllllllll',
-'mmmmmmmmmmmmmmmmooooolllllllooooollllllooooooooooooooooo',
-'nnnnnnnnnnnnnnnnoooooooooooooooooooooooo',
-'    mmmmnnnn        aaaaaaaa        aaaaaaaa        llll',
-'    mmmmnnnn        aaaaaaaa        aaaaaaaa        llll',
-'    mmmmnnnn        aaaaaaaa        aaaaaaaa        llll',
-'    mmmmnnnn        aaaaaaaa        aaaaaaaa        llll',
-'mmmmmmmmmmmmmmmmaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaallllllllllllllll',
-'mmmmmmmmmmmmmmmmaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaallllllllllllllll',
-'mmmmmmmmmmmmmmmmaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaallllllllllllllll',
-'mmmmmmmmmmmmmmmmaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaallllllllllllllll',
-'mmmmmmmmmmmmmmmmaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaallllllllllllllll',
-'mmmmmmmmmmmmmmmmaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaallllllllllllllll',
-'mmmmmmmmmmmmmmmmaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaallllllllllllllll',
-'mmmmmmmmmmmmmmmmaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaallllllllllllllll',
-'mmmmmmmmmmmmmmmmaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaallllllllllllllll',
-'mmmmmmmmmmmmmmmmaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaallllllllllllllll',
-'mmmmmmmmmmmmmmmmaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaoooooooooooooooo',
-'nnnnnnnnnnnnnnnnaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
-        ]
-    },
-
-    {
-        name: "EmersonJenner",
-        tiers: {
-            vanilla:"HT5", sword:"LT5", axe:"LT5", pot:"LT5", smp:"LT5",
-            smace:"LT5", rmace:"LT5", emace:"LT5",
-            bcart:"LT5", xbow:"LT5",
-            uhc:"LT5"
-        },
-        skinPalette: {
-            ' ':[255,255,255,0],
-            'a':[14,4,1,255],'b':[34,22,17,255],'c':[27,17,13,255],'d':[74,49,33,255],
-            'e':[95,62,41,255],'f':[43,29,24,255],'g':[109,72,48,255],'h':[126,83,55,255],
-            'i':[146,103,76,255],'j':[255,255,255,255],'k':[65,30,2,255],'l':[117,60,40,255],
-            'm':[184,153,117,255],'n':[34,34,34,255],'o':[127,37,52,255],'p':[185,142,150,255],
-            'q':[134,95,72,255],'r':[202,38,66,255],'s':[219,47,76,255],'t':[133,90,63,255],
-            'u':[147,109,81,255],'v':[52,52,52,255],'w':[162,40,60,255],'x':[161,124,103,255],
-            'y':[216,184,148,255],'z':[207,173,133,255],'A':[200,166,172,255],'B':[187,36,61,255],
-            'C':[108,62,39,255],'D':[129,156,181,255],'E':[60,60,60,255],'F':[81,81,81,255],
-            'G':[254,253,253,255]
-        },
-        skinBitmap: [
-'        abcacaacddeeeedd',
-'        cacbcacadddeeddd',
-'        acbcbabcdddddddd',
-'        cbacacaadddddddd',
-'        aacbbcacdddddddd',
-'        acbbbbcadddddddd',
-'        bcbfbcbaddeeeedd',
-'        cbbfbbcadeeeeeed',
-'cabcaccaaacbbcaaaaacacaacacacaaa',
-'acbacbabaeghhgeacacbcaaababcabac',
-'aaaaaaegghhhhhhggeaacbabacacaacb',
-'abaihegghhhhhhhhggehibaccacabaca',
-'ccdhegghhjkhhkjggggehdcaaabcacba',
-'ggeghgghihhhhhhiggghgeggdcaacacd',
-'edeeggghhhhllhhgggggeedeegggggge',
-'ddddddddeghhhhgeedddddddddeeeedd',
-'    mmmmnnnn        opeeeepommqqqqmm        rssrhttu',
-'    mmmmvnnv        opeddepommmmmmmm        ssrwhgdd',
-'    xxxxvnnv        opeddepoyyymmyyy        sssrhttu',
-'    xxxxvvvv        opgeegpoyyymmyyy        rssrhgdd',
-'mxmzzyyzzmxmzzzzwoossAggggpssoowwppppppwBBrsssrrwoowBrrr',
-'mmmzzzzzzmmmzzzzroowrsAAppsrBoowwssswwBBBrBBsrwwoooowrBr',
-'mmzzzyyzzzmmzmmzBwwBrssrrBBBBwwrssrrrrrsBBBrrrrwoooowBwB',
-'mzzzyyyyzzzmmmmmBwwBssssrrsrBwBBBrBBBrrroooooooooooooooo',
-'mzzyyyymyzzmmzzmrwBBBBBrrsssrBwrBBBrsrBBgggggggeeeeeeggg',
-'mmzzyzzmzzmmzzzzBwwBBrrssssrrwwrrrssrBBrgggghhhggeegghgh',
-'mmzzzzzxzzmmzzzzwwwwwwBBBBwwwwwwwwwBBBwwhgghhghhgeeghhgh',
-'xxxxxxxxxxxxxxxxmmmmmyyyyyymmmmmmmmmmmmmhghhhghhggeghhhh',
-'xxxxxxxxxxxxxxxxCCCCCCCDDCCCCCCCCCCCCCCChghhhhhtggggthhh',
-'xxxxxxxxxxxxxxxxxxxxmmmmmmmmxxxxxxxxxxxxhhhhhttggggggtth',
-'nnvvEFEEvvnnnnnnmxxmzzzzzzzmmxxmmzzmmzzmhhghhugeegegeguh',
-'EEEvvEEvvEEEEEEEmxxmmyymxyyzmxxmzzzzzzzzhhghhtugehehguth',
-'','','','','','','',
-'                                        AGGGGGGGppppAAGA',
-'','',
-'yyyyyyyyyyyyyyyy',
-'zzmzmmzzmmzmzmmz',
-'yyyyyyyyyyyyyyyy',
-'','',
-'                    mmmmnnnn        rssrutth',
-'                    mmmmvnnv        wrssddgh',
-'                    xxxxvnnv        rsssutth',
-'                    xxxxvvvv        rssrddgh',
-'                mxmzxyyzzmxmzzzzwoowrrsssrBBrrrB',
-'                mmmzxzzzzmmmzzzzoooowwrsBBrBrBrw',
-'                mmzzmyyzzzmmzmmzoooowrrrrBBBBwBw',
-'                mzzzmyyyzzzmmmmmooooooooooooooooppppGGGGGGGAAGAA',
-'                mzzyyyyyyzzmmzzmeeeeegggggggggge',
-'                mmzzyzzyzzmmzzzzgeeggghhgggghghg',
-'                mmzzzzzzzzmmzzzzgeeghghhggghhghh',
-'yyyyyyyyyyyyyyyyxxxxxxxxxxxxxxxxggeghhhhghhhhhhh',
-'zzmzzzmmmmzmzmmzxxxxxxxxxxxxxxxxggggthhhghhhhhht',
-'yyyyyyyyyyyyyyyyxxxxxxxxxxxxxxxxgggggtthhhghhttg',
-'                nnvvEFEEvvnnnnnngegeeguhhhghhuge',
-'                EEEvvEEvvEEEEEEEheheguthhhhhhtug'
-        ]
-    },
-
-    {
-        name: "Donkeh",
-        tiers: {
-            vanilla:"LT5", sword:"LT5", axe:"LT5", pot:"LT5", smp:"LT5",
-            smace:"LT5", rmace:"LT5", emace:"LT5",
-            bcart:"LT5", xbow:"LT5",
-            uhc:"LT5"
-        },
-        skinPalette: {
-            ' ':[255,255,255,0],
-            'a':[74,50,25,255],'b':[183,131,107,255],'c':[70,58,165,255],
-            'd':[7,188,198,255],'e':[63,63,63,255],'f':[255,255,255,255],
-            'g':[121,77,60,255],'h':[132,79,64,255]
-        },
-        skinBitmap: [
-'        aaaaaaaabbaaaabb',
-'        aaaaaaaabbbbbbbb',
-'        aaaaaaaabbbbbbbb',
-'        aaaaaaaabbbbbbbb',
-'        aaaaaaaabbbbbbbb',
-'        aaaaaaaabbbbbbbb',
-'        aaaaaaaaaaaaaaaa',
-'        aaaaaaaaaaaaaaaa',
-'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
-'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
-'aaaaaaaaabbbbbbaaaaaaaaaaaaaaaaa',
-'aaaaaaaabaabbaabaaaaaaaaaaaaaaaa',
-'aaaaabbabfcbbcfbabbaaaaaaaaaaaaa',
-'aaaaaaabbbbggbbbbaaaaaaaaaaaaaaa',
-'aaabbaaaabahhabaaaabbaaaaaaaaaaa',
-'bbbbbbaaaaaaaaaaaabbbbbbbbaaaabb',
-'    cccceeee        ddddddddcccdcccc        ddddbbbb',
-'    cccceeee        ddddddddcccccccc        ddddbbbb',
-'    cccceeee        ddbbbbddcccccccc        ddddbbbb',
-'    cccceeee        ddbbbbddccccccdd        ddddbbbb',
-'ccccccccccccccccddddddbbbbdddddddddddddddddddddddddddddd',
-'ccccccccccccccccdddddddbbddddddddddddddddddddddddddddddd',
-'ccccccccccccccccdddddddddddddddddddddddddddddddddddddddd',
-'ccccccccccccccccdddddddddddddddddddddddddddddddddddddddd',
-'ccccccccccccccccddddddddddddddddddddddddbbbbbbbbbbbbbbbb',
-'ccccccccccccccccddddddddddddddddddddddddbbbbbbbbbbbbbbbb',
-'ccccccccccccccccddddddddddddddddddddddddbbbbbbbbbbbbbbbb',
-'ccccccccccccccccddddddddddddddddddddddddbbbbbbbbbbbbbbbb',
-'ccccceecccccccccddddddddddddddddddddddddbbbbbbbbbbbbbbbb',
-'eeeeeeeeeeeeeeeeddddddddddddddddddddddddbbbbbbbbbbbbbbbb',
-'eeeeeeeeeeeeeeeecccccccccdddddcccdddddccbbbbbbbbbbbbbbbb',
-'eeeeeeeeeeeeeeeeccccccccccdddcccccccdcccbbbbbbbbbbbbbbbb',
-'','','','','','','','','','','','','','','','',
-'                    cccceeee        ddddbbbb',
-'                    cccceeee        ddddbbbb',
-'                    cccceeee        ddddbbbb',
-'                    cccceeee        ddddbbbb',
-'                ccccccccccccccccdddddddddddddddd',
-'                ccccccccccccccccdddddddddddddddd',
-'                ccccccccccccccccdddddddddddddddd',
-'                ccccccccccccccccdddddddddddddddd',
-'                ccccccccccccccccbbbbbbbbbbbbbbbb',
-'                ccccccccccccccccbbbbbbbbbbbbbbbb',
-'                ccccccccccccccccbbbbbbbbbbbbbbbb',
-'                ccccccccccccccccbbbbbbbbbbbbbbbb',
-'                ccccceecccccccccbbbbbbbbbbbbbbbb',
-'                eeeeeeeeeeeeeeeebbbbbbbbbbbbbbbb',
-'                eeeeeeeeeeeeeeeebbbbbbbbbbbbbbbb',
-'                eeeeeeeeeeeeeeeebbbbbbbbbbbbbbbb'
-        ]
-    },
-
-    {
-        name: "eliasjenner",
-        tiers: {
-            vanilla:"LT5", sword:"LT5", axe:"LT5", pot:"LT5", smp:"LT5",
-            smace:"LT5", rmace:"LT5", emace:"LT5",
-            bcart:"LT5", xbow:"LT5",
-            uhc:"LT5"
-        },
-        skinPalette: {
-            ' ':[255,255,255,0],
-            'a':[229,141,63,255],'b':[235,152,63,255],'c':[222,129,46,255],'d':[243,168,88,255],
-            'e':[223,196,162,255],'f':[212,183,143,255],'g':[235,208,176,255],'h':[239,218,191,255],
-            'i':[255,255,255,255],'j':[35,98,36,255],'k':[239,187,177,255],'l':[113,171,110,255],
-            'm':[54,54,54,255],'n':[40,40,40,255],'o':[140,190,138,255],'p':[134,185,132,255],
-            'q':[92,59,39,255],'r':[128,130,90,255],'s':[123,178,120,255],'t':[100,65,44,255],
-            'u':[114,78,54,255],'v':[124,87,62,255],'w':[108,70,46,255],'x':[148,150,107,255],
-            'y':[148,200,146,255],'z':[88,88,88,255],'A':[101,101,101,255],'B':[111,111,111,255],
-            'C':[63,63,63,255],'D':[79,79,79,255],'E':[24,56,22,255],'F':[43,84,40,255],
-            'G':[117,80,56,255]
-        },
-        skinBitmap: [
-'        abacacaaabcabcbb',
-'        bbbbcccbbbcabcbb',
-'        bbddbbcaabacacba',
-'        accabcbbcabacabc',
-'        bddddbddccabcbac',
-'        acabbaabefcccaac',
-'        bbbdabaaeeefffcc',
-'        adbdbddbeeggggee',
-'abbadabaadbdabdaaabdbaababbbabba',
-'addbdababdabaabdabbddbaddbbbabda',
-'bddababbbabaeeabbdbbbdaadbdbadda',
-'ddbabaabbbaghggabbdbabbabddaadbc',
-'aaabaeeagijhhjigadbdbabaadbcbdac',
-'bbbaegghhhhhhhhheadbdababdacdbac',
-'abcagghhhhhkkhhggedadcbcdbcbdbca',
-'bacffeggghhhhhgeeabcbcacbbcbbaca',
-'    llllmmnn        opaaabballllllll        ooohhg',
-'    llllnnmm        oppccabbllqqqqll        ooohgf',
-'    llqqmmnn        oprfccablqqqqqql        ooohhg',
-'    lqqqnnmm        oreffaaalqqqqqql        ooohgf',
-'poostuvtttllppppooooprgeefrlllllllllllspoooooooopooooo',
-'tsstwvvwttttqqttossopxhgghrllllsllllspooppoopoppopppop',
-'uwwuvvwvutttwuvvossspsxhhrllsllssspooyoyyooyyyooyyooyo',
-'vvuttwvuvwwwuvvvolssopsxrllspslspyoyoyoyrrrrrrrrrrrrrr',
-'wttwvvvuuwwwqwwwslsoyoyoslsppslooyyoyyyyggggggeeeeeegg',
-'zzztwuuwtzzzzAAzsssoyyysypoposlsyyysyoyyhhhhhhggeegghh',
-'AAAzzAzzzAAAAAAAosloyyosyoyposssyoysysyohhhhhhhgegghhh',
-'zAAAABAAAAAzCDDCossoysolysyoolsoosysosyohhhhhhhgegghhh',
-'CDDCzAAzCDDCDzzDEEEFllslolosFEEElsososolhhhhhhhgggehhh',
-'zzzDCDDCDzzzDzzzlsslFFEEEEFFlsslEEFFFFFEhhhhhhggggeghh',
-'DDzzzBAzzzDDCDDDopssppopopopspooooosopoohhhhhgeegggegh',
-'mCCDAAAzDCCmmCCmoopsptGGGGtppoopsooooooohhhhhhgegegghh',
-'','','','',
-'                         abdbaabbbbbaa',
-'                          daba  aaaa',
-'                         bda',
-'                         db             xxxxxrrrrrrrrx',
-'                         b',
-'','','','','','','',
-'                    lllqnnmm        booghh',
-'                    llllmmnn        baofgh',
-'                    qqqqnnmm        daoghh',
-'                    qqqqmmnn        doofgh',
-'                tttttvuwttttqsoooopabooooooooa',
-'                tttttvvuuuuwwqqqppoabopoopppop',
-'                tttwuwvvvvvvvvutoyyooyyyooyoyo',
-'                wwwuvvwttuvvvvvwrrrrrrrrrrrrrr  rrrrrrxxxxxxrr',
-'                wwwuuvvvuttwwwwweeeeegggggggge',
-'                zzztwuuwtzzzzAADgeegghhhhhhhhg',
-'                AAAzDAzzzAAAAAAzggeghhhhhhhhhh',
-'                zAAAzBAAAAAzCDDCggeghhhhhhhhhh',
-'                CDDCDAAzCDDCDzzDeggghhhhhhhhhh',
-'                zzzDCDDCDzzzzzzzegggghhhhhhhhg',
-'                DDzzzBAzzzDDDDDDgggeeghhhhhhge',
-'                mCCDAAAADCCmmCCmgegeghhhhhhhhg'
-        ]
-    }
-];
+function makeLocBadge(loc, size) {
+    size = size || 32;
+    var code = (loc || 'xx').toLowerCase();
+    var h = Math.round(size * 0.67);
+    return '<img src="https://flagcdn.com/w320/' + code + '.png"' +
+        ' width="' + size + '" height="' + h + '"' +
+        ' style="border-radius:3px;object-fit:cover;flex-shrink:0;">';
+}
 
 // News prefs: which types count as unread
 function getNewsPrefs() {
@@ -2273,19 +2945,14 @@ function preloadSkins(onDone) {
     function next() {
         if (i >= players.length) { onDone(); return; }
         var p = players[i];
-
         bar.style.width = Math.round((i / players.length) * 100) + '%';
-
         setTimeout(function() {
             if (p.skinBitmap && p.skinPalette) {
                 renderSkin(skinCanvas, p);
                 p.avatarUrl = skinCanvas.toDataURL();
-
-                // Show skin image, update to latest loaded
                 skinImg.style.display = 'block';
                 skinImg.src = p.avatarUrl;
             }
-
             i++; next();
         }, 10);
     }
@@ -2503,6 +3170,20 @@ function buildAllPage() {
         (function(p, rank) {
             var row = document.createElement("div");
             row.className = "player-row";
+row.style.marginBottom = "30px";
+row.addEventListener('mouseenter', function() {
+    this.style.zIndex = 99999;
+});
+row.addEventListener('mouseleave', function() {
+    this.style.zIndex = '';
+});
+
+var shineDiv = document.createElement("div");
+shineDiv.className = "row-shine";
+var shineBar = document.createElement("div");
+shineBar.className = "row-shine-bar";
+shineDiv.appendChild(shineBar);
+row.appendChild(shineDiv);
 
             var rc = makeRowSVG(rank);
 
@@ -2522,7 +3203,7 @@ function buildAllPage() {
             }
 
             var polyDiv = document.createElement("div");
-            polyDiv.className = "row-bg";
+            polyDiv.className = "row-bg row-poly";
             polyDiv.innerHTML = rc.poly;
             polyDiv.style.zIndex = "2";
             row.appendChild(polyDiv);
@@ -2532,7 +3213,7 @@ function buildAllPage() {
 
             var posEl = document.createElement("div");
             posEl.className = "row-pos";
-            posEl.textContent = p.alt ? "ALT" : (p._rank + 1);
+            posEl.textContent = p.alt ? ('R' + p.rgrank) : (p._rank + 1);
             content.appendChild(posEl);
 
             var nameEl = document.createElement("div");
@@ -2559,14 +3240,55 @@ function buildAllPage() {
 
             var tiersEl = document.createElement("div");
             tiersEl.className = "row-tiers";
-            for (var j = 0; j < styles.length; j++) {
-                var t = getEffectiveTier(p, styles[j].key);
-                var wrap = document.createElement("div");
-                wrap.className = "tier-circle-wrap";
-                wrap.innerHTML = makeTierCircle(t, styles[j], 42);
-                tiersEl.appendChild(wrap);
-            }
-            content.appendChild(tiersEl);
+for (var j = 0; j < styles.length; j++) {
+    var t = getEffectiveTier(p, styles[j].key);
+    var wrap = document.createElement("div");
+    wrap.className = "tier-circle-wrap";
+
+    var isR = isRTier(t);
+    var baseT = normTier(t);
+    var pts = tierPoints[baseT] || 1;
+
+    // Check for peak tier
+    var peakKey = 'p' + styles[j].key;
+    var peakTier = p.tiers[peakKey];
+var tooltipLabel = (isR ? 'Retired ' : '') + (peakTier ? 'Peak ' + peakTier : t);
+var tooltipPts = pts;
+
+wrap.innerHTML =
+    makeTierCircle(t, styles[j], 42) +
+    '<div class="tier-tooltip">' +
+        '<div class="tooltip-tier">' + tooltipLabel + '</div>' +
+        '<div class="tooltip-pts">' + tooltipPts + ' pts</div>' +
+    '</div>';
+
+wrap.addEventListener('mouseenter', function() {
+    var tooltip = this.querySelector('.tier-tooltip');
+    var rect = this.getBoundingClientRect();
+    if (rect.top < 120) {
+        tooltip.style.bottom = 'auto';
+        tooltip.style.top = 'calc(100% + 10px)';
+        tooltip.classList.add('tooltip-below');
+    } else {
+        tooltip.style.top = 'auto';
+        tooltip.style.bottom = 'calc(100% + 10px)';
+        tooltip.classList.remove('tooltip-below');
+    }
+    tooltip.style.display = 'block';
+});
+
+wrap.addEventListener('mouseleave', function() {
+    this.querySelector('.tier-tooltip').style.display = 'none';
+});
+
+tiersEl.appendChild(wrap);
+}
+var locBadge = document.createElement("div");
+locBadge.style.cssText = 'display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0;margin-right:8px;gap:3px;';
+locBadge.innerHTML = makeLocBadge(p.loc, 32) +
+    (p.loc2 ? makeLocBadge(p.loc2, 24) : '');
+tiersEl.insertBefore(locBadge, tiersEl.firstChild);
+content.appendChild(tiersEl);
             row.appendChild(content);
 
             if (p.avatarUrl) {
@@ -2907,7 +3629,7 @@ function rebuildStyleColumns(inner, style, colTiers, subKey) {
 
                     var rankEl = document.createElement("div");
                     rankEl.className = "col-rank";
-                    rankEl.textContent = entry.player.alt ? "ALT" : "#" + (entry.player._rank + 1);
+                    rankEl.textContent = entry.player.alt ? ("ALT") : "#" + (entry.player._rank + 1);
                     cc.appendChild(rankEl);
 
                     // Arrow icon — colored if R-Tier
@@ -2967,6 +3689,9 @@ function rebuildStyleColumns(inner, style, colTiers, subKey) {
 var activeSubModes = {};
 
 var switchTab = function(key, subKey) {
+var filterWrap = document.getElementById('filter-wrap');
+if (filterWrap) filterWrap.style.display = key === 'all' ? 'flex' : 'none';
+
     // Hide all pages
     document.getElementById("page-all").style.display = key === "all" ? "flex" : "none";
     document.getElementById("page-news").style.display = key === "news" ? "flex" : "none";
@@ -3045,11 +3770,28 @@ var switchTab = function(key, subKey) {
 // ============================================================
 var openDetail = function(player, rank) {
     document.getElementById("detail-name").textContent = player.name;
+    document.getElementById("detail-name").style.paddingLeft = '85px';
 
     var points = getPoints(player);
     var title = getTitle(getDisplayPoints(player));
-    document.getElementById("detail-pos").textContent = player.alt ? "ALT" : "Global Rank #" + (player._rank + 1);
+
+    document.getElementById("detail-pos").textContent = player.alt ? ("Alted at global rank #" + player.rgrank) : "Global Rank #" + (player._rank + 1);
+    document.getElementById("detail-pos").style.paddingLeft = '85px';
+
     document.getElementById("detail-title-label").textContent = title.label + " • " + getDisplayPoints(player) + " pts";
+    document.getElementById("detail-title-label").style.paddingLeft = '85px';
+
+    // Location badge
+    var oldBadge = document.getElementById('detail-loc-badge');
+    if (oldBadge) oldBadge.remove();
+    var locDiv = document.createElement('div');
+    locDiv.id = 'detail-loc-badge';
+locDiv.style.cssText =
+    'position:absolute;top:36px;left:28px;' +
+    'display:flex;flex-direction:column;align-items:flex-start;gap:4px;';
+locDiv.innerHTML = makeLocBadge(player.loc, 56);
+    document.querySelector('.detail-right').style.position = 'relative';
+    document.querySelector('.detail-right').appendChild(locDiv);
 
     var rc = rowColors[Math.min(rank, 3)];
     var dq = document.getElementById("detail-quad");
@@ -3073,7 +3815,7 @@ var openDetail = function(player, rank) {
         var img = document.createElement("img");
         img.src = player.avatarUrl;
         img.style.cssText =
-            'position:absolute;left:-360px;top:-240px;' +
+            'position:absolute;left:-380px;top:-270px;' +
             'width:900px;height:900px;z-index:3;pointer-events:none;';
         detailLeft.appendChild(img);
     }
@@ -3081,35 +3823,36 @@ var openDetail = function(player, rank) {
     // Tier circles with sub-tier hover panels
     var tiersEl = document.getElementById("detail-tiers");
     tiersEl.innerHTML = "";
-
     for (var i = 0; i < styles.length; i++) {
         (function(style) {
             var t = getEffectiveTier(player, style.key);
+            var isR = isRTier(t);
+            var baseT = normTier(t);
+            var pts = tierPoints[baseT] || 1;
+            var peakKey = 'p' + style.key;
+            var peakTier = player.tiers[peakKey];
+
             var item = document.createElement("div");
             item.className = "detail-tier-item";
-
             item.innerHTML =
                 makeTierCircle(t, style, 52) +
                 '<div class="detail-style-lbl">' + style.label + '</div>';
 
-            // Sub-tier hover panel for styles with subs
+            // Sub-tier hover panel
             if (style.subs) {
                 var subPanel = document.createElement("div");
                 subPanel.className = "detail-sub-tiers";
-
                 for (var si = 0; si < style.subs.length; si++) {
                     (function(sub) {
                         var subT = player.tiers[sub.key] || "LT5";
                         var subWrap = document.createElement("div");
-                        subWrap.style.cssText =
-                            'display:flex;flex-direction:column;align-items:center;gap:3px;';
+                        subWrap.style.cssText = 'display:flex;flex-direction:column;align-items:center;gap:3px;';
                         subWrap.innerHTML =
                             makeTierCircle(subT, sub, 36) +
                             '<div style="font-size:9px;opacity:0.5;">' + sub.label + '</div>';
                         subPanel.appendChild(subWrap);
                     })(style.subs[si]);
                 }
-
                 item.appendChild(subPanel);
             }
 
@@ -3414,7 +4157,254 @@ document.addEventListener("click", function() {
     document.querySelectorAll(".tab-submenu").forEach(function(m) {
         m.classList.remove("open");
     });
+    document.querySelectorAll(".filter-popup").forEach(function(p) {
+        p.classList.remove("open");
+    });
 });
+
+// ============================================================
+// FILTER STATE
+// ============================================================
+var filterState = {
+    locs: [],      // active loc codes, empty = show all
+    style: null    // active style key for sorting, null = default
+};
+
+function getUniqueLocs() {
+    var seen = {};
+    var locs = [];
+    for (var i = 0; i < players.length; i++) {
+        var loc = players[i].loc;
+        if (loc && !seen[loc]) {
+            seen[loc] = true;
+            locs.push(loc);
+        }
+    }
+    return locs;
+}
+
+function applyFilters() {
+    var listAll = document.getElementById('list-all');
+    var rows = Array.prototype.slice.call(listAll.querySelectorAll('.player-row'));
+
+    // Step 1: record positions BEFORE reorder (FLIP - First)
+    var beforeRects = {};
+    for (var r = 0; r < rows.length; r++) {
+        var nameEl = rows[r].querySelector('.row-name');
+        if (nameEl) {
+            beforeRects[nameEl.textContent] = rows[r].getBoundingClientRect().top;
+        }
+    }
+
+    // Step 2: determine sort order
+    var sorted;
+    if (filterState.style) {
+        sorted = sortedPlayers.slice().sort(function(a, b) {
+            if (a.alt && !b.alt) return 1;
+            if (!a.alt && b.alt) return -1;
+            var aIdx = tierOrder.indexOf(normTier(getEffectiveTier(a, filterState.style)));
+            var bIdx = tierOrder.indexOf(normTier(getEffectiveTier(b, filterState.style)));
+            if (aIdx !== bIdx) return aIdx - bIdx;
+            return scorePlayer(a) - scorePlayer(b);
+        });
+    } else {
+        sorted = sortedPlayers;
+    }
+
+    // Step 3: reorder DOM
+    for (var i = 0; i < sorted.length; i++) {
+        var name = sorted[i].name;
+        for (var r = 0; r < rows.length; r++) {
+            var nameEl = rows[r].querySelector('.row-name');
+            if (nameEl && nameEl.textContent === name) {
+                listAll.appendChild(rows[r]);
+                break;
+            }
+        }
+    }
+
+    // Step 4: show/hide based on loc filter
+    rows = Array.prototype.slice.call(listAll.querySelectorAll('.player-row'));
+    for (var r = 0; r < rows.length; r++) {
+        var nameEl = rows[r].querySelector('.row-name');
+        if (!nameEl) continue;
+        var playerName = nameEl.textContent;
+        var player = null;
+        for (var pi = 0; pi < players.length; pi++) {
+            if (players[pi].name === playerName) { player = players[pi]; break; }
+        }
+        if (!player) continue;
+
+        var show = filterState.locs.length === 0 || filterState.locs.indexOf(player.loc) !== -1;
+
+        if (show) {
+            rows[r].classList.remove('row-hidden');
+            var posEl = rows[r].querySelector('.row-pos');
+            if (posEl) posEl.textContent = player.alt ? ('R' + player.rgrank) : (player._rank + 1);
+        } else {
+            rows[r].classList.add('row-hidden');
+        }
+    }
+
+    // Step 5: re-number visible ranks
+    var visibleRank = 1;
+    rows = Array.prototype.slice.call(listAll.querySelectorAll('.player-row'));
+    for (var r = 0; r < rows.length; r++) {
+        if (rows[r].classList.contains('row-hidden')) continue;
+        var nameEl = rows[r].querySelector('.row-name');
+        if (!nameEl) continue;
+        var player = null;
+        for (var pi = 0; pi < players.length; pi++) {
+            if (players[pi].name === nameEl.textContent) { player = players[pi]; break; }
+        }
+        if (!player || player.alt) continue;
+        var posEl = rows[r].querySelector('.row-pos');
+        if (posEl) posEl.textContent = visibleRank++;
+    }
+
+    // Step 6: FLIP animate
+    rows = Array.prototype.slice.call(listAll.querySelectorAll('.player-row'));
+    for (var r = 0; r < rows.length; r++) {
+        if (rows[r].classList.contains('row-hidden')) continue;
+        var nameEl = rows[r].querySelector('.row-name');
+        if (!nameEl) continue;
+        var name = nameEl.textContent;
+        var afterTop = rows[r].getBoundingClientRect().top;
+        var beforeTop = beforeRects[name];
+        if (beforeTop === undefined) continue;
+        var delta = beforeTop - afterTop;
+        if (Math.abs(delta) < 1) continue;
+
+        rows[r].style.transition = 'none';
+        rows[r].style.transform = 'translateY(' + delta + 'px)';
+        rows[r].offsetHeight;
+        rows[r].style.transition = 'transform 0.35s ease, filter 0.15s, opacity 0.25s ease';
+        rows[r].style.transform = '';
+    }
+
+    // Step 7: cleanup + update poly colors after animation
+    setTimeout(function() {
+        var allRows = Array.prototype.slice.call(listAll.querySelectorAll('.player-row'));
+        for (var r = 0; r < allRows.length; r++) {
+            allRows[r].style.transition = '';
+            allRows[r].style.transform = '';
+        }
+
+        var visibleIdx = 0;
+for (var r = 0; r < allRows.length; r++) {
+    if (allRows[r].classList.contains('row-hidden')) continue;
+    var nameEl = allRows[r].querySelector('.row-name');
+    if (!nameEl) continue;
+    var player = null;
+    for (var pi = 0; pi < players.length; pi++) {
+        if (players[pi].name === nameEl.textContent) { player = players[pi]; break; }
+    }
+    if (!player) continue;
+    var polyDiv = allRows[r].querySelector('.row-poly');
+    if (polyDiv) {
+        (function(pd, idx, pname) {
+            pd.style.transition = 'opacity 0.2s ease';
+            pd.style.opacity = '0';
+            setTimeout(function() {
+                pd.innerHTML = makeRowSVG(idx, pname).poly;
+                pd.style.opacity = '1';
+            }, 200);
+        })(polyDiv, visibleIdx, player.name);
+    }
+    visibleIdx++;
+}
+    }, 380);
+}
+
+function buildFilterPopup() {
+    var wrap = document.createElement('div');
+    wrap.style.cssText = 'position:relative;display:flex;align-items:center;';
+    wrap.id = 'filter-wrap';
+
+    var btn = document.createElement('button');
+    btn.className = 'tabbar-btn';
+    btn.title = 'Filter';
+    btn.innerHTML = '<span class="material-icons" style="color:#fff;font-size:22px;text-shadow:none;pointer-events:none;">filter_alt</span>';
+
+    var popup = document.createElement('div');
+    popup.className = 'filter-popup';
+
+    // ── LOC FLAGS ──
+    var locLabel = document.createElement('div');
+    locLabel.className = 'filter-section-label';
+    locLabel.textContent = 'NATIONALITY';
+    popup.appendChild(locLabel);
+
+    var flagGrid = document.createElement('div');
+    flagGrid.className = 'filter-flag-grid';
+
+    var uniqueLocs = getUniqueLocs();
+    for (var i = 0; i < uniqueLocs.length; i++) {
+        (function(loc) {
+            var flagBtn = document.createElement('div');
+            flagBtn.className = 'filter-flag-btn';
+            flagBtn.innerHTML = '<img src="https://flagcdn.com/w40/' + loc.toLowerCase() + '.png">';
+            flagBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                var idx = filterState.locs.indexOf(loc);
+                if (idx === -1) {
+                    filterState.locs.push(loc);
+                    flagBtn.classList.add('active');
+                } else {
+                    filterState.locs.splice(idx, 1);
+                    flagBtn.classList.remove('active');
+                }
+                applyFilters();
+            });
+            flagGrid.appendChild(flagBtn);
+        })(uniqueLocs[i]);
+    }
+    popup.appendChild(flagGrid);
+
+    // ── STYLE SORT ──
+    var styleLabel = document.createElement('div');
+    styleLabel.className = 'filter-section-label';
+    styleLabel.style.marginTop = '4px';
+    styleLabel.textContent = 'SORT BY STYLE';
+    popup.appendChild(styleLabel);
+
+    var styleGrid = document.createElement('div');
+    styleGrid.className = 'filter-style-grid';
+
+    for (var si = 0; si < styles.length; si++) {
+        (function(style) {
+            var styleBtn = document.createElement('div');
+            styleBtn.className = 'filter-style-btn';
+            styleBtn.innerHTML = '<img src="' + style.iconUrl + '">' + style.label;
+            styleBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                if (filterState.style === style.key) {
+                    filterState.style = null;
+                    styleBtn.classList.remove('active');
+                } else {
+                    filterState.style = style.key;
+                    // Deactivate all other style buttons
+                    styleGrid.querySelectorAll('.filter-style-btn').forEach(function(b) {
+                        b.classList.remove('active');
+                    });
+                    styleBtn.classList.add('active');
+                }
+                applyFilters();
+            });
+            styleGrid.appendChild(styleBtn);
+        })(styles[si]);
+    }
+    popup.appendChild(styleGrid);
+
+    btn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        popup.classList.toggle('open');
+    });
+
+    wrap.appendChild(btn);
+    wrap.appendChild(popup);
+    return wrap;
+}
 
 // ============================================================
 // INIT
@@ -3434,7 +4424,10 @@ preloadSkins(function() {
     switchTab("all");
 
     // Button listeners
-    document.querySelector(".panorama-btn").addEventListener("click", openBannerTest);
+var filterWrap = buildFilterPopup();
+var panoramaBtn = document.querySelector('.panorama-btn');
+panoramaBtn.parentElement.insertBefore(filterWrap, panoramaBtn);
+    document.querySelector(".panorama-btn").addEventListener("click", openBannerTest);a
     document.getElementById("info-btn").addEventListener("click", function(e) {
         e.stopPropagation();
         openInfo();
